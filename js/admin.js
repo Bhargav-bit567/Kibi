@@ -27,7 +27,7 @@ function init() {
     showGate({
       title: 'Sign in required',
       message: 'You need to be signed in to view the admin dashboard.',
-      actionsHtml: `<a href="login.html" class="block w-full py-2.5 rounded-lg bg-primary text-white text-sm font-medium hover:opacity-90">Go to Login</a>`
+      actionsHtml: `<a href="login.html" class="block w-full py-2.5 rounded-lg btn-primary text-sm font-medium">Go to Login</a>`
     });
     return;
   }
@@ -39,7 +39,7 @@ function init() {
       showGate({
         title: 'Claim admin access',
         message: `No admin account exists yet. As ${escapeHtml(user.name || user.email || 'the first user')}, you can claim the admin role to set up this dashboard.`,
-        actionsHtml: `<button id="claimAdminBtn" class="w-full py-2.5 rounded-lg bg-primary text-black text-sm font-medium hover:opacity-90">Claim Admin Access</button>`
+        actionsHtml: `<button id="claimAdminBtn" class="w-full py-2.5 rounded-lg btn-primary text-sm font-medium">Claim Admin Access</button>`
       });
       document.getElementById('claimAdminBtn').addEventListener('click', () => {
         setUserRole(user.id, USER_ROLES.ADMIN);
@@ -50,7 +50,7 @@ function init() {
       showGate({
         title: 'Access denied',
         message: `Your account (${escapeHtml(user.email || user.name || '')}) doesn't have admin permissions. Contact an existing admin if you believe this is a mistake.`,
-        actionsHtml: `<a href="index.html" class="block w-full py-2.5 rounded-lg border border-gray-200 text-gray-600 text-sm font-medium hover:bg-gray-50">Back to Site</a>`
+        actionsHtml: `<a href="index.html" class="block w-full py-2.5 rounded-lg border border-gray-200 text-gray-600 text-sm font-medium hover:bg-gray-50 transition-colors">Back to Site</a>`
       });
     }
     return;
@@ -192,12 +192,12 @@ function renderAll() {
 function renderSidebarUser() {
   const u = state.currentAdmin;
   document.getElementById('sidebarUser').innerHTML = `
-    <div class="w-9 h-9 rounded-full bg-primary text-white flex items-center justify-center text-sm font-semibold shrink-0">
+    <div class="w-9 h-9 rounded-full bg-accent text-white flex items-center justify-center text-sm font-semibold shrink-0 ring-2 ring-white/10">
       ${(u.name || u.email || 'A').charAt(0).toUpperCase()}
     </div>
     <div class="min-w-0">
-      <div class="text-sm font-medium text-gray-900 truncate">${escapeHtml(u.name || 'Admin')}</div>
-      <div class="text-xs text-gray-400 truncate">${escapeHtml(u.email || '')}</div>
+      <div class="text-sm font-medium text-white truncate">${escapeHtml(u.name || 'Admin')}</div>
+      <div class="text-xs truncate" style="color:#7690b0;">${escapeHtml(u.email || '')}</div>
     </div>
   `;
 }
@@ -217,21 +217,22 @@ function renderNavCounts() {
 function renderDashboard() {
   const stats = getAdminStats();
   const cards = [
-    { label: 'Total Users', value: stats.totalUsers, sub: `+${stats.newUsersThisWeek} this week`, icon: '👥' },
-    { label: 'Admins', value: stats.admins, sub: `${stats.suspended} suspended`, icon: '🛡️' },
-    { label: 'Total Trips', value: stats.totalTrips, sub: `+${stats.newTripsThisWeek} this week`, icon: '🧳' },
-    { label: 'Open Trips', value: stats.openTrips, sub: `${stats.totalTrips - stats.openTrips} closed/full`, icon: '🗺️' },
-    { label: 'Join Requests', value: stats.totalRequests, sub: `${stats.pendingRequests} pending`, icon: '📥' }
+    { label: 'Total Users', value: stats.totalUsers, sub: `+${stats.newUsersThisWeek} this week`, icon: '👥', accent: '#1e3a5f', tint: '#1e3a5f0d' },
+    { label: 'Admins', value: stats.admins, sub: `${stats.suspended} suspended`, icon: '🛡️', accent: '#3b82f6', tint: '#3b82f60d' },
+    { label: 'Total Trips', value: stats.totalTrips, sub: `+${stats.newTripsThisWeek} this week`, icon: '🧳', accent: '#e07a5f', tint: '#e07a5f0d' },
+    { label: 'Open Trips', value: stats.openTrips, sub: `${stats.totalTrips - stats.openTrips} closed/full`, icon: '🗺️', accent: '#81b29a', tint: '#81b29a0d' },
+    { label: 'Join Requests', value: stats.totalRequests, sub: `${stats.pendingRequests} pending`, icon: '📥', accent: '#b45309', tint: '#b453090d' }
   ];
 
   document.getElementById('statsGrid').innerHTML = cards.map(c => `
-    <div class="bg-white shadow rounded-xl p-5">
-      <div class="flex items-center justify-between mb-2">
-        <span class="text-2xl">${c.icon}</span>
+    <div class="bg-white shadow-card ring-1 ring-black/5 rounded-xl p-5 relative overflow-hidden hover:-translate-y-0.5 hover:shadow-soft transition-all duration-150">
+      <div class="absolute inset-y-0 left-0 w-1" style="background:${c.accent};"></div>
+      <div class="flex items-center justify-between mb-3">
+        <span class="w-9 h-9 rounded-lg flex items-center justify-center text-lg" style="background:${c.tint};">${c.icon}</span>
       </div>
-      <div class="text-2xl font-bold text-gray-900">${c.value}</div>
-      <div class="text-sm text-gray-500">${c.label}</div>
-      <div class="text-xs text-gray-400 mt-1">${c.sub}</div>
+      <div class="text-2xl font-bold text-charcoal tracking-tight">${c.value}</div>
+      <div class="text-sm text-gray-500 font-medium">${c.label}</div>
+      <div class="text-xs text-gray-400 mt-1.5">${c.sub}</div>
     </div>
   `).join('');
 
@@ -294,7 +295,7 @@ function renderUsers() {
 
   container.innerHTML = `
     <table class="min-w-full divide-y divide-gray-200">
-      <thead class="bg-gray-100">
+      <thead class="bg-gray-50/80 border-b border-gray-200">
         <tr>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
@@ -345,7 +346,7 @@ function userRow(u) {
       </td>
       <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${u.createdAt ? new Date(u.createdAt).toLocaleDateString() : 'N/A'}</td>
       <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
-        <button data-edit-user="${u.id}" class="text-primary hover:underline font-medium mr-4">Edit</button>
+        <button data-edit-user="${u.id}" class="text-primary hover:text-accent hover:underline font-medium transition-colors mr-4">Edit</button>
         <button data-delete-user="${u.id}" class="text-error hover:underline font-medium" ${isSelf ? 'disabled title="You can\'t delete your own account"' : ''} style="${isSelf ? 'opacity:.4;cursor:not-allowed' : ''}">Delete</button>
       </td>
     </tr>
@@ -390,7 +391,7 @@ function openUserModal(userId) {
     </div>
     <div class="flex gap-3 pt-2">
       <button id="modalCancelBtn" class="flex-1 py-2.5 rounded-lg border border-gray-200 text-gray-600 text-sm font-medium hover:bg-gray-50">Cancel</button>
-      <button id="modalSaveBtn" class="flex-1 py-2.5 rounded-lg bg-primary text-white text-sm font-medium hover:opacity-90">Save Changes</button>
+      <button id="modalSaveBtn" class="flex-1 py-2.5 rounded-lg btn-primary text-sm font-medium">Save Changes</button>
     </div>
   `;
 
@@ -477,7 +478,7 @@ function renderTrips() {
 
   container.innerHTML = `
     <table class="min-w-full divide-y divide-gray-200">
-      <thead class="bg-gray-100">
+      <thead class="bg-gray-50/80 border-b border-gray-200">
         <tr>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trip</th>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Destination</th>
@@ -542,7 +543,7 @@ function tripRow(t) {
         <span class="text-xs font-medium px-2.5 py-1 rounded-full ${statusColors[status] || statusColors.open}">${capitalize(status)}</span>
       </td>
       <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
-        <button data-view-trip="${t.id}" class="text-primary hover:underline font-medium mr-3">View</button>
+        <button data-view-trip="${t.id}" class="text-primary hover:text-accent hover:underline font-medium transition-colors mr-3">View</button>
         <button data-feature-trip="${t.id}" class="text-gray-500 hover:underline font-medium mr-3">${t.featured ? 'Unfeature' : 'Feature'}</button>
         <button data-delete-trip="${t.id}" class="text-error hover:underline font-medium">Delete</button>
       </td>
@@ -604,7 +605,7 @@ function renderRequests() {
 
   container.innerHTML = `
     <table class="min-w-full divide-y divide-gray-200">
-      <thead class="bg-gray-100">
+      <thead class="bg-gray-50/80 border-b border-gray-200">
         <tr>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Requester</th>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trip</th>
@@ -681,7 +682,7 @@ function renderActivity() {
 
   container.innerHTML = `
     <table class="min-w-full divide-y divide-gray-200">
-      <thead class="bg-gray-100">
+      <thead class="bg-gray-50/80 border-b border-gray-200">
         <tr>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
           <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Details</th>
@@ -730,8 +731,8 @@ function renderPagination(containerId, page, totalPages, totalItems, onChange) {
   el.innerHTML = `
     <span>Page ${page} of ${totalPages} · ${totalItems} total</span>
     <div class="flex gap-2">
-      <button id="${containerId}-prev" class="px-3 py-1.5 rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-40" ${page <= 1 ? 'disabled' : ''}>Previous</button>
-      <button id="${containerId}-next" class="px-3 py-1.5 rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-40" ${page >= totalPages ? 'disabled' : ''}>Next</button>
+      <button id="${containerId}-prev" class="px-3 py-1.5 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 hover:border-gray-300 transition-colors disabled:opacity-40" ${page <= 1 ? 'disabled' : ''}>Previous</button>
+      <button id="${containerId}-next" class="px-3 py-1.5 rounded-lg border border-gray-200 bg-white hover:bg-gray-50 hover:border-gray-300 transition-colors disabled:opacity-40" ${page >= totalPages ? 'disabled' : ''}>Next</button>
     </div>
   `;
   const prev = document.getElementById(`${containerId}-prev`);
