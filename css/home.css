@@ -1,0 +1,22 @@
+/* ============================================
+   Kibi — Homepage Tailwind Overrides
+   Minimal page-specific styles beyond Tailwind.
+   ============================================ */
+
+/* Hero background subtle zoom */
+.hero-bg-zoom {
+  animation: slowZoom 20s ease-out forwards;
+}
+
+/* Scroll indicator bounce */
+.scroll-indicator {
+  animation: scrollBounce 2s ease-in-out infinite;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .hero-bg-zoom,
+  .scroll-indicator {
+    animation: none;
+  }
+}
