@@ -12,12 +12,8 @@ const STORAGE_KEYS = {
   JOIN_REQUESTS: 'wm_join_requests',
   NOTIFICATIONS: 'wm_notifications',
   SAMPLE_TRAVELERS: 'wm_sample_travelers',
-  INITIALIZED: 'wm_initialized',
-  ACTIVITY_LOG: 'wm_activity_log'
+  INITIALIZED: 'wm_initialized'
 };
-
-const USER_ROLES = { ADMIN: 'admin', MODERATOR: 'moderator', USER: 'user' };
-const USER_STATUS = { ACTIVE: 'active', SUSPENDED: 'suspended', BANNED: 'banned' };
 
 /* --- Helper --- */
 function getStore(key) {
@@ -118,8 +114,22 @@ function saveTrip(trip) {
   const trips = getTrips();
   trip.id = trip.id || generateId();
   trip.createdAt = trip.createdAt || new Date().toISOString();
+
+  // Prevent duplicate trips for the same user/destination/dates
+  const duplicate = trips.find(t =>
+    t.createdBy === trip.createdBy &&
+    t.destination === trip.destination &&
+    t.startDate === trip.startDate &&
+    t.endDate === trip.endDate
+  );
+  if (duplicate) {
+    console.warn('Duplicate trip detected, returning existing trip:', duplicate.id);
+    return duplicate;
+  }
+
   trips.push(trip);
   setStore(STORAGE_KEYS.TRIPS, trips);
+  console.log('[Storage] saveTrip:', trip.id, trip.destination, 'days:', (trip.itinerary || []).length);
   return trip;
 }
 
@@ -129,7 +139,13 @@ function getTrips() {
 
 function getTripById(id) {
   const trips = getTrips();
-  return trips.find(t => t.id === id) || null;
+  const trip = trips.find(t => t.id === id) || null;
+  if (trip) {
+    console.log('[Storage] getTripById:', id, '->', trip.destination, 'days:', (trip.itinerary || []).length);
+  } else {
+    console.log('[Storage] getTripById:', id, '-> not found');
+  }
+  return trip;
 }
 
 function getUserTrips(userId) {
@@ -164,6 +180,10 @@ function deleteTrip(tripId) {
   const trips = getTrips();
   const filtered = trips.filter(t => t.id !== tripId);
   setStore(STORAGE_KEYS.TRIPS, filtered);
+  // Also remove isolated saved itinerary if present
+  try {
+    localStorage.removeItem(`wm_saved_itinerary_${tripId}`);
+  } catch (e) {}
 }
 
 function saveTripToUser(userId, tripId) {
@@ -181,6 +201,10 @@ function removeSavedTrip(userId, tripId) {
   if (!user) return;
   const savedTrips = (user.savedTrips || []).filter(id => id !== tripId);
   updateUser(userId, { savedTrips });
+  // Also remove isolated saved itinerary if present
+  try {
+    localStorage.removeItem(`wm_saved_itinerary_${tripId}`);
+  } catch (e) {}
 }
 
 /* --- Join Request Functions --- */
@@ -730,185 +754,6 @@ function initSampleData() {
 
   // Mark as initialized
   setStore(STORAGE_KEYS.INITIALIZED, true);
-}
-
-/* ============================================
-   Admin Functions
-   Role management, moderation, deletion, stats,
-   activity logging — everything the admin
-   dashboard needs on top of the base CRUD above.
-   ============================================ */
-
-/* --- Activity Log --- */
-function getActivityLog() {
-  return getStore(STORAGE_KEYS.ACTIVITY_LOG) || [];
-}
-
-function logActivity(action, details, actorId) {
-  const log = getActivityLog();
-  const actor = actorId || (getCurrentUser() && getCurrentUser().id) || 'system';
-  log.unshift({
-    id: generateId(),
-    action,
-    details: details || '',
-    actorId: actor,
-    createdAt: new Date().toISOString()
-  });
-  // Keep log bounded so localStorage doesn't grow unbounded
-  if (log.length > 500) log.length = 500;
-  setStore(STORAGE_KEYS.ACTIVITY_LOG, log);
-}
-
-function clearActivityLog() {
-  setStore(STORAGE_KEYS.ACTIVITY_LOG, []);
-}
-
-/* --- Role & Status Management --- */
-function setUserRole(userId, role) {
-  const updated = updateUser(userId, { role });
-  if (updated) logActivity('role_change', `Set role of ${updated.name || updated.email || userId} to ${role}`);
-  return updated;
-}
-
-function setUserStatus(userId, status, reason) {
-  const updated = updateUser(userId, { status, statusReason: reason || null });
-  if (updated) logActivity('status_change', `Set status of ${updated.name || updated.email || userId} to ${status}${reason ? ' (' + reason + ')' : ''}`);
-  return updated;
-}
-
-function isUserAdmin(user) {
-  return !!user && (user.role === USER_ROLES.ADMIN || user.isAdmin === true);
-}
-
-/* --- User Deletion (cascades) --- */
-function deleteUser(userId) {
-  const user = getUserById(userId);
-  if (!user) return false;
-
-  // Remove user record
-  const users = getUsers().filter(u => u.id !== userId);
-  setStore(STORAGE_KEYS.USERS, users);
-
-  // Remove trips they created
-  const trips = getTrips().filter(t => t.createdBy !== userId);
-  // Also remove them as a member from any remaining trips
-  trips.forEach(t => {
-    if (t.members && t.members.includes(userId)) {
-      t.members = t.members.filter(m => m !== userId);
-    }
-  });
-  setStore(STORAGE_KEYS.TRIPS, trips);
-
-  // Remove their join requests
-  const requests = getJoinRequests().filter(r => r.userId !== userId);
-  setStore(STORAGE_KEYS.JOIN_REQUESTS, requests);
-
-  // Remove their notifications
-  const notifications = getNotifications().filter(n => n.userId !== userId);
-  setStore(STORAGE_KEYS.NOTIFICATIONS, notifications);
-
-  // Remove their preferences
-  const allPrefs = getStore(STORAGE_KEYS.PREFERENCES) || {};
-  delete allPrefs[userId];
-  setStore(STORAGE_KEYS.PREFERENCES, allPrefs);
-
-  logActivity('user_deleted', `Deleted user ${user.name || user.email || userId} (and their trips/requests)`);
-  return true;
-}
-
-/* --- Trip Moderation --- */
-function setTripFeatured(tripId, featured) {
-  const updated = updateTrip(tripId, { featured: !!featured });
-  if (updated) logActivity('trip_featured', `${featured ? 'Featured' : 'Unfeatured'} trip "${updated.title || updated.destination}"`);
-  return updated;
-}
-
-function setTripStatus(tripId, status) {
-  const updated = updateTrip(tripId, { status });
-  if (updated) logActivity('trip_status_change', `Set trip "${updated.title || updated.destination}" status to ${status}`);
-  return updated;
-}
-
-function adminDeleteTrip(tripId) {
-  const trip = getTripById(tripId);
-  if (!trip) return false;
-  deleteTrip(tripId);
-  // Clean up any join requests pointing at this trip
-  const requests = getJoinRequests().filter(r => r.tripId !== tripId);
-  setStore(STORAGE_KEYS.JOIN_REQUESTS, requests);
-  logActivity('trip_deleted', `Deleted trip "${trip.title || trip.destination}"`);
-  return true;
-}
-
-/* --- Join Request Moderation --- */
-function deleteJoinRequest(requestId) {
-  const requests = getJoinRequests().filter(r => r.id !== requestId);
-  setStore(STORAGE_KEYS.JOIN_REQUESTS, requests);
-}
-
-function approveJoinRequest(requestId) {
-  const request = updateJoinRequest(requestId, { status: 'approved' });
-  if (request) {
-    const trip = getTripById(request.tripId);
-    if (trip) {
-      const members = trip.members || [];
-      if (!members.includes(request.userId)) {
-        members.push(request.userId);
-        updateTrip(trip.id, { members });
-      }
-    }
-    saveNotification({
-      userId: request.userId,
-      message: `Your request to join "${trip ? (trip.title || trip.destination) : 'the trip'}" was approved!`,
-      type: 'join_approved',
-      tripId: request.tripId
-    });
-    logActivity('join_approved', `Approved join request ${requestId}`);
-  }
-  return request;
-}
-
-function rejectJoinRequest(requestId) {
-  const request = updateJoinRequest(requestId, { status: 'rejected' });
-  if (request) {
-    saveNotification({
-      userId: request.userId,
-      message: `Your request to join the trip was declined.`,
-      type: 'join_rejected',
-      tripId: request.tripId
-    });
-    logActivity('join_rejected', `Rejected join request ${requestId}`);
-  }
-  return request;
-}
-
-/* --- Admin Dashboard Stats --- */
-function getAdminStats() {
-  const users = getUsers();
-  const trips = getTrips();
-  const requests = getJoinRequests();
-  const now = Date.now();
-  const sevenDaysAgo = now - 7 * 24 * 60 * 60 * 1000;
-
-  return {
-    totalUsers: users.length,
-    newUsersThisWeek: users.filter(u => u.createdAt && new Date(u.createdAt).getTime() >= sevenDaysAgo).length,
-    admins: users.filter(u => isUserAdmin(u)).length,
-    suspended: users.filter(u => u.status === USER_STATUS.SUSPENDED || u.status === USER_STATUS.BANNED).length,
-    totalTrips: trips.length,
-    openTrips: trips.filter(t => t.status === 'open').length,
-    newTripsThisWeek: trips.filter(t => t.createdAt && new Date(t.createdAt).getTime() >= sevenDaysAgo).length,
-    pendingRequests: requests.filter(r => r.status === 'pending').length,
-    totalRequests: requests.length
-  };
-}
-
-/* --- Bootstrap: ensure there is always at least one admin path available.
-   If no admin exists yet, the currently logged-in user can claim the role
-   from the admin login screen. This mirrors common "first user becomes
-   admin" patterns used by self-hosted admin panels. --- */
-function anyAdminExists() {
-  return getUsers().some(u => isUserAdmin(u));
 }
 
 // Initialize on load

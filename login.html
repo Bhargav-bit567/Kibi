@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kibi - Login</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-surface": "#1a1c1e",
+                      "on-secondary": "#ffffff",
+                      "on-tertiary-container": "#fcfcff",
+                      "on-primary-fixed": "#001c39",
+                      "on-tertiary-fixed": "#151c22",
+                      "primary-fixed": "#d4e3ff",
+                      "surface-container": "#eeeef0",
+                      "on-error": "#ffffff",
+                      "error": "#ba1a1a",
+                      "on-primary": "#ffffff",
+                      "on-tertiary-fixed-variant": "#40484e",
+                      "surface-container-high": "#e8e8ea",
+                      "surface-container-low": "#f3f3f6",
+                      "on-primary-fixed-variant": "#004883",
+                      "secondary-container": "#8bd2fe",
+                      "primary": "#005da7",
+                      "secondary-fixed": "#c6e7ff",
+                      "inverse-primary": "#a4c9ff",
+                      "on-secondary-fixed": "#001e2d",
+                      "background": "#f9f9fc",
+                      "surface-container-lowest": "#ffffff",
+                      "secondary-fixed-dim": "#88cffb",
+                      "inverse-surface": "#2f3133",
+                      "primary-container": "#2976c7",
+                      "surface-variant": "#e2e2e5",
+                      "surface": "#f9f9fc",
+                      "on-secondary-fixed-variant": "#004c6b",
+                      "tertiary-container": "#6e757c",
+                      "on-secondary-container": "#005a7e",
+                      "error-container": "#ffdad6",
+                      "inverse-on-surface": "#f0f0f3",
+                      "on-primary-container": "#fdfcff",
+                      "surface-tint": "#0060ac",
+                      "surface-container-highest": "#e2e2e5",
+                      "outline-variant": "#c1c7d3",
+                      "on-error-container": "#93000a",
+                      "on-surface-variant": "#414751",
+                      "tertiary-fixed": "#dce3eb",
+                      "on-tertiary": "#ffffff",
+                      "primary-fixed-dim": "#a4c9ff",
+                      "tertiary-fixed-dim": "#c0c7cf",
+                      "on-background": "#1a1c1e",
+                      "secondary": "#01658c",
+                      "surface-bright": "#f9f9fc",
+                      "surface-dim": "#dadadc",
+                      "tertiary": "#555d63",
+                      "outline": "#717783"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "section-gap-mobile": "64px",
+                      "section-gap-desktop": "120px",
+                      "container-padding": "24px",
+                      "base": "8px",
+                      "gutter": "24px"
+              },
+              "fontFamily": {
+                      "display-lg": ["Outfit", "sans-serif"],
+                      "body-lg": ["Inter", "sans-serif"],
+                      "label-md": ["Inter", "sans-serif"],
+                      "label-sm": ["Inter", "sans-serif"],
+                      "body-md": ["Inter", "sans-serif"],
+                      "headline-lg": ["Outfit", "sans-serif"],
+                      "headline-md": ["Outfit", "sans-serif"],
+                      "headline-lg-mobile": ["Outfit", "sans-serif"]
+              },
+              "fontSize": {
+                      "display-lg": ["72px", { "lineHeight": "84px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                      "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
+                      "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600" }],
+                      "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+                      "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                      "headline-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
+                      "headline-md": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
+                      "headline-lg-mobile": ["32px", { "lineHeight": "40px", "fontWeight": "700" }]
+              }
+            }
+          }
+        }
+</script>
+<style>
+  .form-error {
+    display: block;
+    color: #ba1a1a;
+    font-size: 0.75rem;
+    margin-top: 0.375rem;
+  }
+  .input-error {
+    border-color: #ba1a1a !important;
+  }
+  .toast {
+    position: fixed;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    padding: 0.875rem 1.25rem;
+    border-radius: 0.75rem;
+    background: #1a1c1e;
+    color: #fff;
+    font-size: 0.875rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    opacity: 0;
+    transform: translateY(1rem);
+    transition: all 0.3s ease;
+    pointer-events: none;
+    z-index: 9999;
+  }
+  .toast.active { opacity: 1; transform: translateY(0); }
+  .toast.success { background: #1b5e20; }
+  .toast.error { background: #c62828; }
+</style>
+</head>
+<body class="bg-surface-container-lowest text-on-surface font-body-md antialiased selection:bg-primary-container selection:text-on-primary-container">
+<main class="min-h-screen flex w-full">
+<!-- Left Side: Image Canvas (Hidden on mobile) -->
+<div class="hidden lg:flex lg:w-1/2 relative bg-cover bg-center bg-no-repeat" data-alt="A serene, high-quality photograph of a vintage camper van parked on a pristine white sand beach at sunrise. The sky is a gorgeous gradient of soft blues, pastel pinks, and warm golden hues. The ocean is perfectly calm and clear, reflecting the morning light. The overall mood is peaceful, ethereal, adventurous, and magical, perfectly embodying a premium, stress-free travel experience. Shot with soft, natural lighting in a bright, optimistic style." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD326ZIwavYXS8gFonpiONC4nIenOMPVHtSKSXKj0kH2oxgbJCGLVA3D30Hqf2sZAoBh7M5KOMQVbavCuLC-VlQKgVAnD865HqE0iuvoSJIXATS0oGnOVuVUBPGbRIDaE-Rb4lXnBJKb47uX1_O7fhhjNxBNL6zpOcVOf6qewkv18o2rUhoJicgfykzIT5TGsJwvSdnN-0Xnk8N4ZoZlSBtGM2nIBTK1OzmfgXkuFZlSJSLsvaxpq4u')">
+<!-- Subtle gradient overlay for text readability and premium feel -->
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/60 via-transparent to-transparent"></div>
+<!-- Content over image -->
+<div class="absolute bottom-0 left-0 right-0 p-12 xl:p-24 flex flex-col justify-end">
+<div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white font-label-sm text-label-sm w-max mb-6">
+<span class="material-symbols-outlined text-[18px]">auto_awesome</span>
+                    Magical Journeys
+                </div>
+<h2 class="font-headline-lg text-headline-lg text-white mb-4 drop-shadow-sm max-w-lg">Your next great adventure awaits.</h2>
+<p class="font-body-lg text-body-lg text-white/90 max-w-md drop-shadow-sm">Let our AI curate a personalized journey tailored exactly to your dreams and budget.</p>
+</div>
+</div>
+<!-- Right Side: Login Form -->
+<div class="w-full lg:w-1/2 flex flex-col justify-center px-8 sm:px-16 lg:px-24 xl:px-32 py-12 relative overflow-hidden">
+<!-- Atmospheric background shapes for the light mode form side -->
+<div class="absolute top-0 right-0 w-[500px] h-[500px] bg-secondary-fixed/30 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
+<div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-primary-fixed/20 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4 pointer-events-none"></div>
+<div class="w-full max-w-[420px] mx-auto relative z-10">
+<!-- Brand Logo -->
+<div class="mb-12 sm:mb-16">
+<a class="inline-block font-display-lg text-[1.5rem] font-bold text-primary tracking-tight" href="index.html">Kibi</a>
+</div>
+<!-- Header -->
+<div class="mb-10 space-y-2">
+<h1 class="font-headline-md text-headline-md text-on-surface">Welcome Back</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Log in to continue planning your perfect trip.</p>
+</div>
+<!-- Form -->
+<form class="space-y-6" id="loginForm" action="index.html">
+<!-- Email Field -->
+<div class="space-y-2">
+<label class="block font-label-sm text-label-sm text-on-surface" for="email">Email Address</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">mail</span>
+<input class="form-input w-full pl-12 pr-4 py-3.5 rounded-xl border border-outline-variant bg-surface-container-lowest focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none font-body-md text-body-md placeholder:text-outline/70" id="email" placeholder="hello@example.com" required="" type="email"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-2">
+<div class="flex justify-between items-center">
+<label class="block font-label-sm text-label-sm text-on-surface" for="password">Password</label>
+<a class="font-label-sm text-label-sm text-primary hover:text-primary-container transition-colors" href="#">Forgot password?</a>
+</div>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">lock</span>
+<input class="form-input w-full pl-12 pr-12 py-3.5 rounded-xl border border-outline-variant bg-surface-container-lowest focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none font-body-md text-body-md placeholder:text-outline/70" id="password" placeholder="••••••••" required="" type="password"/>
+<button class="password-toggle absolute right-4 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors focus:outline-none" type="button" aria-label="Toggle password visibility">
+<span class="material-symbols-outlined text-[20px]">visibility_off</span>
+</button>
+</div>
+</div>
+<!-- Submit Button -->
+<button class="w-full py-4 px-6 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:bg-primary-container hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 transform active:scale-[0.98] mt-4" type="submit">
+                        Log In
+                    </button>
+</form>
+<!-- Divider -->
+<div class="relative flex items-center py-8">
+<div class="flex-grow border-t border-surface-variant"></div>
+<span class="flex-shrink-0 mx-4 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Or continue with</span>
+<div class="flex-grow border-t border-surface-variant"></div>
+</div>
+<!-- Social Logins -->
+<div class="grid grid-cols-2 gap-4">
+<button class="social-btn flex items-center justify-center gap-3 py-3.5 px-4 rounded-xl border border-outline-variant bg-surface-container-lowest hover:bg-surface-container-low transition-colors font-label-md text-label-md text-on-surface shadow-sm shadow-black/5" type="button" data-provider="google">
+<svg class="w-5 h-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+</svg>
+                        Google
+                    </button>
+<button class="social-btn flex items-center justify-center gap-3 py-3.5 px-4 rounded-xl border border-outline-variant bg-surface-container-lowest hover:bg-surface-container-low transition-colors font-label-md text-label-md text-on-surface shadow-sm shadow-black/5" type="button" data-provider="apple">
+<svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <path d="M17.05 20.28c-.98 1.44-2.04 2.46-3.55 2.46-1.5 0-2.1-.94-3.92-.94-1.82 0-2.42.96-3.93.96-1.5 0-2.7-1.42-3.72-2.88C1.24 16.98-.18 13.32.02 9.74c.18-2.84 1.9-4.88 4.18-5.82 1.72-.72 3.62-.7 5.04-.04 1.04.48 1.76.48 2.84.04 1.64-.7 3.3-.72 4.9.04 1.34.62 2.44 1.68 3.12 3.06-.08.04-2.56 1.52-2.54 4.52.02 3.56 3.1 4.74 3.48 4.84zM12.04 7.24c-.12-2.06 1.6-3.84 3.58-4.04.22 2.18-1.78 4.22-3.58 4.04z"/>
+</svg>
+                        Apple
+                    </button>
+</div>
+<!-- Sign Up Link -->
+<div class="text-center mt-10">
+<p class="font-body-md text-body-md text-on-surface-variant">
+                        Don't have an account? <a class="font-label-md text-label-md text-primary hover:text-primary-container hover:underline transition-colors ml-1" href="signup.html">Sign up for free</a>
+</p>
+</div>
+</div>
+</div>
+</main>
+
+<!-- Google Identity Services SDK -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<!-- Sign in with Apple JS SDK -->
+<script type="text/javascript" src="https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js"></script>
+<script src="js/config.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/app.js"></script>
+<script src="js/auth.js"></script>
+<script>
+(function () {
+  // Password visibility toggles
+  document.querySelectorAll('.password-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const input = btn.parentElement.querySelector('input[type="password"], input[type="text"]');
+      const icon = btn.querySelector('.material-symbols-outlined');
+      if (!input) return;
+      const isHidden = input.type === 'password';
+      input.type = isHidden ? 'text' : 'password';
+      icon.textContent = isHidden ? 'visibility' : 'visibility_off';
+      btn.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+    });
+  });
+})();
+</script>
+</body></html>

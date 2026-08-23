@@ -318,37 +318,157 @@
   /* ---------- Destinations ---------- */
   function initDestinations() {
     const grid = document.getElementById('destinationsGrid');
+    const searchInput = document.getElementById('homeDestSearch');
+    const searchBtn = document.getElementById('homeDestSearchBtn');
     if (!grid) return;
 
-    const destinations = getDestinations().slice(0, 4);
-    grid.innerHTML = destinations.map(dest => `
-      <div class="destination-card group relative rounded-2xl overflow-hidden cursor-pointer shadow-card hover:shadow-lg transition-shadow duration-300" data-dest="${dest.id}" onclick="window.location.href='plan-trip.html?dest=${dest.id}'" role="link" tabindex="0">
-        <div class="aspect-[3/4] overflow-hidden">
-          <img src="${dest.image}" alt="${dest.name}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" loading="lazy">
-        </div>
-        <div class="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-charcoal/20 to-transparent"></div>
-        <div class="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
-          <h3 class="font-serif text-2xl mb-2">${dest.name}</h3>
-          <div class="flex flex-wrap gap-2 mb-3">
-            ${(dest.tags || []).slice(0, 2).map(tag => `<span class="text-xs px-2 py-1 bg-white/20 backdrop-blur-sm rounded-full">${tag}</span>`).join('')}
-          </div>
-          <div class="flex items-center gap-1 text-sm text-white/80 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <span>Explore</span>
-            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </div>
-        </div>
-      </div>
-    `).join('');
+    const CURATED = [
+      { id: 'dest_manali', name: 'Manali', state: 'Himachal Pradesh', tags: ['Nature', 'Adventure'], image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80' },
+      { id: 'dest_kasol', name: 'Kasol', state: 'Himachal Pradesh', tags: ['Slow Travel', 'Mountains'], image: 'https://images.unsplash.com/photo-1506905927185-0d3c0e4d3f4e?w=1200&q=80' },
+      { id: 'dest_goa', name: 'Goa', state: 'Goa', tags: ['Beach', 'Relaxation'], image: 'https://images.unsplash.com/photo-1512343879784-a73133f1bf21?w=1200&q=80' },
+      { id: 'dest_rishikesh', name: 'Rishikesh', state: 'Uttarakhand', tags: ['Adventure', 'Wellness'], image: 'https://images.unsplash.com/photo-1527697891168-4d3a18e2955e?w=1200&q=80' }
+    ];
 
-    grid.querySelectorAll('.destination-card').forEach(card => {
-      card.addEventListener('keydown', e => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          const destId = card.dataset.dest;
-          if (destId) window.location.href = `plan-trip.html?dest=${destId}`;
-        }
+    function addDays(date, days) {
+      const result = new Date(date);
+      result.setDate(result.getDate() + days);
+      return result.toISOString().split('T')[0];
+    }
+
+    function renderCard(dest, large = false) {
+      return `
+        <div class="${large ? 'lg:col-span-2' : ''} destination-card group relative rounded-[2rem] overflow-hidden shadow-lg h-80 cursor-pointer" role="link" tabindex="0">
+          <img src="${dest.image}" alt="${dest.name}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80'">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+          <div class="absolute top-4 left-4 bg-white/20 backdrop-blur-md rounded-full px-3 py-1 text-xs text-white font-medium border border-white/30">
+            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="inline mr-1" viewBox="0 0 16 16"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg>
+            4.9
+          </div>
+          <div class="absolute bottom-6 left-6 right-6">
+            <h3 class="text-white ${large ? 'text-2xl' : 'text-xl'} font-bold mb-1">${dest.name}</h3>
+            <p class="text-white/80 ${large ? 'text-sm' : 'text-xs line-clamp-2'}">${dest.description || `Explore ${dest.name}, ${dest.state || ''}`}</p>
+            ${large ? `
+            <div class="flex justify-between items-end mt-4">
+              <div class="flex flex-wrap gap-2">
+                ${(dest.tags || []).slice(0, 2).map(tag => `<span class="text-xs px-2 py-1 bg-white/20 backdrop-blur-sm rounded-full">${tag}</span>`).join('')}
+              </div>
+              <button class="bg-white text-gray-900 text-sm font-semibold py-2 px-5 rounded-full hover:bg-gray-100 transition-colors pointer-events-none">View details</button>
+            </div>` : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    function wireCardClicks(handler) {
+      grid.querySelectorAll('.destination-card').forEach(card => {
+        card.addEventListener('click', handler);
+        card.addEventListener('keydown', e => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handler(e);
+          }
+        });
       });
-    });
+    }
+
+    function renderFallback() {
+      grid.innerHTML = CURATED.map((dest, i) => renderCard(dest, i === 0)).join('');
+      wireCardClicks(() => {
+        window.location.href = 'plan-trip.html';
+      });
+    }
+
+    async function searchDestination(query) {
+      query = query.trim();
+      if (!query) {
+        renderFallback();
+        return;
+      }
+
+      grid.innerHTML = '<div class="col-span-full text-center py-12 text-gray-500">Searching for your destination...</div>';
+
+      try {
+        const [place, geo] = await Promise.all([
+          typeof TripMateAPI !== 'undefined' ? TripMateAPI.getPlaceInfo(query).catch(() => null) : Promise.resolve(null),
+          typeof GeocodingAPI !== 'undefined' ? GeocodingAPI.searchDestination(query).catch(() => []) : Promise.resolve([])
+        ]);
+
+        const geoResult = geo[0];
+        if (!place && !geoResult) {
+          grid.innerHTML = `<div class="col-span-full text-center py-12 text-gray-500">We couldn't find "${query}". Try a different place.</div>`;
+          return;
+        }
+
+        const dest = {
+          name: place?.name || geoResult?.name || query,
+          state: place?.description ? place.description.split(',')[0] : (geoResult?.displayName || ''),
+          description: place?.description || `Discover ${query}`,
+          image: place?.image || `https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=800&q=80`, // reliable fallback for unknown queries
+          lat: geoResult?.latitude ? parseFloat(geoResult.latitude) : (place?.coordinates?.lat || null),
+          lon: geoResult?.longitude ? parseFloat(geoResult.longitude) : (place?.coordinates?.lon || null)
+        };
+
+        grid.innerHTML = renderCard(dest, true);
+        wireCardClicks((e) => generateHomeTrip(dest.name, dest.lat, dest.lon, e));
+
+        const back = document.createElement('div');
+        back.className = 'col-span-full text-center mt-2';
+        back.innerHTML = `<button id="homeClearSearch" class="text-sm text-brand-blue hover:underline">Clear search</button>`;
+        grid.appendChild(back);
+        document.getElementById('homeClearSearch').addEventListener('click', renderFallback);
+      } catch (err) {
+        console.error('Home destination search error:', err);
+        grid.innerHTML = `<div class="col-span-full text-center py-12 text-gray-500">Something went wrong searching for "${query}".</div>`;
+      }
+    }
+
+    window.generateHomeTrip = async function(destinationName, lat, lon, evt) {
+      const card = evt?.currentTarget;
+      if (card) {
+        card.style.pointerEvents = 'none';
+        card.style.opacity = '0.7';
+      }
+
+      try {
+        showToast(`Planning your ${destinationName} trip...`, 'default');
+        const startDate = addDays(new Date(), 7);
+        const endDate = addDays(startDate, 3);
+        const result = await generateItinerary({
+          destinationId: 'home_' + destinationName.toLowerCase().replace(/\s+/g, '_'),
+          destinationName,
+          lat: lat || undefined,
+          lon: lon || undefined,
+          startDate,
+          endDate,
+          budget: 12000,
+          travelStyle: ['Adventure'],
+          interests: ['Nature', 'Photography'],
+          socialPreference: 'Small Group',
+          travelPace: 'Moderate'
+        });
+
+        if (!result) throw new Error('Itinerary generation failed');
+
+        sessionStorage.setItem('wm_generated_itinerary', JSON.stringify(result));
+        window.location.href = 'itinerary.html';
+      } catch (err) {
+        console.error('Home trip generation error:', err);
+        showToast('Could not generate itinerary. Please try again.', 'error');
+        if (card) {
+          card.style.pointerEvents = '';
+          card.style.opacity = '';
+        }
+      }
+    };
+
+    if (searchBtn) searchBtn.addEventListener('click', () => searchDestination(searchInput.value));
+    if (searchInput) {
+      searchInput.addEventListener('keydown', e => {
+        if (e.key === 'Enter') searchDestination(searchInput.value);
+      });
+    }
+
+    renderFallback();
   }
 
   /* ---------- Trending trips ---------- */
@@ -363,7 +483,7 @@
     }
 
     container.innerHTML = trips.map(trip => `
-      <div class="bg-white rounded-2xl overflow-hidden shadow-soft hover:shadow-card transition-shadow duration-300 cursor-pointer group" onclick="window.location.href='trip-details.html?id=${trip.id}'">
+      <div class="bg-white rounded-2xl overflow-hidden shadow-soft hover:shadow-card transition-shadow duration-300 cursor-pointer group" onclick="window.location.href='itinerary.html?id=${trip.id}'">
         <div class="aspect-[16/10] overflow-hidden">
           <img src="${trip.image || 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80'}" alt="${trip.destination}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy">
         </div>

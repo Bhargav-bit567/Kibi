@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kibi - Discover</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+        "brand": { "blue": "#5C9CE6", "dark": "#0A1B29", "light": "#F8F9FA" },
+                      "on-primary-container": "#fdfcff",
+                      "primary": "#005da7",
+                      "primary-fixed": "#d4e3ff",
+                      "on-error": "#ffffff",
+                      "on-primary-fixed": "#001c39",
+                      "secondary": "#01658c",
+                      "tertiary-container": "#6e757c",
+                      "surface-variant": "#e2e2e5",
+                      "tertiary": "#555d63",
+                      "on-tertiary-fixed": "#151c22",
+                      "tertiary-fixed-dim": "#c0c7cf",
+                      "on-primary": "#ffffff",
+                      "surface": "#f9f9fc",
+                      "background": "#f9f9fc",
+                      "on-tertiary-container": "#fcfcff",
+                      "on-secondary-container": "#005a7e",
+                      "on-tertiary": "#ffffff",
+                      "on-surface-variant": "#414751",
+                      "on-surface": "#1a1c1e",
+                      "primary-fixed-dim": "#a4c9ff",
+                      "inverse-primary": "#a4c9ff",
+                      "surface-bright": "#f9f9fc",
+                      "outline-variant": "#c1c7d3",
+                      "surface-container": "#eeeef0",
+                      "on-primary-fixed-variant": "#004883",
+                      "error-container": "#ffdad6",
+                      "on-secondary": "#ffffff",
+                      "inverse-surface": "#2f3133",
+                      "surface-tint": "#0060ac",
+                      "error": "#ba1a1a",
+                      "tertiary-fixed": "#dce3eb",
+                      "on-tertiary-fixed-variant": "#40484e",
+                      "inverse-on-surface": "#f0f0f3",
+                      "on-background": "#1a1c1e",
+                      "surface-container-high": "#e8e8ea",
+                      "on-secondary-fixed-variant": "#004c6b",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-dim": "#dadadc",
+                      "on-error-container": "#93000a",
+                      "surface-container-highest": "#e2e2e5",
+                      "outline": "#717783",
+                      "on-secondary-fixed": "#001e2d",
+                      "secondary-container": "#8bd2fe",
+                      "surface-container-low": "#f3f3f6",
+                      "primary-container": "#2976c7",
+                      "secondary-fixed-dim": "#88cffb",
+                      "secondary-fixed": "#c6e7ff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "base": "8px",
+                      "gutter": "24px",
+                      "container-padding": "24px",
+                      "section-gap-desktop": "120px",
+                      "section-gap-mobile": "64px"
+              },
+              "fontFamily": {
+                      "label-md": [
+                              "Inter"
+                      ],
+                      "headline-md": [
+                              "Outfit"
+                      ],
+                      "headline-lg-mobile": [
+                              "Outfit"
+                      ],
+                      "display-lg": [
+                              "Outfit"
+                      ],
+                      "headline-lg": [
+                              "Outfit"
+                      ],
+                      "body-md": [
+                              "Inter"
+                      ],
+                      "label-sm": [
+                              "Inter"
+                      ],
+                      "body-lg": [
+                              "Inter"
+                      ]
+              },
+              "fontSize": {
+                      "label-md": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.02em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-md": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "32px",
+                              {
+                                      "lineHeight": "40px",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "display-lg": [
+                              "72px",
+                              {
+                                      "lineHeight": "84px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "headline-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.01em",
+                                      "fontWeight": "700"
+                              }
+                      ],
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "label-sm": [
+                              "12px",
+                              {
+                                      "lineHeight": "16px",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+            }
+          }
+        }
+      </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+        .ambient-shadow {
+            box-shadow: 0 20px 40px -10px rgba(0, 93, 167, 0.08);
+        }
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+      </style>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md min-h-screen flex flex-col relative overflow-x-hidden">
+<!-- Ambient Background Elements -->
+<div class="fixed inset-0 pointer-events-none z-[-1] overflow-hidden">
+<div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary-fixed rounded-full blur-[120px] opacity-30"></div>
+<div class="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-secondary-fixed rounded-full blur-[150px] opacity-20"></div>
+</div>
+<!-- Header -->
+<header class="relative z-50 px-6 lg:px-12 flex justify-between items-center w-full max-w-7xl mx-auto pt-6 pb-4">
+  
+  <!-- Logo -->
+  <a href="index.html" class="flex items-center justify-center h-10 px-5 bg-white/90 backdrop-blur-md rounded-full font-heading font-bold text-[1.25rem] tracking-tight text-[#005da7] hover:bg-white transition-colors shadow-sm border border-white/20">
+    Kibi
+  </a>
+
+  <!-- Center Nav Pill -->
+  <nav class="hidden md:flex items-center bg-white/85 backdrop-blur-md rounded-full px-2 py-1.5 border border-white/40 shadow-sm">
+    <ul class="flex items-center gap-1 lg:gap-2 text-[14px]">
+      <li><a href="index.html" class="bg-white shadow-sm border border-slate-50 text-slate-900 px-5 py-2 rounded-full block transition-colors font-medium">Home</a></li>
+      <li><a href="discover.html" class="hover:bg-slate-100/50 px-5 py-2 rounded-full transition-colors block text-slate-700 font-medium">Discover</a></li>
+      <li><a href="plan-trip.html" class="hover:bg-slate-100/50 px-5 py-2 rounded-full transition-colors block text-slate-700 font-medium">Plan Trip</a></li>
+      <li><a href="my-trips.html" class="hover:bg-slate-100/50 px-5 py-2 rounded-full transition-colors block text-slate-700 font-medium">My Trips</a></li>
+      <li><a href="about.html" class="hover:bg-slate-100/50 px-5 py-2 rounded-full transition-colors block text-slate-700 font-medium">About Us</a></li>
+    </ul>
+  </nav>
+
+  <!-- Right Action -->
+  <div class="flex items-center gap-3">
+    <div id="auth-action-container"></div>
+    <button id="mobile-menu-btn" class="md:hidden w-10 h-10 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-slate-800 hover:bg-white transition-colors shadow-sm border border-white/20">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </button>
+  </div>
+</header>
+
+<main class="flex-1 max-w-[1280px] mx-auto w-full px-container-padding py-section-gap-mobile md:py-section-gap-desktop flex flex-col gap-section-gap-mobile md:gap-section-gap-desktop">
+<!-- Hero Section -->
+<section class="flex flex-col items-center text-center gap-6 max-w-3xl mx-auto">
+<span class="bg-primary-fixed text-on-primary-fixed px-4 py-1.5 rounded-full font-label-sm text-label-sm inline-flex items-center gap-2">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1; font-size: 16px;">explore</span>
+                Discover the World
+            </span>
+<h1 class="font-display-lg text-headline-lg-mobile md:text-display-lg text-on-surface">
+                Find Your Next <br/> <span class="text-primary">Adventure</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">
+                Explore our handpicked selection of extraordinary destinations, curated by AI and tailored for unforgettable experiences.
+            </p>
+</section>
+<!-- Categories -->
+<section class="w-full max-w-5xl mx-auto">
+<div class="glass-panel rounded-xl p-8 ambient-shadow flex flex-col gap-6">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant">Destination</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-primary opacity-60">location_on</span>
+<input class="w-full bg-white/50 border border-outline-variant rounded-lg py-2 pl-10 pr-4 font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Where to?" type="text"/>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant">Travel Dates</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-primary opacity-60">calendar_today</span>
+<input class="w-full bg-white/50 border border-outline-variant rounded-lg py-2 pl-10 pr-4 font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="Select dates" type="text"/>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant">Budget Range</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-primary opacity-60">payments</span>
+<select class="w-full bg-white/50 border border-outline-variant rounded-lg py-2 pl-10 pr-4 font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all appearance-none">
+<option>Economy</option>
+<option>Standard</option>
+<option>Luxury</option>
+</select>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant">Travel Style &amp; Interests</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-primary opacity-60">auto_awesome</span>
+<input class="w-full bg-white/50 border border-outline-variant rounded-lg py-2 pl-10 pr-4 font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" placeholder="e.g. Adventure, Foodie" type="text"/>
+</div>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant">Group Size</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-primary opacity-60">group</span>
+<input class="w-full bg-white/50 border border-outline-variant rounded-lg py-2 pl-10 pr-4 font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all" min="1" placeholder="1 Traveler" type="number"/>
+</div>
+</div>
+<div class="flex items-end">
+<button class="w-full bg-primary text-on-primary h-[42px] rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">search</span>
+                    Find My Trip
+                </button>
+</div>
+</div>
+</div>
+</section>
+<!-- India Pre-Planned Trips Grid -->
+<section id="indiaTripsGrid" class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+  <!-- Cards injected by JS -->
+</section>
+</main>
+<!-- Footer -->
+<!-- BEGIN: Footer Section -->
+  <footer class="bg-brand-dark text-white pt-16 pb-8 px-6 lg:px-12 rounded-t-[3rem] mt-10">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-4 mb-12">
+
+      <!-- Brand Column -->
+      <div class="md:col-span-1">
+        <div class="flex items-center gap-2 font-bold text-2xl tracking-tighter mb-4">
+          <div class="w-8 h-8 rounded-full bg-brand-blue flex items-center justify-center text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+              <path
+                d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+            </svg>
+          </div>
+          kibi
+        </div>
+        <p class="text-white/60 text-xs mb-6 max-w-[200px] leading-relaxed">
+          Making travel planning effortless and personal for the modern explorer.
+        </p>
+        <!-- Socials -->
+        <div class="flex gap-4">
+          <a href="#" class="text-white/60 hover:text-white transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+              <path
+                d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z" />
+            </svg>
+          </a>
+          <a href="#" class="text-white/60 hover:text-white transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+              <path
+                d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z" />
+            </svg>
+          </a>
+          <a href="#" class="text-white/60 hover:text-white transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+              <path
+                d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334z" />
+            </svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Links Column 1 -->
+      <div class="md:col-span-1 md:justify-self-center">
+        <ul class="space-y-3 text-sm">
+          <li><a href="index.html" class="text-white hover:text-brand-blue transition-colors">Home</a></li>
+          <li><a href="discover.html" class="text-white/60 hover:text-white transition-colors">Destinations</a></li>
+          <li><a href="plan-trip.html" class="text-white/60 hover:text-white transition-colors">Plan Trip</a></li>
+          <li><a href="#pricing" class="text-white/60 hover:text-white transition-colors">Pricing</a></li>
+          <li><a href="#faq" class="text-white/60 hover:text-white transition-colors">FAQ</a></li>
+        </ul>
+      </div>
+
+      <!-- Links Column 2 -->
+      <div class="md:col-span-1 md:justify-self-center">
+        <ul class="space-y-3 text-sm">
+          <li><a href="#" class="text-white/60 hover:text-white transition-colors">Support</a></li>
+          <li><a href="#" class="text-white/60 hover:text-white transition-colors">User Guide</a></li>
+          <li><a href="#" class="text-white/60 hover:text-white transition-colors">Terms of Service</a></li>
+          <li><a href="#" class="text-white/60 hover:text-white transition-colors">API Access</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact Column -->
+      <div class="md:col-span-1 md:justify-self-end text-sm">
+        <ul class="space-y-3">
+          <li class="text-white/60">Contact Us</li>
+          <li class="text-white/80">info@kibi.io</li>
+          <li class="text-white/80">+1 (555) 123-4567</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div
+      class="max-w-7xl mx-auto pt-6 border-t border-white/10 flex flex-col md:flex-row justify-between items-center text-xs text-white/40 gap-4">
+      <p>&copy; 2024 Kibi. All rights reserved.</p>
+      <div class="flex gap-6">
+        <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+        <a href="#" class="hover:text-white transition-colors">Cookie Policy</a>
+        <a href="#" class="hover:text-white transition-colors">Manage Cookies</a>
+      </div>
+    </div>
+  </footer>
+<!-- API Layer & Scripts -->
+<script src="js/api/api-config.js?v=8"></script>
+<script src="js/api/api-cache.js?v=8"></script>
+<script src="js/api/geocoding-api.js?v=8"></script>
+<script src="js/api/weather-api.js?v=8"></script>
+<script src="js/api/places-api.js?v=8"></script>
+<script src="js/api/routing-api.js?v=8"></script>
+<script src="js/api/tripmate-api.js?v=8"></script>
+<script src="js/storage.js?v=8"></script>
+<script src="js/matching.js?v=8"></script>
+<script src="js/planner.js?v=8"></script>
+<script src="js/app.js?v=8"></script>
+<script src="js/home.js"></script>
+<script>
+(function() {
+  const INDIA_TRIPS = [
+    {
+      id: 'india_manali',
+      name: 'Manali',
+      state: 'Himachal Pradesh',
+      duration: '3D/2N',
+      numDays: 3,
+      budget: 12000,
+      bestFor: 'Adventure, mountains, friends',
+      travelStyle: ['Adventure'],
+      interests: ['Nature', 'Trekking', 'Photography'],
+      socialPreference: 'Small Group',
+      pace: 'Moderate',
+      lat: 32.2396,
+      lon: 77.1887
+    },
+    {
+      id: 'india_jibhi',
+      name: 'Jibhi–Tirthan Valley',
+      state: 'Himachal Pradesh',
+      duration: '3D/2N',
+      numDays: 3,
+      budget: 9000,
+      bestFor: 'Introverts, nature, peace',
+      travelStyle: ['Nature'],
+      interests: ['Slow Travel', 'Peace', 'Riverside'],
+      socialPreference: 'Solo',
+      pace: 'Slow',
+      lat: 31.8092,
+      lon: 77.3523
+    },
+    {
+      id: 'india_kashmir',
+      name: 'Kashmir',
+      state: 'Jammu and Kashmir',
+      duration: '4D/3N',
+      numDays: 4,
+      budget: 18000,
+      bestFor: 'Scenic, photography, couples',
+      travelStyle: ['Nature'],
+      interests: ['Photography', 'Scenic', 'Romance'],
+      socialPreference: '1-2 People',
+      pace: 'Moderate',
+      lat: 34.0837,
+      lon: 74.7973
+    },
+    {
+      id: 'india_rishikesh',
+      name: 'Rishikesh',
+      state: 'Uttarakhand',
+      duration: '3D/2N',
+      numDays: 3,
+      budget: 10000,
+      bestFor: 'Adventure + social',
+      travelStyle: ['Adventure'],
+      interests: ['Rafting', 'Yoga', 'Camping'],
+      socialPreference: 'Social',
+      pace: 'Fast',
+      lat: 30.0869,
+      lon: 78.2676
+    },
+    {
+      id: 'india_leh',
+      name: 'Leh–Ladakh',
+      state: 'Ladakh',
+      duration: '5D/4N',
+      numDays: 5,
+      budget: 25000,
+      bestFor: 'Adventure, photography',
+      travelStyle: ['Adventure'],
+      interests: ['Road Trip', 'Mountains', 'Photography'],
+      socialPreference: 'Small Group',
+      pace: 'Moderate',
+      lat: 34.1526,
+      lon: 77.5771
+    },
+    {
+      id: 'india_goa',
+      name: 'Goa',
+      state: 'Goa',
+      duration: '4D/3N',
+      numDays: 4,
+      budget: 15000,
+      bestFor: 'Social, friends, nightlife',
+      travelStyle: ['Relaxation'],
+      interests: ['Beach', 'Nightlife', 'Food'],
+      socialPreference: 'Social',
+      pace: 'Slow',
+      lat: 15.2993,
+      lon: 74.1240
+    },
+    {
+      id: 'india_munnar',
+      name: 'Munnar',
+      state: 'Kerala',
+      duration: '3D/2N',
+      numDays: 3,
+      budget: 11000,
+      bestFor: 'Nature, relaxed travelers',
+      travelStyle: ['Nature'],
+      interests: ['Tea Gardens', 'Wildlife', 'Relaxation'],
+      socialPreference: 'Small Group',
+      pace: 'Slow',
+      lat: 10.0889,
+      lon: 77.0595
+    },
+    {
+      id: 'india_udaipur',
+      name: 'Udaipur',
+      state: 'Rajasthan',
+      duration: '3D/2N',
+      numDays: 3,
+      budget: 13000,
+      bestFor: 'Culture, photography, couples',
+      travelStyle: ['Culture'],
+      interests: ['Heritage', 'Palaces', 'Photography'],
+      socialPreference: '1-2 People',
+      pace: 'Moderate',
+      lat: 24.5854,
+      lon: 73.7125
+    },
+    {
+      id: 'india_andaman',
+      name: 'Andaman Islands',
+      state: 'Andaman and Nicobar',
+      duration: '5D/4N',
+      numDays: 5,
+      budget: 30000,
+      bestFor: 'Beaches, adventure',
+      travelStyle: ['Adventure'],
+      interests: ['Beach', 'Water Sports', 'Scuba'],
+      socialPreference: 'Small Group',
+      pace: 'Moderate',
+      lat: 11.7401,
+      lon: 92.6586
+    },
+    {
+      id: 'india_meghalaya',
+      name: 'Meghalaya',
+      state: 'Meghalaya',
+      duration: '5D/4N',
+      numDays: 5,
+      budget: 20000,
+      bestFor: 'Nature, offbeat, explorers',
+      travelStyle: ['Nature'],
+      interests: ['Waterfalls', 'Caves', 'Trekking'],
+      socialPreference: 'Small Group',
+      pace: 'Moderate',
+      lat: 25.4670,
+      lon: 91.3662
+    }
+  ];
+
+  function formatBudget(amount) {
+    return '₹' + amount.toLocaleString('en-IN');
+  }
+
+  function addDays(date, days) {
+    const result = new Date(date);
+    result.setDate(result.getDate() + days);
+    return result.toISOString().split('T')[0];
+  }
+
+  function renderCard(trip, place, idx) {
+    const isLarge = idx < 2;
+    const image = place?.image || `https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80`;
+    const description = place?.description || `Explore ${trip.name}, ${trip.state}. Perfect for ${trip.bestFor}.`;
+    return `
+      <div class="${isLarge ? 'md:col-span-6' : 'md:col-span-4'} rounded-xl overflow-hidden relative group h-[360px] cursor-pointer ambient-shadow" onclick="window.generateIndiaTrip('${trip.id}')">
+        <img alt="${trip.name}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="${image}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80'">
+        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+        <div class="absolute top-4 left-4">
+          <span class="bg-white/20 backdrop-blur-md text-white px-3 py-1 rounded-full font-label-sm text-label-sm">${trip.state}</span>
+        </div>
+        <div class="absolute bottom-0 left-0 p-6 w-full flex flex-col gap-3">
+          <h3 class="font-headline-md text-[22px] leading-[30px] font-semibold text-white">${trip.name}</h3>
+          <p class="text-white/80 text-sm line-clamp-2">${description.slice(0, 120)}</p>
+          <div class="flex flex-wrap items-center gap-4 text-white/90 text-label-sm">
+            <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">calendar_month</span> ${trip.duration}</span>
+            <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">payments</span> ${formatBudget(trip.budget)}</span>
+          </div>
+          <div class="mt-1 flex items-center gap-2 text-primary text-label-sm font-semibold">
+            <span>View Itinerary</span>
+            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  async function renderGrid() {
+    const grid = document.getElementById('indiaTripsGrid');
+    if (!grid) return;
+
+    grid.innerHTML = '<div class="md:col-span-12 text-center py-12 text-on-surface-variant">Loading curated trips...</div>';
+
+    const placeInfos = await Promise.all(
+      INDIA_TRIPS.map(t => TripMateAPI.getPlaceInfo(t.name).catch(() => null))
+    );
+
+    grid.innerHTML = INDIA_TRIPS.map((trip, idx) => renderCard(trip, placeInfos[idx], idx)).join('');
+  }
+
+  window.generateIndiaTrip = async function(tripId) {
+    const trip = INDIA_TRIPS.find(t => t.id === tripId);
+    if (!trip) return;
+
+    const startDate = addDays(new Date(), 7);
+    const endDate = addDays(startDate, trip.numDays);
+
+    const btn = event?.currentTarget;
+    if (btn) {
+      btn.style.pointerEvents = 'none';
+      btn.style.opacity = '0.7';
+    }
+
+    try {
+      showToast(`Planning your ${trip.name} trip...`, 'default');
+      const result = await generateItinerary({
+        destinationId: trip.id,
+        destinationName: trip.name,
+        lat: trip.lat,
+        lon: trip.lon,
+        startDate,
+        endDate,
+        budget: trip.budget,
+        travelStyle: trip.travelStyle,
+        interests: trip.interests,
+        socialPreference: trip.socialPreference,
+        travelPace: trip.pace
+      });
+
+      if (!result) throw new Error('Itinerary generation failed');
+
+      sessionStorage.setItem('wm_generated_itinerary', JSON.stringify(result));
+      window.location.href = 'itinerary.html';
+    } catch (err) {
+      console.error('India trip generation error:', err);
+      showToast('Could not generate itinerary. Please try again.', 'error');
+      if (btn) {
+        btn.style.pointerEvents = '';
+        btn.style.opacity = '';
+      }
+    }
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderGrid);
+  } else {
+    renderGrid();
+  }
+})();
+</script>
+</body></html>

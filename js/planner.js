@@ -34,125 +34,221 @@ async function generateItinerary(params) {
   // 2. Fetch TripMate data (Wikipedia image/description + attractions + weather)
   let tripMateInfo = null;
   let tripMateAttractions = [];
+  let realHotels = [];
   let weatherData = null;
 
+  // Helper: abort slow API calls so one hang doesn't block the whole planner
+  const withTimeout = (promise, ms, label) => {
+    return Promise.race([
+      promise,
+      new Promise((_, reject) => setTimeout(() => reject(new Error(`${label} timed out`)), ms))
+    ]);
+  };
+
   try {
-    tripMateInfo = await TripMateAPI.getPlaceInfo(destination.name);
+    const [placeInfo, attractions] = await Promise.all([
+      withTimeout(TripMateAPI.getPlaceInfo(destination.name), 8000, 'place info').catch(e => {
+        console.warn('TripMate place info failed:', e);
+        return null;
+      }),
+      withTimeout(TripMateAPI.getAttractions(destination.name), 12000, 'attractions').catch(e => {
+        console.warn('TripMate attractions failed:', e);
+        return [];
+      })
+    ]);
+    tripMateInfo = placeInfo;
+    tripMateAttractions = attractions;
   } catch (e) {
-    console.warn('TripMate place info failed:', e);
+    console.warn('TripMate data fetch failed:', e);
   }
 
   if (destination.lat && destination.lon) {
     try {
-      weatherData = await TripMateAPI.getWeather(destination.lat, destination.lon);
-      if (weatherData && weatherData.weathercode !== undefined) {
-        weatherData.current = {
-          temp: weatherData.temperature,
-          condition: TripMateAPI.weatherCodeToText(weatherData.weathercode),
-          weather_code: weatherData.weathercode
+      const [weatherRaw, hotels] = await Promise.all([
+        withTimeout(TripMateAPI.getWeather(destination.lat, destination.lon), 8000, 'weather').catch(e => {
+          console.warn('TripMate weather failed:', e);
+          return null;
+        }),
+        withTimeout(searchRealHotels(destination.lat, destination.lon), 15000, 'hotels').catch(e => {
+          console.warn('Real hotel search failed:', e);
+          return [];
+        })
+      ]);
+
+      // Normalize TripMate/Open-Meteo weather into stable shape used by the UI
+      if (weatherRaw) {
+        const current = weatherRaw.current_weather || weatherRaw;
+        const code = current.weathercode !== undefined ? current.weathercode : current.weather_code;
+        weatherData = {
+          current: {
+            temp: current.temperature !== undefined ? current.temperature : (current.temp || null),
+            condition: TripMateAPI.weatherCodeToText(code),
+            icon: getWeatherIcon(code),
+            wind: current.windspeed !== undefined ? current.windspeed : (current.wind || null),
+            weather_code: code
+          },
+          daily: (weatherRaw.daily || []).time ? weatherRaw.daily.time.map((date, i) => ({
+            date,
+            maxTemp: Math.round(weatherRaw.daily.temperature_2m_max[i]),
+            minTemp: Math.round(weatherRaw.daily.temperature_2m_min[i]),
+            rainProb: weatherRaw.daily.precipitation_probability_max[i],
+            condition: TripMateAPI.weatherCodeToText(weatherRaw.daily.weather_code[i]),
+            icon: getWeatherIcon(weatherRaw.daily.weather_code[i])
+          })) : []
         };
       }
+      realHotels = hotels;
     } catch (e) {
-      console.warn('TripMate weather failed:', e);
+      console.warn('Location data fetch failed:', e);
     }
   }
 
-  try {
-    tripMateAttractions = await TripMateAPI.getAttractions(destination.name);
-  } catch (e) {
-    console.warn('TripMate attractions failed:', e);
+  function getWeatherIcon(code) {
+    if (code === 0) return '☀️';
+    if (code >= 1 && code <= 2) return '⛅';
+    if (code === 3) return '☁️';
+    if (code >= 45 && code <= 48) return '🌫️';
+    if (code >= 51 && code <= 65) return '🌧️';
+    if (code >= 71 && code <= 75) return '❄️';
+    if (code >= 80 && code <= 82) return '🌦️';
+    if (code >= 95) return '⛈️';
+    return '🌡️';
   }
 
-  // If TripMate has no image, ask Gemini for one
+  // If TripMate has no image, ask Gemini for one (with a short timeout)
   let heroImage = tripMateInfo?.image || destination.image;
   if (!heroImage && typeof GeminiAPI !== 'undefined') {
     try {
-      heroImage = await GeminiAPI.getPlaceImage(destination.name);
+      heroImage = await withTimeout(GeminiAPI.getPlaceImage(destination.name), 6000, 'Gemini image');
     } catch (e) {
       console.warn('Gemini image fetch failed:', e);
     }
   }
 
-  // 3. Try AI-powered itinerary generation
-  let aiResult = null;
+  // 3. Build itinerary from real TripMate attractions (permanent default)
+  console.log('[Planner] Building itinerary from real TripMate attractions');
+  const dailyBudget = Math.round(budget / numDays);
+
+  // Convert TripMate attractions into activity format
+  const attractionActivities = (tripMateAttractions || []).map(a => ({
+    name: a.name,
+    type: Array.isArray(a.category) ? a.category[0] : (a.category || 'Attraction'),
+    icon: '📍',
+    cost: typeof a.entryFee === 'number' ? a.entryFee : 300,
+    description: a.description || `A popular spot in ${destination.name}.`,
+    lat: a.coordinates?.latitude,
+    lon: a.coordinates?.longitude,
+    isRealPlace: true
+  }));
+
+  // Combine with destination activities and sample fallback
+  const combinedActivities = [...attractionActivities, ...destination.activities, ...getLocalSampleActivities()];
+  destination.activities = combinedActivities;
+
+  const selectedActivities = selectActivities(destination, {
+    travelStyle: Array.isArray(travelStyle) ? travelStyle : [travelStyle],
+    interests: interests || [],
+    budget: dailyBudget,
+    pace: travelPace || 'Moderate',
+    weather: weatherData
+  });
+
+  let stay = selectStay(destination, budget, numDays);
+  let itinerary = buildDayPlan(selectedActivities, numDays, travelPace);
+
+  // Use real hotels for accommodations
+  let accommodations = realHotels.length > 0
+    ? realHotels.slice(0, 3).map(h => ({
+        name: h.name,
+        costPerNight: h.costPerNight,
+        type: h.type,
+        description: h.description,
+        lat: h.lat,
+        lon: h.lon,
+        source: 'real'
+      }))
+    : (destination.stays ? destination.stays.map(s => ({
+        name: s.name,
+        costPerNight: s.cost,
+        type: s.type,
+        description: '',
+        source: 'fallback'
+      })) : []);
+
+  // 4. Optional: let Gemini restructure/enhance the real-data plan if available
+  let aiEnhanced = false;
   if (typeof GeminiAPI !== 'undefined') {
     try {
-      aiResult = await GeminiAPI.generateItinerary({
-        destination: destination.name,
-        lat: destination.lat,
-        lon: destination.lon,
-        startDate,
-        endDate,
-        budget,
-        travelStyle,
-        interests,
-        socialPreference,
-        travelPace,
-        numDays,
-        attractions: tripMateAttractions,
-        weather: weatherData
-      });
+      const aiResult = await withTimeout(
+        GeminiAPI.generateItinerary({
+          destination: destination.name,
+          lat: destination.lat,
+          lon: destination.lon,
+          startDate,
+          endDate,
+          budget,
+          travelStyle,
+          interests,
+          socialPreference,
+          travelPace,
+          numDays,
+          attractions: tripMateAttractions,
+          hotels: realHotels,
+          weather: weatherData
+        }),
+        10000,
+        'Gemini enhancement'
+      );
+
+      if (aiResult && aiResult.itinerary && aiResult.itinerary.length > 0) {
+        console.log('[Planner] AI enhancement applied');
+        itinerary = aiResult.itinerary.map(day => ({
+          day: day.day,
+          title: day.title || `Day ${day.day}`,
+          activities: (day.activities || []).map(act => ({
+            name: act.name,
+            time: act.time || '12:00 PM',
+            icon: act.icon || '📍',
+            cost: typeof act.cost === 'number' ? act.cost : 0,
+            type: act.type || 'Activity',
+            description: act.description || ''
+          }))
+        }));
+
+        // Merge AI accommodation suggestions with real hotel data when possible
+        accommodations = (aiResult.accommodations || []).map(acc => {
+          const real = realHotels.find(h =>
+            h.name.toLowerCase().includes(acc.name.toLowerCase()) ||
+            acc.name.toLowerCase().includes(h.name.toLowerCase())
+          );
+          return {
+            name: real ? real.name : acc.name,
+            costPerNight: real ? real.costPerNight : (typeof acc.costPerNight === 'number' ? acc.costPerNight : 1500),
+            type: real ? real.type : (acc.type || 'Mid-Range'),
+            description: acc.description || (real ? `Real ${real.type.toLowerCase()} stay found near ${destination.name}.` : 'AI-suggested stay.'),
+            lat: real ? real.lat : null,
+            lon: real ? real.lon : null,
+            source: real ? 'real' : 'ai'
+          };
+        });
+
+        aiEnhanced = true;
+      }
     } catch (e) {
-      console.warn('Gemini itinerary generation failed, falling back to rule-based:', e);
+      console.warn('Gemini enhancement failed, keeping real-data plan:', e);
     }
   }
 
-  // 4. Use AI result or fall back to rule-based
-  let itinerary;
-  let accommodations;
-  let stay;
-
-  if (aiResult && aiResult.itinerary && aiResult.itinerary.length > 0) {
-    itinerary = aiResult.itinerary.map(day => ({
-      day: day.day,
-      title: day.title || `Day ${day.day}`,
-      activities: (day.activities || []).map(act => ({
-        name: act.name,
-        time: act.time || '12:00 PM',
-        icon: act.icon || '📍',
-        cost: typeof act.cost === 'number' ? act.cost : 0,
-        type: act.type || 'Activity',
-        description: act.description || ''
-      }))
-    }));
-
-    accommodations = (aiResult.accommodations || []).map(acc => ({
-      name: acc.name,
-      costPerNight: typeof acc.costPerNight === 'number' ? acc.costPerNight : 1500,
-      type: acc.type || 'Mid-Range',
-      description: acc.description || ''
-    }));
-
-    // Pick first accommodation as the primary stay for budget calc
-    stay = accommodations.length > 0
-      ? { name: accommodations[0].name, cost: accommodations[0].costPerNight, type: accommodations[0].type }
-      : selectStay(destination, budget, numDays);
-  } else {
-    // Fallback to rule-based planner
-    const dailyBudget = Math.round(budget / numDays);
-    const selectedActivities = selectActivities(destination, {
-      travelStyle: Array.isArray(travelStyle) ? travelStyle : [travelStyle],
-      interests: interests || [],
-      budget: dailyBudget,
-      pace: travelPace || 'Moderate',
-      weather: weatherData
-    });
-
-    stay = selectStay(destination, budget, numDays);
-    itinerary = buildDayPlan(selectedActivities, numDays, travelPace);
-    accommodations = destination.stays ? destination.stays.map(s => ({
-      name: s.name,
-      costPerNight: s.cost,
-      type: s.type,
-      description: ''
-    })) : [];
-  }
+  // Pick first accommodation as the primary stay for budget calc
+  stay = accommodations.length > 0
+    ? { name: accommodations[0].name, cost: accommodations[0].costPerNight, type: accommodations[0].type }
+    : selectStay(destination, budget, numDays);
 
   // 5. Enhance with routes
   await enhanceItineraryWithRoutes(itinerary);
 
-  // 6. Budget breakdown
-  const budgetBreakdown = calculateBudgetBreakdown(itinerary, stay, destination, numDays);
+  // 6. Budget breakdown (scaled to match user's entered budget)
+  const budgetBreakdown = calculateBudgetBreakdown(itinerary, stay, destination, numDays, budget);
 
   return {
     destination: destination.name,
@@ -172,7 +268,10 @@ async function generateItinerary(params) {
     interests,
     socialPreference,
     weather: weatherData,
-    placeDescription: tripMateInfo?.description || ''
+    placeDescription: tripMateInfo?.description || '',
+    aiEnhanced,
+    aiPlanned: aiEnhanced,
+    aiFailed: !aiEnhanced
   };
 }
 
@@ -363,7 +462,7 @@ async function enhanceItineraryWithRoutes(itineraryDays) {
 }
 
 /* --- Calculate Budget Breakdown --- */
-function calculateBudgetBreakdown(itinerary, stay, destination, numDays) {
+function calculateBudgetBreakdown(itinerary, stay, destination, numDays, userBudget = 0) {
   const transport = destination.transport;
   let transportCost = 0;
   if (transport) {
@@ -376,7 +475,7 @@ function calculateBudgetBreakdown(itinerary, stay, destination, numDays) {
 
   const stayCost = stay.cost * numDays;
   let activitiesCost = 0;
-  
+
   itinerary.forEach(day => {
     day.activities.forEach(act => {
       activitiesCost += act.cost || 0;
@@ -385,15 +484,90 @@ function calculateBudgetBreakdown(itinerary, stay, destination, numDays) {
 
   const foodCost = numDays * 800; // ₹800 per day average
 
-  const total = transportCost + stayCost + activitiesCost + foodCost;
+  // If user entered a budget, scale breakdown so total matches it
+  const estimatedTotal = transportCost + stayCost + activitiesCost + foodCost;
+  const targetTotal = userBudget > 0 ? userBudget : estimatedTotal;
+  const scale = estimatedTotal > 0 ? targetTotal / estimatedTotal : 1;
 
   return {
-    transport: transportCost,
-    stay: stayCost,
-    food: foodCost,
-    activities: activitiesCost,
-    total
+    transport: Math.round(transportCost * scale),
+    stay: Math.round(stayCost * scale),
+    food: Math.round(foodCost * scale),
+    activities: Math.round(activitiesCost * scale),
+    total: targetTotal
   };
+}
+
+/* --- Search Real Hotels via Overpass --- */
+async function searchRealHotels(lat, lon) {
+  const radius = 15000; // 15km
+  const query = `
+    [out:json][timeout:20];
+    (
+      node["tourism"="hotel"](around:${radius},${lat},${lon});
+      node["tourism"="guest_house"](around:${radius},${lat},${lon});
+      node["tourism"="hostel"](around:${radius},${lat},${lon});
+      node["tourism"="apartment"](around:${radius},${lat},${lon});
+      node["tourism"="resort"](around:${radius},${lat},${lon});
+      way["tourism"="hotel"](around:${radius},${lat},${lon});
+      way["tourism"="guest_house"](around:${radius},${lat},${lon});
+      way["tourism"="hostel"](around:${radius},${lat},${lon});
+      way["tourism"="apartment"](around:${radius},${lat},${lon});
+      way["tourism"="resort"](around:${radius},${lat},${lon});
+    );
+    out center 20;
+  `;
+
+  try {
+    const response = await fetch(API_CONFIG.overpass.baseUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: 'data=' + encodeURIComponent(query)
+    });
+    if (!response.ok) throw new Error('Overpass hotel search failed');
+    const data = await response.json();
+
+    const hotels = (data.elements || [])
+      .filter(el => el.tags && (el.tags.name || el.tags['name:en']))
+      .map(el => {
+        const tags = el.tags || {};
+        const name = tags.name || tags['name:en'];
+        let type = 'Mid-Range';
+        if (tags.tourism === 'hostel') type = 'Budget';
+        else if (tags.tourism === 'resort' || tags.stars >= 4) type = 'Luxury';
+        else if (tags.tourism === 'hotel') type = 'Comfort';
+
+        let costPerNight = 1500;
+        if (type === 'Budget') costPerNight = 700;
+        else if (type === 'Comfort') costPerNight = 2500;
+        else if (type === 'Luxury') costPerNight = 5000;
+
+        return {
+          name,
+          costPerNight,
+          type,
+          description: `${tags.tourism ? tags.tourism.replace(/_/g, ' ') : 'Stay'} in the area.`,
+          lat: el.lat || (el.center && el.center.lat),
+          lon: el.lon || (el.center && el.center.lon),
+          stars: tags.stars || null,
+          source: 'overpass'
+        };
+      });
+
+    // Deduplicate by name and return top 6
+    const seen = new Set();
+    const unique = [];
+    for (const h of hotels) {
+      if (!seen.has(h.name)) {
+        seen.add(h.name);
+        unique.push(h);
+      }
+    }
+    return unique.slice(0, 6);
+  } catch (err) {
+    console.warn('Hotel search error:', err);
+    return [];
+  }
 }
 
 /* --- Calculate Number of Days --- */
