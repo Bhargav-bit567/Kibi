@@ -1005,12 +1005,6 @@ function renderLoadedItinerary(itinerary) {
   // 7. Map modal
   initMapModal(itinerary);
 
-  // Debug banner: show itinerary coordinates and ID for troubleshooting
-  const debugBanner = document.getElementById('itinDebugBanner');
-  if (debugBanner) {
-    debugBanner.style.display = 'block';
-    debugBanner.textContent = `DEBUG — dest: ${itinerary.destination || 'n/a'} | lat: ${itinerary.lat || 'n/a'} | lon: ${itinerary.lon || 'n/a'} | id: ${itinerary.id || 'n/a'}`;
-  }
 }
 
 function getWeatherIcon(code) {
