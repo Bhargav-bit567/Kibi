@@ -1,427 +1,433 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<meta name="description" content="Your personalized travel dashboard — Kibi">
-<title>Dashboard — Kibi</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap" rel="stylesheet"/>
-<script id="tailwind-config">
-        tailwind.config = {
-          darkMode: "class",
-          theme: {
-            extend: {
-              "colors": {
-                      "on-surface-variant": "#414751",
-                      "surface": "#f9f9fc",
-                      "inverse-primary": "#a4c9ff",
-                      "surface-bright": "#f9f9fc",
-                      "tertiary": "#555d63",
-                      "background": "#f9f9fc",
-                      "secondary-container": "#8bd2fe",
-                      "on-tertiary": "#ffffff",
-                      "on-primary-container": "#fdfcff",
-                      "on-primary": "#ffffff",
-                      "primary-container": "#2976c7",
-                      "outline": "#717783",
-                      "error": "#ba1a1a",
-                      "primary": "#005da7",
-                      "inverse-on-surface": "#f0f0f3",
-                      "on-error-container": "#93000a",
-                      "error-container": "#ffdad6",
-                      "tertiary-fixed": "#dce3eb",
-                      "surface-container-lowest": "#ffffff",
-                      "inverse-surface": "#2f3133",
-                      "secondary": "#01658c",
-                      "secondary-fixed": "#c6e7ff",
-                      "on-primary-fixed-variant": "#004883",
-                      "tertiary-fixed-dim": "#c0c7cf",
-                      "on-background": "#1a1c1e",
-                      "on-tertiary-fixed": "#151c22",
-                      "on-error": "#ffffff",
-                      "on-secondary": "#ffffff",
-                      "outline-variant": "#c1c7d3",
-                      "surface-container": "#eeeef0",
-                      "on-tertiary-container": "#fcfcff",
-                      "surface-container-highest": "#e2e2e5",
-                      "on-secondary-fixed-variant": "#004c6b",
-                      "on-surface": "#1a1c1e",
-                      "surface-container-high": "#e8e8ea",
-                      "on-primary-fixed": "#001c39",
-                      "on-secondary-fixed": "#001e2d",
-                      "on-tertiary-fixed-variant": "#40484e",
-                      "surface-container-low": "#f3f3f6",
-                      "secondary-fixed-dim": "#88cffb",
-                      "surface-tint": "#0060ac",
-                      "primary-fixed": "#d4e3ff",
-                      "on-secondary-container": "#005a7e",
-                      "tertiary-container": "#6e757c",
-                      "surface-variant": "#e2e2e5",
-                      "primary-fixed-dim": "#a4c9ff",
-                      "surface-dim": "#dadadc",
-                      "brand-dark": "#0F1419",
-                      "brand-blue": "#005da7"
-              },
-              "borderRadius": {
-                      "DEFAULT": "0.25rem",
-                      "lg": "0.5rem",
-                      "xl": "0.75rem",
-                      "full": "9999px"
-              },
-              "spacing": {
-                      "base": "8px",
-                      "section-gap-desktop": "120px",
-                      "container-padding": "24px",
-                      "gutter": "24px",
-                      "section-gap-mobile": "64px"
-              },
-              "fontFamily": {
-                      "label-md": [
-                              "Plus Jakarta Sans"
-                      ],
-                      "headline-lg-mobile": [
-                              "Plus Jakarta Sans"
-                      ],
-                      "display-lg": [
-                              "Plus Jakarta Sans"
-                      ],
-                      "headline-lg": [
-                              "Plus Jakarta Sans"
-                      ],
-                      "label-sm": [
-                              "Plus Jakarta Sans"
-                      ],
-                      "body-lg": [
-                              "Be Vietnam Pro"
-                      ],
-                      "body-md": [
-                              "Be Vietnam Pro"
-                      ],
-                      "headline-md": [
-                              "Plus Jakarta Sans"
-                      ]
-              },
-              "fontSize": {
-                      "label-md": [
-                              "14px",
-                              {
-                                      "lineHeight": "20px",
-                                      "letterSpacing": "0.02em",
-                                      "fontWeight": "600"
-                              }
-                      ],
-                      "headline-lg-mobile": [
-                              "32px",
-                              {
-                                      "lineHeight": "40px",
-                                      "fontWeight": "700"
-                              }
-                      ],
-                      "display-lg": [
-                              "72px",
-                              {
-                                      "lineHeight": "84px",
-                                      "letterSpacing": "-0.02em",
-                                      "fontWeight": "700"
-                              }
-                      ],
-                      "headline-lg": [
-                              "48px",
-                              {
-                                      "lineHeight": "56px",
-                                      "letterSpacing": "-0.01em",
-                                      "fontWeight": "700"
-                              }
-                      ],
-                      "label-sm": [
-                              "12px",
-                              {
-                                      "lineHeight": "16px",
-                                      "fontWeight": "500"
-                              }
-                      ],
-                      "body-lg": [
-                              "18px",
-                              {
-                                      "lineHeight": "28px",
-                                      "fontWeight": "400"
-                              }
-                      ],
-                      "body-md": [
-                              "16px",
-                              {
-                                      "lineHeight": "24px",
-                                      "fontWeight": "400"
-                              }
-                      ],
-                      "headline-md": [
-                              "32px",
-                              {
-                                      "lineHeight": "40px",
-                                      "fontWeight": "600"
-                              }
-                      ]
-              }
-      },
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta name="description" content="Your personalized travel dashboard — Kibi">
+  <title>Dashboard — Kibi</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+
+  <!-- Fonts & Material Symbols -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Be+Vietnam+Pro:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+  <!-- Tailwind Configuration -->
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-surface-variant": "#475569",
+            "surface": "#ffffff",
+            "inverse-primary": "#a4c9ff",
+            "tertiary": "#64748b",
+            "background": "#f8fafc",
+            "secondary-container": "#8bd2fe",
+            "on-tertiary": "#ffffff",
+            "on-primary": "#ffffff",
+            "primary-container": "#2976c7",
+            "outline": "#cbd5e1",
+            "error": "#ef4444",
+            "primary": "#005da7",
+            "secondary": "#01658c",
+            "on-surface": "#0f172a",
+            "surface-container": "#f1f5f9",
+            "surface-container-high": "#e2e8f0",
+            "brand-dark": "#0B0F17",
+            "brand-blue": "#005da7"
           },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "xl": "1rem",
+            "2xl": "1.5rem",
+            "3xl": "2rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"],
+            heading: ["Plus Jakarta Sans", "sans-serif"],
+            body: ["Be Vietnam Pro", "sans-serif"]
+          }
         }
-      </script>
-<style>
-          .glass-panel {
-              background: rgba(255, 255, 255, 0.7);
-              backdrop-filter: blur(20px);
-              -webkit-backdrop-filter: blur(20px);
-              border: 1px solid rgba(255, 255, 255, 0.5);
-              box-shadow: 0 8px 32px 0 rgba(0, 93, 167, 0.05);
-          }
+      }
+    };
+  </script>
 
-          .ambient-glow {
-              box-shadow: 0 10px 40px -10px rgba(0, 93, 167, 0.15);
-          }
+  <style>
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      box-shadow: 0 10px 30px 0 rgba(0, 93, 167, 0.05);
+    }
 
-          html.dark body.dashboard-page { background-color: #0B0F17 !important; color: #E8EAED !important; }
-          html.dark body.dashboard-page .bg-background,
-          html.dark body.dashboard-page .bg-surface { background-color: #0B0F17 !important; }
-          html.dark body.dashboard-page .bg-surface-container-high,
-          html.dark body.dashboard-page .bg-surface-container { background-color: #121821 !important; }
-          html.dark body.dashboard-page .bg-surface-variant { background-color: #1b2430 !important; }
-          html.dark body.dashboard-page .bg-surface-container-lowest { background-color: #0B0F17 !important; }
-          html.dark body.dashboard-page .bg-primary-fixed\/30,
-          html.dark body.dashboard-page .bg-primary-fixed\/50 { background-color: rgba(41,118,199,0.22) !important; }
-          html.dark body.dashboard-page .bg-secondary-fixed,
-          html.dark body.dashboard-page .bg-secondary-fixed\/50,
-          html.dark body.dashboard-page .bg-secondary-fixed\/90 { background-color: rgba(27,58,95,0.55) !important; }
-          html.dark body.dashboard-page .bg-tertiary-fixed\/50 { background-color: rgba(85,93,99,0.4) !important; }
-          html.dark body.dashboard-page .bg-primary-fixed { background-color: #1b3a5f !important; color: #a4c9ff !important; }
-          html.dark body.dashboard-page .bg-secondary-fixed { background-color: #1b4a66 !important; color: #8bd2fe !important; }
-          html.dark body.dashboard-page .text-on-primary-fixed { color: #a4c9ff !important; }
-          html.dark body.dashboard-page .text-on-secondary-fixed { color: #8bd2fe !important; }
-          html.dark body.dashboard-page span[class*="rounded-full"][class*="bg-primary-fixed"],
-          html.dark body.dashboard-page span[class*="rounded-full"][class*="bg-secondary-fixed"] { background-color: #1b3a5f !important; color: #a4c9ff !important; }
-          html.dark body.dashboard-page .absolute.top-4.right-4 { background-color: rgba(27,58,95,0.9) !important; color: #a4c9ff !important; }
-          html.dark body.dashboard-page .bg-white\/90 { background-color: rgba(18,24,33,0.9) !important; }
-          html.dark body.dashboard-page .bg-white { background-color: #121821 !important; }
-          html.dark body.dashboard-page .glass-panel { background: rgba(18,24,33,0.78) !important; border: 1px solid rgba(255,255,255,0.08) !important; }
-          html.dark body.dashboard-page .text-on-surface,
-          html.dark body.dashboard-page .text-on-background,
-          html.dark body.dashboard-page h1,
-          html.dark body.dashboard-page h2,
-          html.dark body.dashboard-page h3,
-          html.dark body.dashboard-page h4,
-          html.dark body.dashboard-page .font-headline-lg,
-          html.dark body.dashboard-page .font-headline-md,
-          html.dark body.dashboard-page .font-label-md,
-          html.dark body.dashboard-page .font-label-sm { color: #E8EAED !important; }
-          html.dark body.dashboard-page .text-on-surface-variant,
-          html.dark body.dashboard-page .text-outline,
-          html.dark body.dashboard-page p,
-          html.dark body.dashboard-page span:not(.material-symbols-outlined) { color: #A8B0BC !important; }
-          html.dark body.dashboard-page .text-primary { color: #a4c9ff !important; }
-          html.dark body.dashboard-page .text-secondary { color: #8bd2fe !important; }
-          html.dark body.dashboard-page .text-tertiary { color: #8B95A3 !important; }
-          html.dark body.dashboard-page .text-on-secondary-fixed { color: #a4c9ff !important; }
-          html.dark body.dashboard-page .text-on-primary-fixed { color: #001c39 !important; }
-          html.dark body.dashboard-page .bg-primary { background-color: #005da7 !important; color: #ffffff !important; }
-          html.dark body.dashboard-page .bg-primary:hover { background-color: #2976c7 !important; }
-          html.dark body.dashboard-page .border-outline-variant,
-          html.dark body.dashboard-page .border-white { border-color: #2A3441 !important; }
-          html.dark body.dashboard-page .border-white\/20 { border-color: rgba(255,255,255,0.08) !important; }
-          html.dark body.dashboard-page footer { background-color: #0A1B29 !important; }
-          html.dark body.dashboard-page footer * { color: rgba(255,255,255,0.7) !important; }
-          html.dark body.dashboard-page footer a:hover { color: #ffffff !important; }
-          html.dark body.dashboard-page header nav { background: rgba(22,27,34,0.85) !important; border-color: rgba(255,255,255,0.08) !important; }
-          html.dark body.dashboard-page header nav a { color: #BDC1C6 !important; }
-          html.dark body.dashboard-page header nav a:hover,
-          html.dark body.dashboard-page header nav a.text-slate-900 { color: #FFFFFF !important; }
-          html.dark body.dashboard-page #navActivePill { background: #2A3038 !important; border-color: rgba(255,255,255,0.08) !important; }
-          html.dark body.dashboard-page footer,
-          html.dark body.dashboard-page footer.bg-brand-dark { background-color: #05080C !important; }
-          html.dark body.dashboard-page footer * { color: rgba(255,255,255,0.7) !important; }
-          html.dark body.dashboard-page footer a:hover { color: #FFFFFF !important; }
-          html.dark body.dashboard-page #profileDropdown { background-color: #161B22 !important; border-color: rgba(255,255,255,0.1) !important; }
-          html.dark body.dashboard-page .ambient-glow { box-shadow: 0 10px 40px -10px rgba(0,0,0,0.35) !important; }
-          html.dark body.dashboard-page #profileAvatarContainer { border-color: rgba(255,255,255,0.1) !important; }
-          html.dark body.dashboard-page .bg-white { background-color: #121821 !important; }
-          html.dark body.dashboard-page .bg-white\/90 { background-color: rgba(18,24,33,0.9) !important; }
-          html.dark body.dashboard-page .text-slate-600 { color: #A8B0BC !important; }
-          html.dark body.dashboard-page .text-slate-800 { color: #E8EAED !important; }
-          /* Edit profile modal dark */
-          html.dark body.dashboard-page #editProfileModal { background-color: rgba(0,0,0,0.6) !important; }
-          html.dark body.dashboard-page #editProfileModal > div { background-color: #121821 !important; border: 1px solid rgba(255,255,255,0.08) !important; }
-          html.dark body.dashboard-page #editProfileModal h3,
-          html.dark body.dashboard-page #editProfileModal label,
-          html.dark body.dashboard-page #editProfileModal .text-on-surface { color: #E8EAED !important; }
-          html.dark body.dashboard-page #editProfileModal input,
-          html.dark body.dashboard-page #editProfileModal textarea { background-color: #0B0F17 !important; border-color: #2A3441 !important; color: #E8EAED !important; }
-          html.dark body.dashboard-page #editProfileModal input::placeholder,
-          html.dark body.dashboard-page #editProfileModal textarea::placeholder { color: #6B7685 !important; }
-          html.dark body.dashboard-page #editProfileModal .text-on-surface-variant,
-          html.dark body.dashboard-page #editProfileModal .text-xs { color: #A8B0BC !important; }
-          html.dark body.dashboard-page #editProfileModal #editAvatarPreview { background-color: #1b2430 !important; color: #A8B0BC !important; }
-          html.dark body.dashboard-page #editProfileModal button[type="submit"] { background-color: #005da7 !important; color: #ffffff !important; }
-          html.dark body.dashboard-page #editProfileModal button[type="button"] { background-color: transparent !important; border-color: #2A3441 !important; color: #E8EAED !important; }
-          html.dark body.dashboard-page #editProfileModal button[type="button"]:hover { background-color: #1b2430 !important; }
-          html.dark body.dashboard-page #editProfileModal label.cursor-pointer { border-color: #2A3441 !important; color: #E8EAED !important; }
-          html.dark body.dashboard-page #editProfileModal label.cursor-pointer:hover { background-color: #1b2430 !important; }
-      </style>
+    .card-hover-effect {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .card-hover-effect:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 35px -10px rgba(0, 93, 167, 0.12);
+    }
+
+    /* Dark Mode Styling Enhancements */
+    html.dark body.dashboard-page {
+      background-color: #07090E !important;
+      color: #E2E8F0 !important;
+    }
+    html.dark body.dashboard-page .glass-panel {
+      background: rgba(15, 23, 42, 0.85) !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.4) !important;
+    }
+    html.dark body.dashboard-page .text-on-surface {
+      color: #F8FAFC !important;
+    }
+    html.dark body.dashboard-page .text-on-surface-variant {
+      color: #94A3B8 !important;
+    }
+    html.dark body.dashboard-page header nav {
+      background: rgba(15, 23, 42, 0.85) !important;
+      border-color: rgba(255, 255, 255, 0.08) !important;
+    }
+    html.dark body.dashboard-page #editProfileModal {
+      background-color: rgba(0, 0, 0, 0.75) !important;
+    }
+    html.dark body.dashboard-page #editProfileModal > div {
+      background-color: #0F172A !important;
+      border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+    html.dark body.dashboard-page #editProfileModal input,
+    html.dark body.dashboard-page #editProfileModal textarea {
+      background-color: #1E293B !important;
+      border-color: #334155 !important;
+      color: #F8FAFC !important;
+    }
+    html.dark body.dashboard-page #editProfileModal input::placeholder,
+    html.dark body.dashboard-page #editProfileModal textarea::placeholder {
+      color: #64748B !important;
+    }
+    html.dark body.dashboard-page footer {
+      background-color: #030712 !important;
+    }
+  </style>
 </head>
-<body class="dashboard-page bg-background text-on-background min-h-screen flex flex-col font-body-md overflow-x-hidden">
-<!-- Global Navbar -->
-<div id="navContainer"></div>
+<body class="dashboard-page bg-background text-on-surface min-h-screen flex flex-col font-sans antialiased selection:bg-primary/20 selection:text-primary">
 
-<main class="flex-grow flex flex-col items-center w-full max-w-[1280px] mx-auto px-container-padding py-8 md:py-16 gap-section-gap-mobile md:gap-section-gap-desktop">
-<!-- Hero Section -->
-<section class="w-full flex flex-col md:flex-row items-start md:items-center gap-8 md:gap-12 relative">
-<div class="absolute -top-20 -left-20 w-64 h-64 bg-primary-fixed/30 rounded-full blur-3xl -z-10 pointer-events-none"></div>
-<div id="profileAvatarContainer" class="w-32 h-32 md:w-48 md:h-48 rounded-full overflow-hidden border-4 border-white shadow-xl flex-shrink-0 ambient-glow bg-surface-container-high flex items-center justify-center">
-              <!-- Avatar rendered by JS -->
+<!-- Global Navigation Bar Container -->
+<div id="navContainer" class="sticky top-0 z-50 backdrop-blur-md"></div>
+
+<main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 space-y-10">
+
+  <!-- HERO COVER & PROFILE SECTION (Matching User Reference Image) -->
+  <section class="relative w-full">
+    <!-- Hero Destination Cover Image -->
+    <div class="relative rounded-[28px] md:rounded-[36px] overflow-hidden shadow-lg h-64 sm:h-80 md:h-[380px] w-full">
+      <img src="assets/images/hero-mountain.jpg" alt="Mountain Landscape" class="w-full h-full object-cover"/>
+      
+      <!-- Top Left Floating Location Tag Badge -->
+      <div class="absolute top-4 left-4 sm:top-6 sm:left-6 bg-white/75 dark:bg-slate-900/75 backdrop-blur-md px-4 py-2 rounded-full text-xs font-semibold text-slate-800 dark:text-slate-200 shadow-sm border border-white/50 dark:border-slate-700/50 flex items-center gap-2 z-10">
+        <span class="material-symbols-outlined text-base text-primary">location_on</span>
+        <span>Himalayan Peaks, Manali | Alpine Discovery</span>
+      </div>
+    </div>
+
+    <!-- Overlapping Profile & Stats Card -->
+    <div class="px-4 sm:px-8 -mt-20 sm:-mt-24 md:-mt-28 relative z-20">
+      <div class="flex flex-col md:flex-row items-center md:items-end gap-6 md:gap-8">
+        
+        <!-- Left: Overlapping Circular Avatar -->
+        <div class="flex-shrink-0 relative group self-center md:self-end">
+          <div id="profileAvatarContainer" class="w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 rounded-full overflow-hidden border-4 sm:border-[6px] border-white dark:border-slate-900 shadow-2xl bg-white dark:bg-slate-800 flex items-center justify-center relative z-20">
+            <!-- Avatar rendered dynamically by JS -->
+          </div>
+          <button id="editProfileBtn" class="absolute bottom-2 right-2 z-30 bg-primary hover:bg-primary-container text-white p-3 rounded-full shadow-lg transition-transform duration-200 hover:scale-110 flex items-center justify-center border-2 border-white dark:border-slate-900" aria-label="Edit Profile" title="Edit Profile">
+            <span class="material-symbols-outlined text-base">edit</span>
+          </button>
+        </div>
+
+        <!-- Right: Overlapping Glass Card with Info & Stats (Transparent Frosted Glass Effect) -->
+        <div class="flex-grow bg-white/70 dark:bg-slate-900/75 backdrop-blur-2xl rounded-[28px] sm:rounded-[36px] p-6 sm:p-8 md:p-10 shadow-[0_15px_40px_-15px_rgba(0,0,0,0.15)] border border-white/80 dark:border-white/10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 md:gap-10">
+          
+          <!-- Name & Bio Column -->
+          <div class="space-y-3 flex-1">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <h1 id="profileName" class="font-heading font-extrabold text-2xl sm:text-3xl md:text-4xl text-slate-900 dark:text-white tracking-tight">Traveler</h1>
+              
+              <div class="flex items-center gap-2">
+                <a href="plan-trip.html" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary text-white font-heading font-bold text-xs shadow-md hover:bg-primary-container transition-all">
+                  <span class="material-symbols-outlined text-sm">add_circle</span> Plan Trip
+                </a>
+              </div>
             </div>
-<div class="flex-grow">
-<h1 id="profileName" class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-on-surface mb-2">Traveler</h1>
-<p id="profileBio" class="font-body-lg text-body-lg text-on-surface-variant mb-6 max-w-2xl">Passionate traveler seeking immersive cultural experiences and breathtaking landscapes. Always ready for the next adventure.</p>
-<div class="flex flex-wrap gap-4">
-<div class="glass-panel px-6 py-4 rounded-2xl flex flex-col items-start gap-1">
-<span class="font-label-sm text-label-sm text-tertiary">Destinations Visited</span>
-<span id="statDestinations" class="font-headline-md text-headline-md text-primary">24</span>
-</div>
-<div class="glass-panel px-6 py-4 rounded-2xl flex flex-col items-start gap-1">
-<span class="font-label-sm text-label-sm text-tertiary">Miles Traveled</span>
-<span id="statMiles" class="font-headline-md text-headline-md text-primary">45k+</span>
-</div>
-<div class="glass-panel px-6 py-4 rounded-2xl flex flex-col items-start gap-1">
-<span class="font-label-sm text-label-sm text-tertiary">Travel Style</span>
-<span id="statStyle" class="font-headline-md text-headline-md text-primary">Explorer</span>
-</div>
-</div>
-</div>
-<button id="editProfileBtn" class="md:absolute top-0 right-0 glass-panel p-3 rounded-full hover:bg-surface-variant transition-colors flex items-center justify-center text-primary" aria-label="Edit profile">
-<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">edit</span>
-</button>
-</section>
+            
+            <p id="profileBio" class="font-body text-sm sm:text-base text-slate-700 dark:text-slate-200 leading-relaxed font-medium max-w-xl">
+              Passionate traveler seeking immersive cultural experiences and breathtaking landscapes. Always ready for the next adventure.
+            </p>
+          </div>
 
-<!-- Main Content Area -->
-<div class="w-full grid grid-cols-1 lg:grid-cols-3 gap-8">
-<!-- My Trips Gallery (Takes up 2 columns on large screens) -->
-<section class="lg:col-span-2 flex flex-col gap-6">
-<div class="flex justify-between items-center">
-<h2 class="font-headline-md text-headline-md text-on-surface">My Trips</h2>
-<a href="my-trips.html" class="font-label-md text-label-md text-primary hover:text-primary-container transition-colors flex items-center gap-1">
-                        View All <span class="material-symbols-outlined text-sm">arrow_forward</span>
-</a>
-</div>
-<div id="profileTripsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-<!-- Trip cards rendered by JS -->
-</div>
+          <!-- Vertical Stats Column (Right Side of Card) -->
+          <div class="w-full lg:w-auto lg:min-w-[210px] lg:border-l lg:border-slate-200/60 dark:lg:border-slate-700/60 lg:pl-8 flex flex-row lg:flex-col justify-between sm:justify-start lg:justify-center gap-5 sm:gap-8 lg:gap-5 pt-4 lg:pt-0 border-t lg:border-t-0 border-slate-200/60 dark:border-slate-700/60">
+            
+            <!-- Stat 1: Destinations -->
+            <div>
+              <p class="text-[11px] font-extrabold tracking-wider text-slate-500 dark:text-slate-400 uppercase">DESTINATIONS</p>
+              <h3 id="statDestinations" class="font-heading font-extrabold text-2xl sm:text-3xl text-primary mt-0.5">24</h3>
+            </div>
 
-<!-- Saved Trips Section -->
-<div class="flex justify-between items-center mt-4">
-<h2 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2">
-<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">bookmark</span>
-                        Saved Trips
-                    </h2>
-<a href="my-trips.html" class="font-label-md text-label-md text-primary hover:text-primary-container transition-colors flex items-center gap-1">
-                        View All <span class="material-symbols-outlined text-sm">arrow_forward</span>
-</a>
-</div>
-<div id="profileSavedTripsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-<!-- Saved trip cards rendered by JS -->
-</div>
-</section>
-<!-- Important Information (Sidebar) -->
-<aside class="flex flex-col gap-6">
-<h2 class="font-headline-md text-headline-md text-on-surface">Important Info</h2>
-<div class="flex flex-col gap-4">
-<!-- Document Card -->
-<div class="glass-panel p-4 rounded-xl flex items-center gap-4 cursor-pointer hover:bg-surface-variant/50 transition-colors">
-<div class="w-12 h-12 rounded-full bg-secondary-fixed/50 flex items-center justify-center text-secondary">
-<span class="material-symbols-outlined">description</span>
-</div>
-<div class="flex-grow">
-<h4 class="font-label-md text-label-md text-on-surface">Travel Documents</h4>
-<p class="font-body-sm text-body-sm text-on-surface-variant text-sm">Passports, Visas, Tickets</p>
-</div>
-<span class="material-symbols-outlined text-outline">chevron_right</span>
-</div>
-<!-- Preferences Card -->
-<div class="glass-panel p-4 rounded-xl flex items-center gap-4 cursor-pointer hover:bg-surface-variant/50 transition-colors">
-<div class="w-12 h-12 rounded-full bg-primary-fixed/50 flex items-center justify-center text-primary">
-<span class="material-symbols-outlined">tune</span>
-</div>
-<div class="flex-grow">
-<h4 class="font-label-md text-label-md text-on-surface">Preferences</h4>
-<p class="font-body-sm text-body-sm text-on-surface-variant text-sm">Dietary, Seating, Alerts</p>
-</div>
-<span class="material-symbols-outlined text-outline">chevron_right</span>
-</div>
-<!-- Payment Card -->
-<div class="glass-panel p-4 rounded-xl flex items-center gap-4 cursor-pointer hover:bg-surface-variant/50 transition-colors">
-<div class="w-12 h-12 rounded-full bg-tertiary-fixed/50 flex items-center justify-center text-tertiary">
-<span class="material-symbols-outlined">credit_card</span>
-</div>
-<div class="flex-grow">
-<h4 class="font-label-md text-label-md text-on-surface">Payment Methods</h4>
-<p class="font-body-sm text-body-sm text-on-surface-variant text-sm">Manage saved cards</p>
-</div>
-<span class="material-symbols-outlined text-outline">chevron_right</span>
-</div>
-</div>
-</aside>
-</div>
+            <!-- Stat 2: Miles Traveled -->
+            <div>
+              <p class="text-[11px] font-extrabold tracking-wider text-slate-400 dark:text-slate-500 uppercase">MILES TRAVELED</p>
+              <h3 id="statMiles" class="font-heading font-extrabold text-2xl sm:text-3xl text-primary mt-0.5">45k+</h3>
+            </div>
+
+            <!-- Stat 3: Travel Style -->
+            <div>
+              <p class="text-[11px] font-extrabold tracking-wider text-slate-400 dark:text-slate-500 uppercase">TRAVEL STYLE</p>
+              <h3 id="statStyle" class="font-heading font-extrabold text-xl sm:text-2xl text-primary mt-0.5 truncate max-w-[180px]">Explorer</h3>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN DASHBOARD CONTENT GRID (Left: Trips & Saved, Right: Sidebar) -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start pt-2">
+    
+    <!-- LEFT COLUMN: MY TRIPS & SAVED TRIPS -->
+    <div class="lg:col-span-2 space-y-10">
+      
+      <!-- MY TRIPS GALLERY -->
+      <section class="space-y-5">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-bold">
+              <span class="material-symbols-outlined text-lg">luggage</span>
+            </div>
+            <h2 class="font-heading font-bold text-xl md:text-2xl text-on-surface">My Trips</h2>
+          </div>
+          <a href="my-trips.html" class="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:text-primary-container transition-colors group">
+            View All Trips 
+            <span class="material-symbols-outlined text-sm transition-transform group-hover:translate-x-1">arrow_forward</span>
+          </a>
+        </div>
+
+        <div id="profileTripsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Trip cards rendered dynamically by JS -->
+        </div>
+      </section>
+
+      <!-- SAVED TRIPS SECTION -->
+      <section class="space-y-5 pt-2">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold">
+              <span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+            </div>
+            <h2 class="font-heading font-bold text-xl md:text-2xl text-on-surface">Saved Itineraries</h2>
+          </div>
+          <a href="discover.html" class="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:text-primary-container transition-colors group">
+            Discover More 
+            <span class="material-symbols-outlined text-sm transition-transform group-hover:translate-x-1">arrow_forward</span>
+          </a>
+        </div>
+
+        <div id="profileSavedTripsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Saved trip cards rendered dynamically by JS -->
+        </div>
+      </section>
+
+    </div>
+
+    <!-- RIGHT COLUMN: SIDEBAR WIDGETS -->
+    <aside class="space-y-6">
+      
+      <!-- QUICK ACTION HUB -->
+      <div class="glass-panel p-6 rounded-3xl space-y-4 border border-slate-200/80 dark:border-slate-800">
+        <h3 class="font-heading font-bold text-lg text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary">bolt</span>
+          Quick Actions
+        </h3>
+        <div class="grid grid-cols-1 gap-3">
+          <a href="plan-trip.html" class="flex items-center justify-between p-3.5 rounded-2xl bg-primary/5 hover:bg-primary/10 transition-colors border border-primary/10 group">
+            <div class="flex items-center gap-3">
+              <span class="w-9 h-9 rounded-xl bg-primary text-white flex items-center justify-center font-bold text-sm shadow-sm">
+                <span class="material-symbols-outlined text-lg">add_location_alt</span>
+              </span>
+              <div>
+                <p class="font-heading font-semibold text-sm text-on-surface">Create Itinerary</p>
+                <p class="text-xs text-on-surface-variant">Build AI-customized plan</p>
+              </div>
+            </div>
+            <span class="material-symbols-outlined text-slate-400 group-hover:translate-x-1 transition-transform">chevron_right</span>
+          </a>
+
+          <a href="discover.html" class="flex items-center justify-between p-3.5 rounded-2xl bg-secondary/5 hover:bg-secondary/10 transition-colors border border-secondary/10 group">
+            <div class="flex items-center gap-3">
+              <span class="w-9 h-9 rounded-xl bg-secondary text-white flex items-center justify-center font-bold text-sm shadow-sm">
+                <span class="material-symbols-outlined text-lg">travel_explore</span>
+              </span>
+              <div>
+                <p class="font-heading font-semibold text-sm text-on-surface">Discover Places</p>
+                <p class="text-xs text-on-surface-variant">Top trending destinations</p>
+              </div>
+            </div>
+            <span class="material-symbols-outlined text-slate-400 group-hover:translate-x-1 transition-transform">chevron_right</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- IMPORTANT TRAVEL INFORMATION -->
+      <div class="glass-panel p-6 rounded-3xl space-y-4 border border-slate-200/80 dark:border-slate-800">
+        <h3 class="font-heading font-bold text-lg text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary">folder_managed</span>
+          Important Info & Tools
+        </h3>
+        <div class="space-y-3">
+          
+          <!-- Document Card -->
+          <div class="p-3.5 rounded-2xl border border-slate-200/60 dark:border-slate-800 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 transition-all cursor-pointer flex items-center justify-between group">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-blue-500/10 text-primary flex items-center justify-center flex-shrink-0">
+                <span class="material-symbols-outlined text-xl">badge</span>
+              </div>
+              <div>
+                <h4 class="font-heading font-semibold text-sm text-on-surface">Travel Documents</h4>
+                <p class="text-xs text-on-surface-variant">Passports, Visas, E-Tickets</p>
+              </div>
+            </div>
+            <span class="material-symbols-outlined text-slate-400 group-hover:translate-x-1 transition-transform">chevron_right</span>
+          </div>
+
+          <!-- Preferences Card -->
+          <div class="p-3.5 rounded-2xl border border-slate-200/60 dark:border-slate-800 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 transition-all cursor-pointer flex items-center justify-between group">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-teal-500/10 text-teal-600 dark:text-teal-400 flex items-center justify-center flex-shrink-0">
+                <span class="material-symbols-outlined text-xl">tune</span>
+              </div>
+              <div>
+                <h4 class="font-heading font-semibold text-sm text-on-surface">Preferences</h4>
+                <p class="text-xs text-on-surface-variant">Dietary, Seating & Alerts</p>
+              </div>
+            </div>
+            <span class="material-symbols-outlined text-slate-400 group-hover:translate-x-1 transition-transform">chevron_right</span>
+          </div>
+
+          <!-- Payment Card -->
+          <div class="p-3.5 rounded-2xl border border-slate-200/60 dark:border-slate-800 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 transition-all cursor-pointer flex items-center justify-between group">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center flex-shrink-0">
+                <span class="material-symbols-outlined text-xl">credit_card</span>
+              </div>
+              <div>
+                <h4 class="font-heading font-semibold text-sm text-on-surface">Payment Methods</h4>
+                <p class="text-xs text-on-surface-variant">Cards & Currency details</p>
+              </div>
+            </div>
+            <span class="material-symbols-outlined text-slate-400 group-hover:translate-x-1 transition-transform">chevron_right</span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- WEATHER & TRAVEL ADVISORY CARD -->
+      <div class="rounded-3xl p-6 bg-gradient-to-br from-slate-900 to-slate-800 text-white shadow-xl space-y-3 relative overflow-hidden">
+        <div class="absolute -right-6 -bottom-6 w-28 h-28 bg-primary/20 rounded-full blur-xl pointer-events-none"></div>
+        <div class="flex items-center justify-between">
+          <span class="px-2.5 py-1 rounded-full bg-white/10 text-xs font-semibold text-slate-200 flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-sm text-sky-400">cloud</span> Travel Weather Assistant
+          </span>
+          <span class="text-xs text-slate-400">Live</span>
+        </div>
+        <div>
+          <h4 class="font-heading font-bold text-lg">Ready for departure?</h4>
+          <p class="text-xs text-slate-300 leading-relaxed mt-1">Check weather forecast and localized packing recommendations before your journey starts.</p>
+        </div>
+        <div class="pt-2">
+          <a href="plan-trip.html" class="inline-flex items-center gap-1.5 text-xs font-bold text-sky-300 hover:text-white transition-colors">
+            Check Travel Checklist <span class="material-symbols-outlined text-xs">arrow_forward</span>
+          </a>
+        </div>
+      </div>
+
+    </aside>
+
+  </div>
+
 </main>
 
-<!-- Global Footer -->
+<!-- Global Footer Container -->
 <div id="footerContainer"></div>
 
-<!-- Edit Profile Modal -->
-<div id="editProfileModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-on-surface/40 backdrop-blur-sm p-4">
-  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 md:p-8">
-    <div class="flex justify-between items-center mb-6">
-      <h3 class="font-headline-md text-headline-md text-on-surface">Edit Profile</h3>
-      <button id="closeEditModal" class="p-2 rounded-full hover:bg-surface-container-low transition-colors text-on-surface-variant">
-        <span class="material-symbols-outlined">close</span>
+<!-- EDIT PROFILE MODAL -->
+<div id="editProfileModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-900/60 backdrop-blur-md p-4 transition-all duration-300">
+  <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-md p-6 md:p-8 space-y-6 border border-slate-200 dark:border-slate-800 transform transition-all scale-100">
+    
+    <div class="flex justify-between items-center pb-2 border-b border-slate-100 dark:border-slate-800">
+      <h3 class="font-heading font-bold text-xl text-on-surface">Edit Profile</h3>
+      <button id="closeEditModal" class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors text-slate-500 hover:text-slate-900 dark:hover:text-white" aria-label="Close modal">
+        <span class="material-symbols-outlined text-xl">close</span>
       </button>
     </div>
+
     <form id="editProfileForm" class="space-y-5">
       <div>
-        <label for="editName" class="block font-label-sm text-label-sm text-on-surface mb-2">Name</label>
-        <input type="text" id="editName" class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-container-lowest focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none transition-all" autocomplete="name"/>
+        <label for="editName" class="block font-heading font-semibold text-xs uppercase tracking-wider text-on-surface mb-2">Name</label>
+        <input type="text" id="editName" class="w-full px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-sm text-on-surface transition-all" autocomplete="name" required/>
       </div>
+
       <div>
-        <label for="editEmail" class="block font-label-sm text-label-sm text-on-surface mb-2">Email</label>
-        <input type="email" id="editEmail" class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-container-lowest focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none transition-all" autocomplete="email"/>
+        <label for="editEmail" class="block font-heading font-semibold text-xs uppercase tracking-wider text-on-surface mb-2">Email</label>
+        <input type="email" id="editEmail" class="w-full px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-sm text-on-surface transition-all" autocomplete="email" required/>
       </div>
+
       <div>
-        <label for="editBio" class="block font-label-sm text-label-sm text-on-surface mb-2">Bio</label>
-        <textarea id="editBio" rows="3" class="w-full px-4 py-3 rounded-xl border border-outline-variant bg-surface-container-lowest focus:border-primary focus:ring-2 focus:ring-primary/10 outline-none transition-all resize-none"></textarea>
+        <label for="editBio" class="block font-heading font-semibold text-xs uppercase tracking-wider text-on-surface mb-2">Bio</label>
+        <textarea id="editBio" rows="3" class="w-full px-4 py-3 rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/80 focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none text-sm text-on-surface transition-all resize-none"></textarea>
       </div>
+
       <div>
-        <label class="block font-label-sm text-label-sm text-on-surface mb-2">Profile Picture</label>
-        <div class="flex items-center gap-4">
-          <div id="editAvatarPreview" class="w-16 h-16 rounded-full bg-surface-container-high flex items-center justify-center overflow-hidden text-on-surface-variant">
-            <!-- preview rendered by JS -->
+        <label class="block font-heading font-semibold text-xs uppercase tracking-wider text-on-surface mb-2">Profile Picture</label>
+        <div class="flex items-center gap-4 p-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40">
+          <div id="editAvatarPreview" class="w-14 h-14 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center overflow-hidden text-on-surface-variant flex-shrink-0 border-2 border-white dark:border-slate-600 shadow-sm">
+            <!-- Avatar preview rendered by JS -->
           </div>
-          <label class="cursor-pointer px-4 py-2 rounded-full border border-outline-variant text-on-surface font-label-md text-label-md hover:bg-surface-container-low transition-colors">
+          <label class="cursor-pointer px-4 py-2.5 rounded-full border border-slate-300 dark:border-slate-600 text-on-surface font-heading font-semibold text-xs hover:bg-white dark:hover:bg-slate-700 shadow-sm transition-all">
             Choose Photo
             <input type="file" id="editAvatarInput" accept="image/*" class="hidden"/>
           </label>
         </div>
-        <p class="text-xs text-on-surface-variant mt-2">Leave empty to use your name's first letter.</p>
+        <p class="text-[11px] text-on-surface-variant mt-1.5">Max size 2MB. Leave empty to use your name's initial.</p>
       </div>
-      <div class="pt-2 flex gap-3">
-        <button type="submit" class="flex-1 py-3 px-4 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:bg-primary-container transition-colors">Save Changes</button>
-        <button type="button" id="cancelEditBtn" class="py-3 px-4 rounded-full border border-outline-variant text-on-surface font-label-md text-label-md hover:bg-surface-container-low transition-colors">Cancel</button>
+
+      <div class="pt-3 flex gap-3">
+        <button type="submit" class="flex-1 py-3 px-5 rounded-full bg-primary hover:bg-primary-container text-white font-heading font-bold text-sm shadow-md hover:shadow-lg transition-all">
+          Save Changes
+        </button>
+        <button type="button" id="cancelEditBtn" class="py-3 px-5 rounded-full border border-slate-300 dark:border-slate-700 text-on-surface font-heading font-semibold text-sm hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
+          Cancel
+        </button>
       </div>
     </form>
+
   </div>
 </div>
 
+<!-- Scripts -->
 <script src="js/storage.js?v=10"></script>
 <script src="js/matching.js?v=10"></script>
 <script src="js/app.js?v=10"></script>
 <script src="js/animations.js?v=10"></script>
 <script src="js/trips.js?v=10"></script>
+
 <script>
 (function () {
   function requireAuthOrRedirect() {
@@ -437,56 +443,69 @@
     const user = requireAuthOrRedirect();
     if (!user) return;
 
-    // Basic info
+    // Basic User Profile Info
     document.getElementById('profileName').textContent = user.name || 'Traveler';
     document.getElementById('profileBio').textContent = user.bio || 'Passionate traveler seeking immersive cultural experiences and breathtaking landscapes. Always ready for the next adventure.';
+    
     const avatarContainer = document.getElementById('profileAvatarContainer');
     if (avatarContainer) {
       avatarContainer.innerHTML = typeof renderAvatarHTML === 'function'
-        ? renderAvatarHTML(user, 'w-full h-full', 'text-4xl')
+        ? renderAvatarHTML(user, 'w-full h-full object-cover', 'text-4xl')
         : `<div class="w-full h-full rounded-full bg-[#005da7] text-white flex items-center justify-center font-bold text-4xl">${user.name ? user.name.charAt(0).toUpperCase() : 'U'}</div>`;
     }
 
-    // Stats
+    // Key Stats
     const trips = getUserTrips(user.id);
     document.getElementById('statDestinations').textContent = user.destinationsVisited || Math.min(trips.length + 3, 99);
     document.getElementById('statMiles').textContent = user.milesTraveled || '45k+';
     document.getElementById('statStyle').textContent = user.personalityName || getTravelPersonality(user);
 
-    // Trips
+    // Trips Grid Render
     const grid = document.getElementById('profileTripsGrid');
     const displayTrips = trips.length ? trips.slice(0, 4) : [];
 
     if (displayTrips.length === 0) {
       grid.innerHTML = `
-        <div class="col-span-full glass-panel rounded-2xl p-8 text-center">
-          <p class="font-body-md text-body-md text-on-surface-variant mb-4">No trips planned yet.</p>
-          <a href="plan-trip.html" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:bg-primary-container transition-colors">Plan your first trip</a>
+        <div class="col-span-full glass-panel rounded-3xl p-8 text-center border border-slate-200/80 dark:border-slate-800">
+          <div class="w-16 h-16 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto mb-4">
+            <span class="material-symbols-outlined text-3xl">flight_takeoff</span>
+          </div>
+          <h3 class="font-heading font-bold text-lg text-on-surface mb-1">No trips planned yet</h3>
+          <p class="font-body text-sm text-on-surface-variant max-w-sm mx-auto mb-6">Start planning your dream itinerary with AI-powered personalized suggestions.</p>
+          <a href="plan-trip.html" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-white font-heading font-bold text-sm hover:bg-primary-container shadow-md hover:shadow-lg transition-all">
+            <span class="material-symbols-outlined text-lg">add_location_alt</span>
+            Plan Your First Trip
+          </a>
         </div>
       `;
     } else {
-      grid.innerHTML = displayTrips.map((trip, idx) => `
-        <div class="glass-panel rounded-2xl overflow-hidden group cursor-pointer hover:-translate-y-1 transition-transform duration-300" onclick="window.location.href='itinerary.html?id=${trip.id}'">
-          <div class="h-48 w-full relative">
-            <img id="tripImg-${idx}" alt="${trip.destination || 'Trip'}" class="w-full h-full object-cover" src="${trip.image || 'assets/images/hero-mountain.jpg'}"/>
-            <div class="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full font-label-sm text-label-sm text-primary shadow-sm">
-              ${new Date(trip.startDate) > new Date() ? 'Upcoming' : 'Past'}
+      grid.innerHTML = displayTrips.map((trip, idx) => {
+        const isUpcoming = new Date(trip.startDate) > new Date();
+        return `
+          <div class="glass-panel rounded-3xl overflow-hidden group cursor-pointer card-hover-effect border border-slate-200/80 dark:border-slate-800 flex flex-col justify-between" onclick="window.location.href='itinerary.html?id=${trip.id}'">
+            <div class="h-48 w-full relative overflow-hidden bg-slate-100 dark:bg-slate-800">
+              <img id="tripImg-${idx}" alt="${trip.destination || 'Trip'}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="${trip.image || 'assets/images/hero-mountain.jpg'}"/>
+              <div class="absolute top-3.5 right-3.5 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md px-3 py-1 rounded-full font-heading font-bold text-xs ${isUpcoming ? 'text-primary' : 'text-slate-500'} shadow-sm border border-white/20 dark:border-slate-700">
+                ${isUpcoming ? 'Upcoming' : 'Past'}
+              </div>
+            </div>
+            <div class="p-5 space-y-3 flex-grow flex flex-col justify-between">
+              <div>
+                <h3 class="font-heading font-bold text-lg text-on-surface group-hover:text-primary transition-colors line-clamp-1">${trip.title || trip.destination}</h3>
+                <p class="font-body text-xs text-on-surface-variant flex items-center gap-1.5 mt-1">
+                  <span class="material-symbols-outlined text-sm text-primary">calendar_month</span> ${formatDateRange(trip.startDate, trip.endDate)}
+                </p>
+              </div>
+              <div class="flex flex-wrap items-center gap-2 pt-1 border-t border-slate-100 dark:border-slate-800/80">
+                <span class="px-2.5 py-1 bg-primary/10 text-primary font-heading font-semibold text-xs rounded-full">${trip.travelStyle || 'Adventure'}</span>
+                <span class="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-on-surface font-heading font-semibold text-xs rounded-full">${formatBudget(trip.budget || trip.totalBudget || 0)}</span>
+              </div>
             </div>
           </div>
-          <div class="p-6">
-            <h3 class="font-label-md text-label-md text-on-surface text-lg mb-1">${trip.title || trip.destination}</h3>
-            <p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mb-4">
-              <span class="material-symbols-outlined text-sm">calendar_month</span> ${formatDateRange(trip.startDate, trip.endDate)}
-            </p>
-            <div class="flex flex-wrap gap-2">
-              <span class="px-3 py-1 bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm rounded-full">${trip.travelStyle || 'Adventure'}</span>
-              <span class="px-3 py-1 bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm rounded-full">${formatBudget(trip.budget || trip.totalBudget || 0)}</span>
-            </div>
-          </div>
-        </div>
-      `).join('');
+        `;
+      }).join('');
 
-      // Load place-specific images for trips that don't have one.
+      // Load place-specific images if available
       displayTrips.forEach((trip, idx) => {
         if (!trip.image && typeof getDestinationImage === 'function') {
           getDestinationImage(trip.destination).then(url => {
@@ -497,39 +516,50 @@
       });
     }
 
-    // Saved Trips
+    // Saved Trips Grid Render
     const savedGrid = document.getElementById('profileSavedTripsGrid');
     const savedTrips = getSavedTrips(user.id);
     const displaySaved = savedTrips.length ? savedTrips.slice(0, 4) : [];
 
     if (displaySaved.length === 0) {
       savedGrid.innerHTML = `
-        <div class="col-span-full glass-panel rounded-2xl p-8 text-center">
-          <p class="font-body-md text-body-md text-on-surface-variant mb-4">No saved trips yet.</p>
-          <a href="discover.html" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-on-primary font-label-md text-label-md hover:bg-primary-container transition-colors">Discover trips</a>
+        <div class="col-span-full glass-panel rounded-3xl p-8 text-center border border-slate-200/80 dark:border-slate-800">
+          <div class="w-16 h-16 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center mx-auto mb-4">
+            <span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+          </div>
+          <h3 class="font-heading font-bold text-lg text-on-surface mb-1">No saved itineraries</h3>
+          <p class="font-body text-sm text-on-surface-variant max-w-sm mx-auto mb-6">Explore community itineraries and save your favorite trips.</p>
+          <a href="discover.html" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-white font-heading font-bold text-sm hover:bg-primary-container shadow-md hover:shadow-lg transition-all">
+            <span class="material-symbols-outlined text-lg">explore</span>
+            Discover Trips
+          </a>
         </div>
       `;
     } else {
       savedGrid.innerHTML = displaySaved.map((trip, idx) => `
-        <div class="glass-panel rounded-2xl overflow-hidden group cursor-pointer hover:-translate-y-1 transition-transform duration-300" onclick="window.location.href='saved-itinerary.html?id=${trip.id}'">
-          <div class="h-48 w-full relative">
-            <img id="savedTripImg-${idx}" alt="${trip.destination || 'Trip'}" class="w-full h-full object-cover" src="${trip.image || 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80'}"/>
-            <div class="absolute top-4 right-4 bg-secondary-fixed/90 backdrop-blur-sm px-3 py-1 rounded-full font-label-sm text-label-sm text-on-secondary-fixed shadow-sm">Saved</div>
+        <div class="glass-panel rounded-3xl overflow-hidden group cursor-pointer card-hover-effect border border-slate-200/80 dark:border-slate-800 flex flex-col justify-between" onclick="window.location.href='saved-itinerary.html?id=${trip.id}'">
+          <div class="h-48 w-full relative overflow-hidden bg-slate-100 dark:bg-slate-800">
+            <img id="savedTripImg-${idx}" alt="${trip.destination || 'Trip'}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="${trip.image || 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80'}"/>
+            <div class="absolute top-3.5 right-3.5 bg-amber-500 text-white backdrop-blur-md px-3 py-1 rounded-full font-heading font-bold text-xs shadow-sm flex items-center gap-1">
+              <span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">bookmark</span> Saved
+            </div>
           </div>
-          <div class="p-6">
-            <h3 class="font-label-md text-label-md text-on-surface text-lg mb-1">${trip.title || trip.destination}</h3>
-            <p class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1 mb-4">
-              <span class="material-symbols-outlined text-sm">calendar_month</span> ${formatDateRange(trip.startDate, trip.endDate)}
-            </p>
-            <div class="flex flex-wrap gap-2">
-              <span class="px-3 py-1 bg-primary-fixed text-on-primary-fixed font-label-sm text-label-sm rounded-full">${trip.destination}</span>
-              <span class="px-3 py-1 bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm rounded-full">${(trip.itinerary || []).length} days</span>
+          <div class="p-5 space-y-3 flex-grow flex flex-col justify-between">
+            <div>
+              <h3 class="font-heading font-bold text-lg text-on-surface group-hover:text-primary transition-colors line-clamp-1">${trip.title || trip.destination}</h3>
+              <p class="font-body text-xs text-on-surface-variant flex items-center gap-1.5 mt-1">
+                <span class="material-symbols-outlined text-sm text-primary">calendar_month</span> ${formatDateRange(trip.startDate, trip.endDate)}
+              </p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2 pt-1 border-t border-slate-100 dark:border-slate-800/80">
+              <span class="px-2.5 py-1 bg-amber-500/10 text-amber-600 dark:text-amber-400 font-heading font-semibold text-xs rounded-full">${trip.destination}</span>
+              <span class="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-on-surface font-heading font-semibold text-xs rounded-full">${(trip.itinerary || []).length} days</span>
             </div>
           </div>
         </div>
       `).join('');
 
-      // Load place-specific images for saved trips that don't have one.
+      // Load place-specific images for saved trips
       displaySaved.forEach((trip, idx) => {
         if (!trip.image && typeof getDestinationImage === 'function') {
           getDestinationImage(trip.destination).then(url => {
@@ -540,7 +570,7 @@
       });
     }
 
-    // Edit form defaults
+    // Modal default inputs
     document.getElementById('editName').value = user.name || '';
     document.getElementById('editEmail').value = user.email || '';
     document.getElementById('editBio').value = user.bio || '';
@@ -552,7 +582,7 @@
     if (!preview) return;
     delete preview.dataset.avatar;
     preview.innerHTML = typeof renderAvatarHTML === 'function'
-      ? renderAvatarHTML(user, 'w-full h-full', 'text-2xl')
+      ? renderAvatarHTML(user, 'w-full h-full object-cover', 'text-2xl')
       : `<div class="w-full h-full rounded-full bg-[#005da7] text-white flex items-center justify-center font-bold text-2xl">${user.name ? user.name.charAt(0).toUpperCase() : 'U'}</div>`;
   }
 
@@ -582,7 +612,7 @@
     const file = e.target.files[0];
     if (!file) return;
     if (file.size > 2 * 1024 * 1024) {
-      showToast('Image must be under 2MB', 'error');
+      if (typeof showToast === 'function') showToast('Image must be under 2MB', 'error');
       e.target.value = '';
       return;
     }
@@ -613,14 +643,20 @@
       updates.avatar = preview.dataset.avatar;
     }
 
-    updateUser(user.id, updates);
-    showToast('Profile updated!', 'success');
+    if (typeof updateUser === 'function') {
+      updateUser(user.id, updates);
+    }
+    if (typeof showToast === 'function') {
+      showToast('Profile updated!', 'success');
+    }
     closeModal();
     renderDashboard();
   });
 
-  // Initialize
-  initNav('dashboard');
+  // Boot Navbar and Dashboard
+  if (typeof initNav === 'function') {
+    initNav('dashboard');
+  }
   renderDashboard();
 })();
 </script>
