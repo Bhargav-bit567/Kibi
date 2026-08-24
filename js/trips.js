@@ -1,9 +1,3 @@
-/* ============================================
-   Kibi — Trips Module
-   CRUD operations, tab management, trip cards
-   ============================================ */
-
-// Curated Unsplash travel photos used when Wikipedia/TripMate has no image.
 const DESTINATION_FALLBACK_IMAGES = [
   'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1600&q=80',
   'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1600&q=80',
@@ -93,14 +87,10 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-/* ==========================================
-   MY TRIPS PAGE
-   ========================================== */
 function initMyTrips(user) {
   const tabs = document.querySelectorAll('.tab');
   const tabContents = document.querySelectorAll('.tab-content');
 
-  // Tab switching
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
       tabs.forEach(t => t.classList.remove('active'));
@@ -117,6 +107,16 @@ function initMyTrips(user) {
   renderSavedTripsTab(user);
 }
 
+function renderEmptyState(heading, message, actionHtml) {
+  return `
+    <div class="empty-state">
+      <h3 class="heading-4 font-serif text-charcoal mb-1">${heading}</h3>
+      <p class="text-text-secondary">${message}</p>
+      ${actionHtml}
+    </div>
+  `;
+}
+
 function renderPlannedTrips(user) {
   const container = document.getElementById('plannedTrips');
   if (!container) return;
@@ -124,13 +124,11 @@ function renderPlannedTrips(user) {
   const trips = getUserTrips(user.id);
 
   if (trips.length === 0) {
-    container.innerHTML = `
-      <div class="empty-state">
-        <h3 class="heading-4 font-serif text-charcoal mb-1">No planned trips yet</h3>
-        <p class="text-text-secondary">Start by planning your first adventure!</p>
-        <a href="plan-trip.html" class="btn btn-accent mt-4 shadow-soft hover:shadow-card transition-shadow">Plan a Trip</a>
-      </div>
-    `;
+    container.innerHTML = renderEmptyState(
+      'No planned trips yet',
+      'Start by planning your first adventure!',
+      '<a href="plan-trip.html" class="btn btn-accent mt-4 shadow-soft hover:shadow-card transition-shadow">Plan a Trip</a>'
+    );
     return;
   }
 
@@ -138,7 +136,6 @@ function renderPlannedTrips(user) {
     ${trips.map(trip => renderTripCard(trip, true)).join('')}
   </div>`;
 
-  // Attach delete handlers
   container.querySelectorAll('.delete-trip').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -162,13 +159,11 @@ function renderJoinedTrips(user) {
   const joinedTrips = trips.filter(t => joinedTripIds.includes(t.id));
 
   if (joinedTrips.length === 0) {
-    container.innerHTML = `
-      <div class="empty-state">
-        <h3 class="heading-4 font-serif text-charcoal mb-1">No joined trips</h3>
-        <p class="text-text-secondary">Browse trips and request to join!</p>
-        <a href="discover.html" class="btn btn-accent mt-4 shadow-soft hover:shadow-card transition-shadow">Discover Trips</a>
-      </div>
-    `;
+    container.innerHTML = renderEmptyState(
+      'No joined trips',
+      'Browse trips and request to join!',
+      '<a href="discover.html" class="btn btn-accent mt-4 shadow-soft hover:shadow-card transition-shadow">Discover Trips</a>'
+    );
     return;
   }
 
@@ -187,13 +182,11 @@ function renderSavedTripsTab(user) {
   const trips = getSavedTrips(user.id);
 
   if (trips.length === 0) {
-    container.innerHTML = `
-      <div class="empty-state">
-        <h3 class="heading-4 font-serif text-charcoal mb-1">No saved trips</h3>
-        <p class="text-text-secondary">Save trips you're interested in!</p>
-        <a href="discover.html" class="btn btn-accent mt-4 shadow-soft hover:shadow-card transition-shadow">Discover Trips</a>
-      </div>
-    `;
+    container.innerHTML = renderEmptyState(
+      'No saved trips',
+      'Save trips you\'re interested in!',
+      '<a href="discover.html" class="btn btn-accent mt-4 shadow-soft hover:shadow-card transition-shadow">Discover Trips</a>'
+    );
     return;
   }
 
@@ -201,7 +194,6 @@ function renderSavedTripsTab(user) {
     ${trips.map(trip => renderTripCard(trip, true, null, true)).join('')}
   </div>`;
 
-  // Attach delete handlers for saved trips
   container.querySelectorAll('.delete-trip').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -242,9 +234,6 @@ function renderTripCard(trip, showDelete = false, status = null, savedView = fal
   `;
 }
 
-/* ==========================================
-   TRIP DETAILS PAGE
-   ========================================== */
 function initTripDetails() {
   const tripId = getQueryParam('id');
   if (!tripId) {
@@ -259,10 +248,8 @@ function initTripDetails() {
   }
 
   const user = getCurrentUser();
-  const dest = getDestinationById(trip.destinationId);
   const hasRequested = user ? hasRequestedToJoin(user.id, tripId) : false;
 
-  // Header
   const headerEl = document.getElementById('tripHeader');
   if (headerEl) {
     headerEl.style.backgroundImage = `url(${trip.image || 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80'})`;
@@ -276,7 +263,6 @@ function initTripDetails() {
     `;
   }
 
-  // Description
   const descEl = document.getElementById('tripDescription');
   if (descEl) {
     descEl.innerHTML = `
@@ -289,7 +275,6 @@ function initTripDetails() {
     `;
   }
 
-  // Compatibility
   if (user) {
     const compatEl = document.getElementById('tripCompat');
     if (compatEl) {
@@ -303,7 +288,6 @@ function initTripDetails() {
     }
   }
 
-  // Itinerary
   const itinEl = document.getElementById('tripItinerary');
   if (itinEl && trip.itinerary) {
     itinEl.innerHTML = `
@@ -328,7 +312,6 @@ function initTripDetails() {
     `;
   }
 
-  // Members
   const membersEl = document.getElementById('tripMembers');
   if (membersEl && trip.members) {
     const travelers = getSampleTravelers();
@@ -350,7 +333,6 @@ function initTripDetails() {
     `;
   }
 
-  // Join button
   const joinBtn = document.getElementById('joinBtn');
   if (joinBtn) {
     if (!user) {
@@ -384,7 +366,6 @@ function initTripDetails() {
     }
   }
 
-  // Save button
   const saveBtn = document.getElementById('saveBtn');
   if (saveBtn && user) {
     saveBtn.addEventListener('click', () => {
@@ -406,19 +387,14 @@ function initTripDetails() {
     });
   }
 
-  // Initialize animations
   if (typeof runAnimationInit === 'function') runAnimationInit();
 }
 
-/* ==========================================
-   PLAN TRIP PAGE
-   ========================================== */
 function initPlanTrip() {
   const user = getCurrentUser();
   const form = document.getElementById('planForm');
   if (!form) return;
 
-  // Destination Search (Nominatim API Integration)
   const destSearch = document.getElementById('destSearch');
   const destSuggestions = document.getElementById('destSuggestions');
   const destId = document.getElementById('destId');
@@ -440,7 +416,6 @@ function initPlanTrip() {
       destSuggestions.style.display = 'block';
     }
 
-    // Close suggestions when clicking outside
     document.addEventListener('click', (e) => {
       if (!destSearch.contains(e.target) && !destSuggestions.contains(e.target)) {
         hideSuggestions();
@@ -457,7 +432,6 @@ function initPlanTrip() {
         return;
       }
 
-      // Debounce API calls — 250ms feels snappy while still avoiding spam
       debounceTimer = setTimeout(async () => {
         showSuggestions('<div class="px-4 py-3 text-text-muted dark:text-[#BDC1C6] text-sm">Searching...</div>');
 
@@ -483,7 +457,6 @@ function initPlanTrip() {
           </div>
         `).join(''));
 
-        // Add click handlers to suggestions
         destSuggestions.querySelectorAll('.suggestion-item').forEach(item => {
           item.addEventListener('click', () => {
             destSearch.value = item.dataset.name;
@@ -497,7 +470,6 @@ function initPlanTrip() {
     });
   }
 
-  // Pre-fill from user preferences
   if (user) {
     const budgetInput = document.getElementById('budgetInput');
     if (budgetInput && user.budget) {
@@ -506,17 +478,14 @@ function initPlanTrip() {
     }
   }
 
-  // Interest chips
   document.querySelectorAll('#planInterests .chip').forEach(chip => {
     chip.addEventListener('click', () => chip.classList.toggle('active'));
   });
 
-  // Travel style chips
   document.querySelectorAll('#planStyles .chip').forEach(chip => {
     chip.addEventListener('click', () => chip.classList.toggle('active'));
   });
 
-  // Generate itinerary
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -534,20 +503,17 @@ function initPlanTrip() {
     const socialPref = document.getElementById('socialSelect')?.value || 'Small Group';
     const pace = document.getElementById('paceSelect')?.value || 'Moderate';
 
-    // Validation
     if (!destinationName) return showToast('Please select a destination', 'error');
     if (!startDate) return showToast('Please select a start date', 'error');
     if (!endDate) return showToast('Please select an end date', 'error');
     if (new Date(endDate) <= new Date(startDate)) return showToast('End date must be after start date', 'error');
     if (!budget || budget < 1000) return showToast('Please enter a valid budget (min ₹1,000)', 'error');
 
-    // Show loading state
     const submitBtn = form.querySelector('button[type="submit"]');
     const originalText = submitBtn.textContent;
     submitBtn.innerHTML = '<span class="spinner inline-block w-5 h-5 border-2 mr-2 align-middle"></span> Generating...';
     submitBtn.disabled = true;
 
-    // Generate async
     try {
       const result = await generateItinerary({
         destinationId,
@@ -567,7 +533,6 @@ function initPlanTrip() {
         throw new Error('Itinerary generation failed');
       }
 
-      // Store the generated itinerary temporarily
       sessionStorage.setItem('wm_generated_itinerary', JSON.stringify(result));
 
       showToast('Itinerary generated! 🎉', 'success');
@@ -584,9 +549,6 @@ function initPlanTrip() {
   });
 }
 
-/* ==========================================
-   ITINERARY PAGE
-   ========================================== */
 function initItineraryPage() {
   try {
     runInitItineraryPage();
@@ -615,36 +577,39 @@ function deepClone(obj) {
   }
 }
 
+function loadSavedTrip(tripId) {
+  const savedList = getSavedItineraries ? getSavedItineraries() : [];
+  let saved = savedList.find(t => t.id === tripId) || null;
+
+  if (!saved) {
+    try {
+      const isolated = localStorage.getItem(`wm_saved_itinerary_${tripId}`);
+      if (isolated) saved = JSON.parse(isolated);
+    } catch (e) {}
+  }
+
+  if (!saved) {
+    saved = getTripById(tripId);
+  }
+
+  return saved;
+}
+
 function runInitItineraryPage() {
   const params = new URLSearchParams(window.location.search);
   const tripId = params.get('id');
 
-  // STRICT: If a saved trip ID is in the URL, ONLY load that saved trip.
   if (tripId) {
-    // Extra safety: remove any generated itinerary lingering in sessionStorage
     try { sessionStorage.removeItem('wm_generated_itinerary'); } catch (e) {}
 
-    // Load from the saved itineraries array first, then legacy storages.
-    let saved = null;
-    const savedList = getSavedItineraries ? getSavedItineraries() : [];
-    saved = savedList.find(t => t.id === tripId) || null;
-
-    if (!saved) {
-      try {
-        const isolated = localStorage.getItem(`wm_saved_itinerary_${tripId}`);
-        if (isolated) saved = JSON.parse(isolated);
-      } catch (e) {}
-    }
-    if (!saved) {
-      saved = getTripById(tripId);
-    }
-
+    const saved = loadSavedTrip(tripId);
     const isValidSaved = saved && saved.destination && (Array.isArray(saved.itinerary) && saved.itinerary.length > 0);
+
     if (isValidSaved) {
       renderLoadedItinerary(deepClone(saved));
       return;
     }
-    // Saved trip missing or corrupt — show clear error instead of falling back
+
     console.error('[Itinerary] Saved trip not found or invalid for id:', tripId, saved);
     const main = document.querySelector('main');
     if (main) {
@@ -659,7 +624,6 @@ function runInitItineraryPage() {
     return;
   }
 
-  // No ID in URL: use generated itinerary from plan-trip/discover flow
   let itinerary = null;
   try {
     const generated = sessionStorage.getItem('wm_generated_itinerary');
@@ -677,7 +641,6 @@ function runInitItineraryPage() {
 }
 
 function renderLoadedItinerary(itinerary) {
-  // Normalize fields so downstream code doesn't crash on missing data
   itinerary.destination = itinerary.destination || 'Your Destination';
   itinerary.startDate = itinerary.startDate || new Date().toISOString();
   itinerary.endDate = itinerary.endDate || new Date().toISOString();
@@ -686,14 +649,12 @@ function renderLoadedItinerary(itinerary) {
   itinerary.budgetBreakdown = itinerary.budgetBreakdown || { stay: 0, food: 0, transport: 0, activities: 0, total: 0 };
   itinerary.weather = itinerary.weather || {};
 
-  // 1. Hero Section
   const heroEl = document.getElementById('itinHero');
   if (heroEl) {
     const fallbackBg = `https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1600&q=80`;
 
     function renderHero(imageUrl, description) {
       const currentUser = getCurrentUser();
-      // Check My Trips (wm_trips) for an existing planned trip with same destination + start date.
       const alreadySaved = currentUser && getUserTrips(currentUser.id).some(t =>
         t.destination === itinerary.destination && t.startDate === itinerary.startDate
       );
@@ -740,7 +701,6 @@ function renderLoadedItinerary(itinerary) {
           }
           if (alreadySaved) return;
 
-          // Re-check in case another tab or action saved it meanwhile.
           const stillNew = !getUserTrips(currentUser.id).some(t =>
             t.destination === itinerary.destination && t.startDate === itinerary.startDate
           );
@@ -752,7 +712,6 @@ function renderLoadedItinerary(itinerary) {
             return;
           }
 
-          // Guard: don't save if itinerary data is incomplete
           if (!itinerary.destination || !itinerary.startDate || !itinerary.endDate ||
               !Array.isArray(itinerary.itinerary) || itinerary.itinerary.length === 0) {
             showToast('Itinerary is still loading. Please wait a moment and try again.', 'error');
@@ -763,7 +722,6 @@ function renderLoadedItinerary(itinerary) {
           saveBtn.dataset.saving = 'true';
           saveBtn.innerHTML = '<span class="spinner w-4 h-4 mr-2 border-2"></span> Saving...';
           setTimeout(() => {
-            // Save generated itineraries from Plan Trip into My Trips (wm_trips).
             const newTrip = {
               ...deepClone(itinerary),
               title: `${itinerary.destination} Trip`,
@@ -781,13 +739,11 @@ function renderLoadedItinerary(itinerary) {
       }
     }
 
-    // Load a place-specific hero image, falling back to a deterministic image per destination.
     getDestinationImage(itinerary.destination).then(url => {
       if (url) renderHero(url, null);
     });
   }
 
-  // 2. Timeline
   const timelineEl = document.getElementById('itinTimeline');
   if (timelineEl) {
     const colors = ['blue-500', 'green-500', 'orange-400', 'purple-500', 'pink-500'];
@@ -839,7 +795,6 @@ function renderLoadedItinerary(itinerary) {
     }
   }
 
-  // 3. Accommodations
   const accommodationsSection = document.getElementById('itinAccommodations');
   if (accommodationsSection && itinerary.accommodations.length > 0) {
     accommodationsSection.innerHTML = `
@@ -888,20 +843,19 @@ function renderLoadedItinerary(itinerary) {
     }
   }
 
-  // 4. Budget
   const budgetEl = document.getElementById('itinBudget');
   if (budgetEl) {
-    const b = itinerary.budgetBreakdown;
-    const tot = b.total || 1;
-    const pStay = Math.round((b.stay / tot) * 100) || 0;
-    const pFood = Math.round((b.food / tot) * 100) || 0;
-    const pTrans = Math.round((b.transport / tot) * 100) || 0;
-    const pAct = Math.round((b.activities / tot) * 100) || 0;
+    const budget = itinerary.budgetBreakdown;
+    const total = budget.total || 1;
+    const pStay = Math.round((budget.stay / total) * 100) || 0;
+    const pFood = Math.round((budget.food / total) * 100) || 0;
+    const pTrans = Math.round((budget.transport / total) * 100) || 0;
+    const pAct = Math.round((budget.activities / total) * 100) || 0;
 
     budgetEl.innerHTML = `
         <div class="flex justify-between items-center mb-6">
             <h3 class="text-xl font-bold text-gray-900 dark:text-[#F1F3F4]">Budget Estimate</h3>
-            <span class="text-2xl font-bold text-brand-blue dark:text-[#7EB8FF]">₹${b.total || 0}</span>
+            <span class="text-2xl font-bold text-brand-blue dark:text-[#7EB8FF]">₹${budget.total || 0}</span>
         </div>
         <div class="flex h-3 w-full rounded-full overflow-hidden mb-6">
             <div class="bg-brand-blue dark:bg-[#5C9CE6]" style="width: ${pStay}%"></div>
@@ -912,30 +866,28 @@ function renderLoadedItinerary(itinerary) {
         <ul class="space-y-4">
             <li class="flex justify-between items-center text-sm">
                 <div class="flex items-center gap-2 text-gray-700 dark:text-[#BDC1C6]"><span class="w-3 h-3 rounded-full bg-brand-blue dark:bg-[#5C9CE6]"></span> Stay</div>
-                <span class="font-bold text-gray-900 dark:text-[#F1F3F4]">₹${b.stay || 0}</span>
+                <span class="font-bold text-gray-900 dark:text-[#F1F3F4]">₹${budget.stay || 0}</span>
             </li>
             <li class="flex justify-between items-center text-sm">
                 <div class="flex items-center gap-2 text-gray-700 dark:text-[#BDC1C6]"><span class="w-3 h-3 rounded-full bg-orange-400"></span> Food &amp; Dining</div>
-                <span class="font-bold text-gray-900 dark:text-[#F1F3F4]">₹${b.food || 0}</span>
+                <span class="font-bold text-gray-900 dark:text-[#F1F3F4]">₹${budget.food || 0}</span>
             </li>
             <li class="flex justify-between items-center text-sm">
                 <div class="flex items-center gap-2 text-gray-700 dark:text-[#BDC1C6]"><span class="w-3 h-3 rounded-full bg-green-400"></span> Transportation</div>
-                <span class="font-bold text-gray-900 dark:text-[#F1F3F4]">₹${b.transport || 0}</span>
+                <span class="font-bold text-gray-900 dark:text-[#F1F3F4]">₹${budget.transport || 0}</span>
             </li>
             <li class="flex justify-between items-center text-sm">
                 <div class="flex items-center gap-2 text-gray-700 dark:text-[#BDC1C6]"><span class="w-3 h-3 rounded-full bg-purple-400"></span> Activities</div>
-                <span class="font-bold text-gray-900 dark:text-[#F1F3F4]">₹${b.activities || 0}</span>
+                <span class="font-bold text-gray-900 dark:text-[#F1F3F4]">₹${budget.activities || 0}</span>
             </li>
         </ul>
     `;
   }
 
-  // 5. Weather
   const weatherEl = document.getElementById('itinWeather');
   if (weatherEl) {
     renderWeatherCard(weatherEl, itinerary.weather);
 
-    // Refresh weather from TripMate if coordinates are available
     if (itinerary.lat && itinerary.lon && typeof TripMateAPI !== 'undefined') {
       Promise.all([
         TripMateAPI.getWeather(itinerary.lat, itinerary.lon).catch(() => null),
@@ -975,7 +927,6 @@ function renderLoadedItinerary(itinerary) {
     }
   }
 
-  // 6. Destination Gallery (TripMate scenic images)
   const essentialsSection = document.querySelector('#itinWeather')?.closest('.grid');
   if (essentialsSection && typeof TripMateAPI !== 'undefined') {
     TripMateAPI.getMultipleImages(itinerary.destination).then(urls => {
@@ -1002,9 +953,7 @@ function renderLoadedItinerary(itinerary) {
     });
   }
 
-  // 7. Map modal
   initMapModal(itinerary);
-
 }
 
 function getWeatherIcon(code) {
@@ -1041,8 +990,6 @@ function initMapModal(itinerary) {
     document.documentElement.style.overflow = 'hidden';
 
     if (!initialized) {
-      // Leaflet requires the container to be visible and measured.
-      // Wait for the modal to fully render before initializing.
       setTimeout(() => {
         ensureCoords().then(() => {
           initMap();
@@ -1050,10 +997,7 @@ function initMapModal(itinerary) {
         });
       }, 600);
     } else if (map) {
-      requestAnimationFrame(() => {
-        setTimeout(() => map.invalidateSize(), 200);
-        setTimeout(() => map.invalidateSize(), 600);
-      });
+      requestAnimationFrame(() => map.invalidateSize());
     }
   }
 
@@ -1078,7 +1022,6 @@ function initMapModal(itinerary) {
     if (itinerary.lat && itinerary.lon) return;
     if (!itinerary.destination) return;
 
-    // Try geocoding API first
     if (typeof GeocodingAPI !== 'undefined') {
       try {
         const results = await GeocodingAPI.searchDestination(itinerary.destination);
@@ -1092,7 +1035,6 @@ function initMapModal(itinerary) {
       }
     }
 
-    // Fallback to TripMate place info
     if (typeof TripMateAPI !== 'undefined') {
       try {
         const place = await TripMateAPI.getPlaceInfo(itinerary.destination);
@@ -1123,7 +1065,6 @@ function initMapModal(itinerary) {
     mapContainer.style.width = '100%';
     mapContainer.style.height = '100%';
 
-    // Ensure Leaflet sees a measured container
     const rect = mapContainer.getBoundingClientRect();
     console.log('[Kibi Map] initMap called with lat/lon:', lat, lon);
     console.log('[Kibi Map] container dimensions:', rect);
@@ -1142,25 +1083,18 @@ function initMapModal(itinerary) {
       maxZoom: 19
     }).addTo(map);
 
-    // Re-measure map once tiles start loading and after container settles.
     requestAnimationFrame(() => {
       setTimeout(() => { if (map) map.invalidateSize(); }, 200);
-      setTimeout(() => { if (map) map.invalidateSize(); }, 600);
-      setTimeout(() => { if (map) map.invalidateSize(); }, 1000);
-      setTimeout(() => { if (map) map.invalidateSize(); }, 1600);
     });
 
-    // If tiles fail to paint, force a reload by invalidating size again.
     tileLayer.on('load', () => console.log('[Kibi Map] tiles loaded'));
     tileLayer.on('tileerror', (e) => console.warn('[Kibi Map] tile error', e));
 
-    // If the modal resizes (e.g. orientation change), keep map sized correctly.
     if (typeof ResizeObserver !== 'undefined') {
       const ro = new ResizeObserver(() => { if (map) map.invalidateSize(); });
       ro.observe(mapContainer);
     }
 
-    // Destination marker
     const destMarker = L.marker([lat, lon], {
       icon: L.divIcon({
         className: 'custom-map-marker',
@@ -1173,7 +1107,6 @@ function initMapModal(itinerary) {
 
     const bounds = [[lat, lon]];
 
-    // Accommodation markers
     const accColors = ['#005da7', '#01658c', '#555d63'];
     (itinerary.accommodations || []).forEach((acc, idx) => {
       if (acc.lat && acc.lon) {
@@ -1190,7 +1123,6 @@ function initMapModal(itinerary) {
       }
     });
 
-    // Activity markers per day + polylines
     const dayColors = ['#3b82f6', '#22c55e', '#f97316', '#a855f7', '#ec4899'];
     (itinerary.itinerary || []).forEach((day, dIdx) => {
       const color = dayColors[dIdx % dayColors.length];
@@ -1212,7 +1144,6 @@ function initMapModal(itinerary) {
       });
 
       if (dayCoords.length >= 2) {
-        // Try to get a routed polyline; fall back to straight line
         drawRoute(dayCoords, color);
       }
     });
@@ -1225,7 +1156,7 @@ function initMapModal(itinerary) {
   async function drawRoute(coords, color) {
     if (!coords || coords.length < 2 || !map) return;
     try {
-      const route = await RoutingAPI.getRoute(coords.map(c => [c[1], c[0]])); // RoutingAPI expects [lon, lat]
+      const route = await RoutingAPI.getRoute(coords.map(c => [c[1], c[0]]));
       if (route && route.geometry && typeof L !== 'undefined' && L.Polyline && L.Polyline.fromEncoded) {
         L.Polyline.fromEncoded(route.geometry, { color, weight: 4, opacity: 0.8 }).addTo(map);
       } else if (route) {
@@ -1260,4 +1191,3 @@ function renderWeatherCard(el, weather, sun = null) {
       </div>` : ''}
   `;
 }
-
