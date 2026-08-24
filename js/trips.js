@@ -1035,6 +1035,10 @@ function initMapModal(itinerary) {
   let initialized = false;
 
   function openModal() {
+    // Move modal to body root so it escapes any transformed/scrolled ancestors.
+    if (modal.parentElement !== document.body) {
+      document.body.appendChild(modal);
+    }
     modal.classList.remove('hidden');
     modal.style.display = 'flex';
     modal.style.alignItems = 'center';
@@ -1061,7 +1065,7 @@ function initMapModal(itinerary) {
 
   function closeModal() {
     modal.classList.add('hidden');
-    modal.style.display = '';
+    modal.style.display = 'none';
     modal.style.alignItems = '';
     modal.style.justifyContent = '';
     document.body.style.overflow = '';
