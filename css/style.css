@@ -1,9 +1,3 @@
-/* ============================================
-   Kibi — Global Reset & Component Styles
-   Tailwind CSS handles utilities; this file
-   provides fonts, tokens, and reusable components.
-   ============================================ */
-
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=Caveat:wght@400;500;600;700&display=swap');
 
 :root {
@@ -31,9 +25,6 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-
-*, *::before, *::after {
   transition-property: background-color, border-color, color, fill, stroke;
   transition-duration: 300ms;
   transition-timing-function: ease;
@@ -44,7 +35,6 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
-/* Smooth page transitions (opacity only, no transform so fixed children work) */
 body {
   opacity: 0;
   transition: opacity 320ms cubic-bezier(0.25, 1, 0.5, 1);
@@ -72,7 +62,6 @@ h1, h2, h3, h4, h5, h6, .font-serif {
   font-family: 'Outfit', sans-serif;
 }
 
-
 img, picture, video, canvas, svg {
   display: block;
   max-width: 100%;
@@ -97,9 +86,6 @@ ul, ol {
   list-style: none;
 }
 
-
-
-/* Utility helpers */
 .font-serif {
   font-family: 'Outfit', sans-serif;
 }
@@ -123,7 +109,6 @@ ul, ol {
   border: 0;
 }
 
-/* ---------- Buttons ---------- */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -206,14 +191,12 @@ ul, ol {
   width: 100%;
 }
 
-/* ---------- Cards ---------- */
 .card {
   background-color: var(--color-white);
   border-radius: 1rem;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.05);
 }
 
-/* ---------- Forms ---------- */
 .form-group {
   margin-bottom: 1.25rem;
 }
@@ -287,7 +270,6 @@ ul, ol {
   background-color: var(--color-border);
 }
 
-/* ---------- Chips & Tags ---------- */
 .chip {
   display: inline-flex;
   align-items: center;
@@ -330,7 +312,6 @@ ul, ol {
   color: var(--color-sage);
 }
 
-/* ---------- Page Layout ---------- */
 .page {
   padding-top: 6rem;
   padding-bottom: 4rem;
@@ -354,7 +335,6 @@ ul, ol {
   margin-bottom: 0.75rem;
 }
 
-/* ---------- Typography helpers ---------- */
 .heading-1 {
   font-size: 2.5rem;
   line-height: 1.1;
@@ -392,7 +372,6 @@ ul, ol {
   text-align: center;
 }
 
-/* ---------- Empty state ---------- */
 .empty-state {
   text-align: center;
   padding: 3rem 1rem;
@@ -409,7 +388,6 @@ ul, ol {
   color: var(--color-text-muted);
 }
 
-/* ---------- Tabs ---------- */
 .tabs {
   display: flex;
   gap: 0.5rem;
@@ -444,7 +422,6 @@ ul, ol {
   display: block;
 }
 
-/* ---------- Trip cards ---------- */
 .trip-card {
   background-color: var(--color-white);
   border-radius: 1rem;
@@ -509,7 +486,6 @@ ul, ol {
   color: var(--color-text-secondary);
 }
 
-/* ---------- Destination cards ---------- */
 .dest-card {
   position: relative;
   border-radius: 1rem;
@@ -559,7 +535,6 @@ ul, ol {
   transform: translateY(0);
 }
 
-/* ---------- Traveler cards ---------- */
 .traveler-card {
   background-color: var(--color-white);
   border-radius: 1rem;
@@ -615,7 +590,6 @@ ul, ol {
   transition: width 1s ease;
 }
 
-/* ---------- Stat cards ---------- */
 .stat-card {
   background-color: var(--color-white);
   border-radius: 1rem;
@@ -635,7 +609,6 @@ ul, ol {
   color: var(--color-text-secondary);
 }
 
-/* ---------- Itinerary timeline ---------- */
 .itinerary-timeline {
   display: flex;
   flex-direction: column;
@@ -702,7 +675,6 @@ ul, ol {
   margin-top: 0.25rem;
 }
 
-/* ---------- Budget grid ---------- */
 .budget-grid {
   display: flex;
   flex-direction: column;
@@ -737,7 +709,6 @@ ul, ol {
   color: var(--color-white);
 }
 
-/* ---------- Route SVG ---------- */
 .route-svg {
   width: 100%;
   height: auto;
@@ -765,7 +736,6 @@ ul, ol {
   fill: var(--color-text-secondary);
 }
 
-/* ---------- Search & filters ---------- */
 .search-bar {
   position: relative;
   display: flex;
@@ -818,7 +788,6 @@ ul, ol {
   color: var(--color-white);
 }
 
-/* ---------- Suggestions dropdown ---------- */
 .suggestions-dropdown {
   position: absolute;
   top: 100%;
@@ -869,7 +838,6 @@ html.dark .suggestion-item .text-xs {
   color: #BDC1C6 !important;
 }
 
-/* Hide native select arrow while keeping custom Material icon */
 select {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -881,14 +849,12 @@ select::-ms-expand {
   display: none;
 }
 
-/* Plan Trip chip active state */
 .chip.active {
   background-color: var(--color-primary) !important;
   color: var(--color-white) !important;
   border-color: var(--color-primary) !important;
 }
 
-/* Remove native select arrow on Plan Trip dropdowns (Tailwind forms plugin adds one) */
 #planForm select,
 #socialSelect,
 #paceSelect {
@@ -899,7 +865,6 @@ select::-ms-expand {
   background-repeat: no-repeat !important;
 }
 
-/* ---------- Onboarding ---------- */
 .progress-bar {
   display: flex;
   gap: 0.5rem;
@@ -998,7 +963,6 @@ select::-ms-expand {
   color: var(--color-text-muted);
 }
 
-/* ---------- Profile ---------- */
 .profile-header {
   display: flex;
   align-items: center;
@@ -1032,7 +996,6 @@ select::-ms-expand {
   font-weight: 500;
 }
 
-/* ---------- Split auth layout ---------- */
 .split-layout {
   display: flex;
   min-height: 100vh;
@@ -1081,7 +1044,6 @@ select::-ms-expand {
   }
 }
 
-/* ---------- Toast / Popup Notification ---------- */
 .toast {
   position: fixed;
   bottom: 1.5rem;
@@ -1143,7 +1105,6 @@ html.dark .toast {
   box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.25);
 }
 
-/* ---------- Spinner ---------- */
 .spinner {
   width: 24px;
   height: 24px;
@@ -1153,7 +1114,6 @@ html.dark .toast {
   animation: spin 0.8s linear infinite;
 }
 
-/* ---------- Keyframes ---------- */
 @keyframes fadeSlideUp {
   from { opacity: 0; transform: translateY(30px); }
   to { opacity: 1; transform: translateY(0); }
@@ -1198,7 +1158,6 @@ html.dark .toast {
   to { opacity: 1; transform: translateX(0); }
 }
 
-/* ---------- Custom cursor ---------- */
 .cursor-dot,
 .cursor-outline {
   position: fixed;
@@ -1238,7 +1197,6 @@ html.dark .toast {
   }
 }
 
-/* ---------- Dark Theme ---------- */
 html {
   transition: background-color 400ms ease, color 400ms ease;
 }
@@ -1333,7 +1291,6 @@ html.dark #navActivePill {
   border-color: rgba(255, 255, 255, 0.08) !important;
 }
 
-/* Profile dropdown popup - consistent across all pages */
 html.dark #profileDropdown,
 html.dark .profile-dropdown {
   background-color: #161B22 !important;
@@ -1423,7 +1380,7 @@ html.dark .glass-card,
 html.dark [class*="glass-card"],
 html.dark [class*="rounded-2xl"][class*="bg-white"],
 html.dark [class*="rounded-3xl"][class*="bg-white"],
-html.dark [class*="rounded-[16px]"][class*="bg-white"],
+html.dark [class*="rounded-\[16px\]"][class*="bg-white"],
 html.dark .bg-surface,
 html.dark .bg-surface-container,
 html.dark .bg-surface-container-low,
@@ -1490,7 +1447,6 @@ html.dark .bg-primary {
   background-color: #005da7 !important;
 }
 
-/* Reduce harsh white borders in dark mode */
 html.dark [class*="border-white"],
 html.dark [class*="border-slate-50"],
 html.dark [class*="border-slate-100"],
@@ -1504,7 +1460,6 @@ html.dark [class*="shadow-xl"] {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35) !important;
 }
 
-/* About & Dashboard specific */
 html.dark .bg-\[\#f9f9fc\],
 html.dark .bg-\[\#F8FAFC\],
 html.dark .bg-\[\#F7F5F0\],
@@ -1523,7 +1478,6 @@ html.dark [class*="bg-surface\\/"] {
   background-color: rgba(22, 27, 34, 0.85) !important;
 }
 
-/* Itinerary page specific */
 html.dark body[data-page="itinerary"] {
   background-color: #0B0F17 !important;
 }
@@ -1543,50 +1497,6 @@ html.dark body[data-page="itinerary"] .glass-panel {
 html.dark body[data-page="itinerary"] body::before {
   background: radial-gradient(circle at 15% 50%, rgba(74, 144, 226, 0.12) 0%, transparent 50%),
               radial-gradient(circle at 85% 30%, rgba(0, 93, 167, 0.12) 0%, transparent 50%);
-}
-
-/* ---------- Hamburger Menu Icon ---------- */
-.hamburger-box {
-  width: 20px;
-  height: 16px;
-  position: relative;
-  display: inline-block;
-  vertical-align: middle;
-}
-
-.hamburger-line {
-  display: block;
-  position: absolute;
-  left: 0;
-  width: 100%;
-  height: 3px;
-  background-color: #0F1419;
-  border-radius: 3px;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
-  transition: transform 0.25s ease, opacity 0.25s ease, top 0.25s ease;
-}
-
-html.dark .hamburger-line {
-  background-color: #FFFFFF;
-  box-shadow: 0 1px 2px rgba(0,0,0,0.4);
-}
-
-.hamburger-line:nth-child(1) { top: 0; }
-.hamburger-line:nth-child(2) { top: 6px; }
-.hamburger-line:nth-child(3) { top: 12px; }
-
-#mobile-menu-btn.menu-open .hamburger-line:nth-child(1) {
-  top: 6px;
-  transform: rotate(45deg);
-}
-
-#mobile-menu-btn.menu-open .hamburger-line:nth-child(2) {
-  opacity: 0;
-}
-
-#mobile-menu-btn.menu-open .hamburger-line:nth-child(3) {
-  top: 6px;
-  transform: rotate(-45deg);
 }
 
 html.dark body[data-page="itinerary"] .text-gray-900,
@@ -1623,7 +1533,6 @@ html.dark body[data-page="itinerary"] .bg-white.text-primary {
   color: #7EB8FF !important;
 }
 
-/* Itinerary timeline & day cards */
 html.dark body[data-page="itinerary"] #itinTimeline .bg-white,
 html.dark body[data-page="itinerary"] #itinTimeline [class*="bg-white"],
 html.dark body[data-page="itinerary"] #itinAccommodations .glass-panel,
@@ -1687,7 +1596,6 @@ html.dark body[data-page="itinerary"] #itinTimeline .border-amber-200 {
   border-color: rgba(255, 255, 255, 0.12) !important;
 }
 
-/* Dashboard page specific */
 html.dark body.dashboard-page {
   background-color: #0B0F17 !important;
 }
@@ -1753,7 +1661,6 @@ html.dark body.dashboard-page .bg-tertiary-container {
   background-color: #1F2630 !important;
 }
 
-/* About page specific — force dark backgrounds/text */
 html.dark body.about-page {
   background-color: #0B0F17 !important;
 }
@@ -1815,13 +1722,11 @@ html.dark body.about-page .text-primary {
   color: #7EB8FF !important;
 }
 
-/* Logo white in dark mode */
 html.dark header a[href="index.html"],
 html.dark .logo-kibi {
   color: #FFFFFF !important;
 }
 
-/* Homepage hero & How It Works in dark mode */
 html.dark .hero-bg::before {
   background: linear-gradient(to bottom, rgba(0, 10, 25, 0.55) 0%, rgba(0, 0, 0, 0) 35%, rgba(11, 15, 23, 0) 80%, rgba(11, 15, 23, 1) 100%) !important;
 }
@@ -1874,15 +1779,11 @@ html.dark .filter-btn:not(.active) {
   border-color: rgba(255, 255, 255, 0.08) !important;
 }
 
-/* ── Discover page dark mode ─────────────────────────────────────────────── */
-
-/* Page background */
 html.dark .discover-page,
 html.dark body {
   background-color: #0B0F17 !important;
 }
 
-/* Hero heading & subtext */
 html.dark .text-\[\#1a1c1e\] {
   color: #F1F3F4 !important;
 }
@@ -1890,7 +1791,6 @@ html.dark .text-\[\#414751\] {
   color: #BDC1C6 !important;
 }
 
-/* Hero search bar */
 html.dark .glass-panel {
   background: rgba(22, 27, 34, 0.85) !important;
   border-color: rgba(255, 255, 255, 0.1) !important;
@@ -1908,7 +1808,6 @@ html.dark .search-input:focus {
   box-shadow: 0 0 0 3px rgba(126, 184, 255, 0.15) !important;
 }
 
-/* Filter pills */
 html.dark .filter-pill {
   background: #1C2128 !important;
   border-color: rgba(255, 255, 255, 0.12) !important;
@@ -1924,7 +1823,6 @@ html.dark .filter-pill.active {
   color: #fff !important;
 }
 
-/* Active filter tags */
 html.dark .active-tag {
   background: rgba(0, 93, 167, 0.25) !important;
   color: #7EB8FF !important;
@@ -1933,18 +1831,15 @@ html.dark .active-tag button {
   color: #7EB8FF !important;
 }
 
-/* Section labels */
 html.dark .section-label {
   color: #F1F3F4 !important;
 }
 
-/* Skeleton shimmer */
 html.dark .skeleton {
   background: linear-gradient(90deg, #1C2128 25%, #242B35 50%, #1C2128 75%) !important;
   background-size: 400% 100% !important;
 }
 
-/* Place cards */
 html.dark .place-card {
   background: #161B22 !important;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45) !important;
@@ -1959,25 +1854,21 @@ html.dark .place-card p {
   color: #BDC1C6 !important;
 }
 
-/* Card tags — season status pill */
 html.dark .place-card .bg-\[\#f3f3f6\] {
   background: rgba(255, 255, 255, 0.07) !important;
   color: #BDC1C6 !important;
 }
 
-/* Card tags — mood pills (blue) */
 html.dark .place-card .bg-\[\#d4e3ff\] {
   background: rgba(0, 93, 167, 0.3) !important;
   color: #a4c9ff !important;
 }
 
-/* Card tags — genre pills (grey) */
 html.dark .place-card .bg-\[\#eeeef0\] {
   background: rgba(255, 255, 255, 0.07) !important;
   color: #9AA0A6 !important;
 }
 
-/* Card footer border + meta text */
 html.dark .place-card .border-t {
   border-color: rgba(255, 255, 255, 0.08) !important;
 }
@@ -1985,7 +1876,6 @@ html.dark .place-card .text-xs.text-\[\#414751\] {
   color: #9AA0A6 !important;
 }
 
-/* Plan Trip link on card */
 html.dark .place-card button.text-\[\#005da7\] {
   color: #7EB8FF !important;
 }
@@ -1993,13 +1883,11 @@ html.dark .place-card button.text-\[\#005da7\]:hover {
   color: #a4c9ff !important;
 }
 
-/* Featured cards */
 html.dark .feat-card {
   background: #161B22 !important;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
 }
 
-/* Featured slider nav buttons */
 html.dark button.border-\[\#c1c7d3\] {
   background: #1C2128 !important;
   border-color: rgba(255, 255, 255, 0.12) !important;
@@ -2010,9 +1898,6 @@ html.dark button.border-\[\#c1c7d3\]:hover {
   color: #7EB8FF !important;
 }
 
-/* Result count badge stays blue — no override needed */
-
-/* Dot indicators */
 html.dark .feat-dot {
   background: rgba(255, 255, 255, 0.2) !important;
 }
@@ -2020,7 +1905,6 @@ html.dark .feat-dot.active {
   background: #7EB8FF !important;
 }
 
-/* Result title / subtitle */
 html.dark #resultsTitle,
 html.dark #featuredTitle {
   color: #F1F3F4 !important;
@@ -2030,28 +1914,23 @@ html.dark #featuredSubtitle {
   color: #9AA0A6 !important;
 }
 
-/* Filter panel label icons + text */
 html.dark .text-xs.font-bold.text-\[\#414751\] {
   color: #9AA0A6 !important;
 }
 
-/* Filter panel divider */
 html.dark .border-t.border-\[\#c1c7d3\]\/40 {
   border-color: rgba(255, 255, 255, 0.08) !important;
 }
 
-/* Hero badge */
 html.dark .bg-\[\#d4e3ff\].text-\[\#001c39\] {
   background: rgba(0, 93, 167, 0.3) !important;
   color: #a4c9ff !important;
 }
 
-/* Discover button — keep gradient, just ensure contrast */
 html.dark .discover-btn {
   box-shadow: 0 4px 20px rgba(0, 93, 167, 0.4) !important;
 }
 
-/* Mobile menu */
 html.dark #mobileMenu a.text-slate-700 {
   color: #BDC1C6 !important;
 }
@@ -2059,10 +1938,52 @@ html.dark #mobileMenu a.text-\[\#005da7\] {
   color: #7EB8FF !important;
 }
 
-/* Empty state */
 html.dark .empty-state h3 {
   color: #7EB8FF !important;
 }
 html.dark .empty-state p {
   color: #9AA0A6 !important;
+}
+
+.hamburger-box {
+  width: 20px;
+  height: 16px;
+  position: relative;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.hamburger-line {
+  display: block;
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: #0F1419;
+  border-radius: 3px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+  transition: transform 0.25s ease, opacity 0.25s ease, top 0.25s ease;
+}
+
+html.dark .hamburger-line {
+  background-color: #FFFFFF;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+}
+
+.hamburger-line:nth-child(1) { top: 0; }
+.hamburger-line:nth-child(2) { top: 6px; }
+.hamburger-line:nth-child(3) { top: 12px; }
+
+#mobile-menu-btn.menu-open .hamburger-line:nth-child(1) {
+  top: 6px;
+  transform: rotate(45deg);
+}
+
+#mobile-menu-btn.menu-open .hamburger-line:nth-child(2) {
+  opacity: 0;
+}
+
+#mobile-menu-btn.menu-open .hamburger-line:nth-child(3) {
+  top: 6px;
+  transform: rotate(-45deg);
 }
