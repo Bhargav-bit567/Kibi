@@ -11,18 +11,19 @@
 
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 
-  <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/animations.css">
-  <link rel="stylesheet" href="css/responsive.css">
-
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
           colors: {
             "brand-dark": "#0A1B29",
-            primary: "#005da7",
+            "primary": "#005da7",
             "primary-container": "#2976c7",
             "primary-fixed": "#d4e3ff",
             "on-primary-fixed": "#001c39",
             "on-primary-fixed-variant": "#004883",
-            surface: "#f9f9fc",
+            "surface": "#f9f9fc",
             "surface-container": "#eeeef0",
             "surface-container-low": "#f3f3f6",
             "on-surface": "#1a1c1e",
@@ -30,8 +31,21 @@
             "outline-variant": "#c1c7d3",
             "status-success": "#22c55e",
             "status-warning": "#fbbf24",
-            background: "#f9f9fc"
-          }size: 13px; font-weight: 600; transition: all 0.2s ease;
+            "background": "#f9f9fc"
+          }
+        }
+      }
+    };
+  </script>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/responsive.css">
+
+  <style>
+    .filter-pill {
+      padding: 8px 16px; border: 1.5px solid #c1c7d3; border-radius: 9999px; background: #fff; color: #414751;
+      font-size: 13px; font-weight: 600; transition: all 0.2s ease;
       white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;
     }
     .filter-pill:hover { border-color: #005da7; color: #005da7; }
