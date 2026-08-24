@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
-    <meta http-equiv="Pragma" content="no-cache"/>
-    <meta http-equiv="Expires" content="0"/>
-    <title>Trip Itinerary - Kibi</title>
-      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+  <meta http-equiv="Pragma" content="no-cache"/>
+  <meta http-equiv="Expires" content="0"/>
+  <title>Trip Itinerary - Kibi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <script id="tailwind-config">
@@ -16,11 +16,7 @@
       theme: {
         extend: {
           colors: {
-            brand: {
-              blue: '#5C9CE6',
-              dark: '#0A1B29',
-              light: '#F8F9FA',
-            },
+            brand: { blue: '#5C9CE6', dark: '#0A1B29', light: '#F8F9FA' },
             charcoal: '#0F1419',
             cream: '#F7F5F0',
             sage: '#6B8E6E',
@@ -71,57 +67,53 @@
       }
     }
   </script>
-    <style>
-        .line-clamp-2 {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
+  <style>
+    .line-clamp-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
 
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            box-shadow: 0 8px 32px 0 rgba(74, 144, 226, 0.05);
-        }
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      box-shadow: 0 8px 32px 0 rgba(74, 144, 226, 0.05);
+    }
 
-        html.dark .glass-panel {
-            background: rgba(22, 27, 34, 0.8) !important;
-            border-color: rgba(255, 255, 255, 0.08) !important;
-        }
+    html.dark .glass-panel {
+      background: rgba(22, 27, 34, 0.8) !important;
+      border-color: rgba(255, 255, 255, 0.08) !important;
+    }
 
-        #tripMap { width: 100%; height: 100%; min-height: 300px; }
+    #tripMap { width: 100%; height: 100%; min-height: 300px; }
 
-        /* Ambient Background */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: radial-gradient(circle at 15% 50%, rgba(212, 227, 255, 0.4) 0%, transparent 50%),
-                        radial-gradient(circle at 85% 30%, rgba(198, 231, 255, 0.4) 0%, transparent 50%);
-            z-index: -1;
-            pointer-events: none;
-        }
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(circle at 15% 50%, rgba(212, 227, 255, 0.4) 0%, transparent 50%),
+                  radial-gradient(circle at 85% 30%, rgba(198, 231, 255, 0.4) 0%, transparent 50%);
+      z-index: -1;
+      pointer-events: none;
+    }
 
-        html.dark body::before {
-            background: radial-gradient(circle at 15% 50%, rgba(74, 144, 226, 0.12) 0%, transparent 50%),
-                        radial-gradient(circle at 85% 30%, rgba(0, 93, 167, 0.12) 0%, transparent 50%);
-        }
-    </style>
-
+    html.dark body::before {
+      background: radial-gradient(circle at 15% 50%, rgba(74, 144, 226, 0.12) 0%, transparent 50%),
+                  radial-gradient(circle at 85% 30%, rgba(0, 93, 167, 0.12) 0%, transparent 50%);
+    }
+  </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/animations.css">
   <link rel="stylesheet" href="css/responsive.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
   <script>
-    // SAFETY: If this page was opened for a saved trip (?id=...), discard any
-    // generated itinerary left in sessionStorage so the saved trip always wins.
     (function() {
       const id = new URLSearchParams(window.location.search).get('id');
       if (id) {
@@ -136,13 +128,10 @@
 <body class="bg-surface text-on-surface antialiased min-h-screen flex flex-col overflow-x-hidden" data-page="itinerary">
 
 <header class="relative z-50 px-6 lg:px-12 flex justify-between items-center w-full max-w-7xl mx-auto pt-6 pb-4">
-  
-  <!-- Logo -->
   <a href="index.html" class="flex items-center justify-center h-10 px-5 bg-white/90 backdrop-blur-md rounded-full font-heading font-bold text-[1.25rem] tracking-tight text-[#005da7] hover:bg-white transition-colors shadow-sm border border-white/20">
     Kibi
   </a>
 
-  <!-- Center Nav Pill -->
   <nav class="hidden md:flex items-center bg-white/85 backdrop-blur-md rounded-full px-2 py-1.5 border border-white/40 shadow-sm relative">
     <div id="navActivePill" class="absolute top-1/2 -translate-y-1/2 h-[calc(100%-12px)] rounded-full bg-white shadow-sm border border-slate-50 transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] pointer-events-none z-0" style="left:0;width:0;opacity:0"></div>
     <ul class="flex items-center gap-1 lg:gap-2 text-[14px] relative z-10">
@@ -154,7 +143,6 @@
     </ul>
   </nav>
 
-  <!-- Right Action -->
   <div class="flex items-center gap-3">
     <div id="auth-action-container"></div>
     <button id="mobile-menu-btn" class="md:hidden w-10 h-10 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-slate-800 hover:bg-white transition-colors shadow-sm border border-white/20 relative">
@@ -162,7 +150,7 @@
     </button>
   </div>
 </header>
-<!-- Mobile Menu -->
+
 <div id="mobileMenu" class="fixed inset-0 z-40 bg-white/95 backdrop-blur-lg opacity-0 pointer-events-none transition-opacity duration-300 md:hidden flex flex-col items-center justify-center gap-6">
   <a href="index.html" class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">Home</a>
   <a href="discover.html" class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">Discover</a>
@@ -172,244 +160,186 @@
   <div id="mobile-auth-action-container"></div>
 </div>
 
+<main class="flex-1 flex flex-col w-full pt-[100px]">
+  <div class="border-b border-outline-variant/20 px-container-padding py-3 bg-white/50 backdrop-blur-md sticky top-0 z-20 hidden md:block">
+    <div class="max-w-[1280px] mx-auto w-full flex items-center gap-4 overflow-x-auto no-scrollbar">
+      <a class="flex items-center gap-2 text-on-surface-variant hover:text-primary text-sm font-medium shrink-0" href="plan-trip.html">
+        <i class="fa-solid fa-arrow-left text-xs"></i>
+        New Trip
+      </a>
+      <span class="text-outline-variant">/</span>
+      <span class="text-sm font-bold text-on-surface shrink-0">Itinerary</span>
+      <div class="ml-auto flex gap-2 bg-surface-container-low p-1 rounded-full shrink-0" id="itinTabs">
+        <button data-tab="overview" class="itin-tab px-6 py-2 rounded-full text-xs font-medium text-on-surface-variant hover:text-primary transition-colors">Overview</button>
+        <button data-tab="itinerary" class="itin-tab px-6 py-2 rounded-full text-xs font-bold bg-white text-primary shadow-sm transition-colors">Itinerary</button>
+        <button data-tab="accommodations" class="itin-tab px-6 py-2 rounded-full text-xs font-medium text-on-surface-variant hover:text-primary transition-colors">Accommodations</button>
+      </div>
+      <input type="hidden" id="currentTabInput" value="itinerary">
+    </div>
+  </div>
 
+  <div class="flex-1 p-container-padding pb-32 max-w-[1280px] mx-auto w-full flex flex-col gap-12 mt-6">
+    <section id="itinHero" class="relative rounded-3xl overflow-hidden min-h-[400px] flex items-end p-8 shadow-sm"></section>
 
-    <!-- Main Content Area -->
-    <main class="flex-1 flex flex-col w-full pt-[100px]">
-
-        <!-- Secondary Navigation / Context Bar -->
-        <div class="border-b border-outline-variant/20 px-container-padding py-3 bg-white/50 backdrop-blur-md sticky top-0 z-20 hidden md:block">
-            <div class="max-w-[1280px] mx-auto w-full flex items-center gap-4 overflow-x-auto no-scrollbar">
-                <a class="flex items-center gap-2 text-on-surface-variant hover:text-primary text-sm font-medium shrink-0" href="plan-trip.html">
-                    <i class="fa-solid fa-arrow-left text-xs"></i>
-                    New Trip
-                </a>
-                <span class="text-outline-variant">/</span>
-                <span class="text-sm font-bold text-on-surface shrink-0">Itinerary</span>
-                <div class="ml-auto flex gap-2 bg-surface-container-low p-1 rounded-full shrink-0" id="itinTabs">
-                    <button data-tab="overview" class="itin-tab px-6 py-2 rounded-full text-xs font-medium text-on-surface-variant hover:text-primary transition-colors">Overview</button>
-                    <button data-tab="itinerary" class="itin-tab px-6 py-2 rounded-full text-xs font-bold bg-white text-primary shadow-sm transition-colors">Itinerary</button>
-                    <button data-tab="accommodations" class="itin-tab px-6 py-2 rounded-full text-xs font-medium text-on-surface-variant hover:text-primary transition-colors">Accommodations</button>
-                </div>
-                <input type="hidden" id="currentTabInput" value="itinerary">
-            </div>
-        </div>
-
-        <!-- Scrollable Canvas -->
-        <div class="flex-1 p-container-padding pb-32 max-w-[1280px] mx-auto w-full flex flex-col gap-12 mt-6">
-            <!-- Hero Section: Header & Image -->
-            <section id="itinHero" class="relative rounded-3xl overflow-hidden min-h-[400px] flex items-end p-8 shadow-sm">
-                <!-- Injected via JS -->
+    <div id="tabContent">
+      <div id="overviewTab" class="hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          <div class="lg:col-span-8 flex flex-col gap-10">
+            <section id="overviewIntro" class="glass-panel rounded-3xl p-8 dark:bg-[#161B22] dark:border-white/[0.08]">
+              <h2 class="text-2xl font-bold text-gray-900 dark:text-[#F1F3F4] mb-4">About ${itinerary.destination}</h2>
+              <p class="text-gray-600 dark:text-[#BDC1C6] leading-relaxed text-sm" id="overviewDescription">Loading destination overview...</p>
+              <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8" id="overviewStats"></div>
             </section>
 
-            <!-- Tab Content -->
-            <div id="tabContent">
-                <!-- Overview Tab -->
-                <div id="overviewTab" class="hidden">
-                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
-                        <!-- Left Column: Overview Details -->
-                        <div class="lg:col-span-8 flex flex-col gap-10">
+            <section>
+              <h2 class="text-2xl font-bold text-gray-900 dark:text-[#F1F3F4] mb-6">Trip Highlights</h2>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="overviewHighlights"></div>
+            </section>
 
-                            <!-- Destination Intro -->
-                            <section id="overviewIntro" class="glass-panel rounded-3xl p-8 dark:bg-[#161B22] dark:border-white/[0.08]">
-                                <h2 class="text-2xl font-bold text-gray-900 dark:text-[#F1F3F4] mb-4">About ${itinerary.destination}</h2>
-                                <p class="text-gray-600 dark:text-[#BDC1C6] leading-relaxed text-sm" id="overviewDescription">Loading destination overview...</p>
+            <section>
+              <h2 class="text-2xl font-bold text-gray-900 dark:text-[#F1F3F4] mb-6">Top Attractions</h2>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="overviewAttractions"></div>
+            </section>
 
-                                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8" id="overviewStats">
-                                    <!-- Injected via JS -->
-                                </div>
-                            </section>
+            <section>
+              <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-[#F1F3F4]">At a Glance</h2>
+                <button onclick="switchItinTab('itinerary')" class="text-brand-blue text-sm font-semibold flex items-center gap-1 hover:underline">View Full Itinerary <i class="fa-solid fa-arrow-right text-xs"></i></button>
+              </div>
+              <div class="flex flex-col gap-4" id="overviewTimeline"></div>
+            </section>
+          </div>
 
-                            <!-- Highlights -->
-                            <section>
-                                <h2 class="text-2xl font-bold text-gray-900 dark:text-[#F1F3F4] mb-6">Trip Highlights</h2>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="overviewHighlights">
-                                    <!-- Injected via JS -->
-                                </div>
-                            </section>
+          <div class="lg:col-span-4 flex flex-col gap-8">
+            <div class="glass-panel rounded-3xl p-8 shadow-sm border border-gray-200/50 dark:bg-[#161B22] dark:border-white/[0.08]">
+              <h3 class="text-xl font-bold text-gray-900 dark:text-[#F1F3F4] mb-6">Quick Info</h3>
+              <ul class="space-y-4 text-sm" id="overviewQuickInfo"></ul>
+            </div>
 
-                            <!-- Top Attractions -->
-                            <section>
-                                <h2 class="text-2xl font-bold text-gray-900 dark:text-[#F1F3F4] mb-6">Top Attractions</h2>
-                                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="overviewAttractions">
-                                    <!-- Injected via JS -->
-                                </div>
-                            </section>
+            <div class="glass-panel rounded-3xl p-8 shadow-sm border border-gray-200/50 dark:bg-[#161B22] dark:border-white/[0.08]">
+              <h3 class="text-xl font-bold text-gray-900 dark:text-[#F1F3F4] mb-4">Best Time to Visit</h3>
+              <p class="text-gray-600 dark:text-[#BDC1C6] text-sm leading-relaxed" id="overviewBestTime">Loading...</p>
+            </div>
 
-                            <!-- Day Preview -->
-                            <section>
-                                <div class="flex justify-between items-center mb-6">
-                                    <h2 class="text-2xl font-bold text-gray-900 dark:text-[#F1F3F4]">At a Glance</h2>
-                                    <button onclick="switchItinTab('itinerary')" class="text-brand-blue text-sm font-semibold flex items-center gap-1 hover:underline">View Full Itinerary <i class="fa-solid fa-arrow-right text-xs"></i></button>
-                                </div>
-                                <div class="flex flex-col gap-4" id="overviewTimeline">
-                                    <!-- Injected via JS -->
-                                </div>
-                            </section>
-                        </div>
+            <div class="glass-panel rounded-3xl p-8 shadow-sm border border-gray-200/50 dark:bg-[#161B22] dark:border-white/[0.08]">
+              <h3 class="text-xl font-bold text-gray-900 dark:text-[#F1F3F4] mb-4">Local Cuisine</h3>
+              <ul class="space-y-3 text-sm" id="overviewCuisine"></ul>
+            </div>
 
-                        <!-- Right Column: Overview Sidebar -->
-                        <div class="lg:col-span-4 flex flex-col gap-8">
-                            <!-- Quick Info Card -->
-                            <div class="glass-panel rounded-3xl p-8 shadow-sm border border-gray-200/50 dark:bg-[#161B22] dark:border-white/[0.08]">
-                                <h3 class="text-xl font-bold text-gray-900 dark:text-[#F1F3F4] mb-6">Quick Info</h3>
-                                <ul class="space-y-4 text-sm" id="overviewQuickInfo">
-                                    <!-- Injected via JS -->
-                                </ul>
-                            </div>
-
-                            <!-- Best Time to Visit -->
-                            <div class="glass-panel rounded-3xl p-8 shadow-sm border border-gray-200/50 dark:bg-[#161B22] dark:border-white/[0.08]">
-                                <h3 class="text-xl font-bold text-gray-900 dark:text-[#F1F3F4] mb-4">Best Time to Visit</h3>
-                                <p class="text-gray-600 dark:text-[#BDC1C6] text-sm leading-relaxed" id="overviewBestTime">Loading...</p>
-                            </div>
-
-                            <!-- Local Cuisine -->
-                            <div class="glass-panel rounded-3xl p-8 shadow-sm border border-gray-200/50 dark:bg-[#161B22] dark:border-white/[0.08]">
-                                <h3 class="text-xl font-bold text-gray-900 dark:text-[#F1F3F4] mb-4">Local Cuisine</h3>
-                                <ul class="space-y-3 text-sm" id="overviewCuisine">
-                                    <!-- Injected via JS -->
-                                </ul>
-                            </div>
-
-                            <!-- Travel Tips -->
-                            <div class="glass-panel rounded-3xl p-8 shadow-sm border border-gray-200/50 dark:bg-[#161B22] dark:border-white/[0.08]">
-                                <h3 class="text-xl font-bold text-gray-900 dark:text-[#F1F3F4] mb-4">Travel Tips</h3>
-                                <ul class="space-y-3 text-sm" id="overviewTips">
-                                    <!-- Injected via JS -->
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Accommodations Tab -->
-                <div id="accommodationsTab" class="hidden">
-                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
-                        <!-- Left Column: Accommodation Cards -->
-                        <div class="lg:col-span-8 flex flex-col gap-10">
-                            <section>
-                                <div class="flex justify-between items-center mb-6">
-                                    <h2 class="text-2xl font-bold text-gray-900 dark:text-[#F1F3F4]">Where You'll Stay</h2>
-                                    <span class="text-xs text-gray-500 dark:text-[#9AA0A6]">Powered by AI recommendations</span>
-                                </div>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="accommodationsGrid">
-                                    <!-- Injected via JS -->
-                                </div>
-                            </section>
-                        </div>
-
-                        <!-- Right Column: Stay Summary -->
-                        <div class="lg:col-span-4 flex flex-col gap-8">
-                            <div class="glass-panel rounded-3xl p-8 shadow-sm border border-gray-200/50 dark:bg-[#161B22] dark:border-white/[0.08]">
-                                <h3 class="text-xl font-bold text-gray-900 dark:text-[#F1F3F4] mb-4">Stay Summary</h3>
-                                <ul class="space-y-4 text-sm" id="accommodationSummary">
-                                    <!-- Injected via JS -->
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Itinerary Tab -->
-                <div id="itineraryTab">
-                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
-                        <!-- Left Column: Itinerary Details (Span 8) -->
-                        <div class="lg:col-span-8 flex flex-col gap-10">
-                            <!-- Day-by-Day Section -->
-                            <section>
-                                <div class="flex justify-between items-center mb-6">
-                                    <h2 class="text-2xl font-bold text-gray-900 dark:text-[#F1F3F4]">Day-by-Day Plan</h2>
-                                    <button class="text-brand-blue text-sm font-semibold flex items-center gap-1 hover:underline">
-                                        Expand All <i class="fa-solid fa-chevron-down text-xs"></i>
-                                    </button>
-                                </div>
-                                <div class="flex flex-col gap-6" id="itinTimeline">
-                                    <!-- Injected via JS -->
-                                </div>
-                            </section>
-
-        
-                            <!-- Travel Essentials -->
-                            <section class="pt-4">
-                                <div class="flex justify-between items-center mb-6">
-                                    <h2 class="text-2xl font-bold text-gray-900 dark:text-[#F1F3F4]">Before You Go</h2>
-                                </div>
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                    <div class="bg-white dark:bg-[#161B22] rounded-3xl p-6 border border-gray-100 dark:border-white/[0.08] shadow-sm flex flex-col gap-4" id="itinWeather">
-                                        <!-- Weather Injected via JS -->
-                                        <div class="w-12 h-12 bg-blue-50 dark:bg-[#1F2630] rounded-2xl flex items-center justify-center text-brand-blue dark:text-[#7EB8FF] text-xl mb-2">
-                                            <i class="fa-solid fa-cloud-sun"></i>
-                                        </div>
-                                        <h3 class="font-bold text-gray-900 dark:text-[#F1F3F4] text-lg">Weather Outlook</h3>
-                                        <p class="text-gray-600 dark:text-[#BDC1C6] text-sm">Loading weather data...</p>
-                                    </div>
-                                    <div class="bg-white dark:bg-[#161B22] rounded-3xl p-6 border border-gray-100 dark:border-white/[0.08] shadow-sm flex flex-col gap-4">
-                                        <div class="w-12 h-12 bg-purple-50 dark:bg-[#1F2630] rounded-2xl flex items-center justify-center text-purple-500 text-xl mb-2">
-                                            <i class="fa-solid fa-suitcase-rolling"></i>
-                                        </div>
-                                        <h3 class="font-bold text-gray-900 dark:text-[#F1F3F4] text-lg">Packing List</h3>
-                                        <ul class="text-gray-600 dark:text-[#BDC1C6] text-sm space-y-2">
-                                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500"></i> Comfortable walking shoes</li>
-                                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500"></i> Light jacket or sweater</li>
-                                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500"></i> Universal power adapter</li>
-                                        </ul>
-                                    </div>
-                                    <div class="bg-white dark:bg-[#161B22] rounded-3xl p-6 border border-gray-100 dark:border-white/[0.08] shadow-sm flex flex-col gap-4">
-                                        <div class="w-12 h-12 bg-orange-50 dark:bg-[#1F2630] rounded-2xl flex items-center justify-center text-orange-500 text-xl mb-2">
-                                            <i class="fa-solid fa-train-tram"></i>
-                                        </div>
-                                        <h3 class="font-bold text-gray-900 dark:text-[#F1F3F4] text-lg">Transport Tips</h3>
-                                        <p class="text-gray-600 dark:text-[#BDC1C6] text-sm">Download local transit apps before arrival. Local passes can save money on daily commutes.</p>
-                                    </div>
-                                </div>
-                            </section>
-                        </div>
-
-                        <!-- Right Column: Sidebar Info (Span 4) -->
-                        <div class="lg:col-span-4 flex flex-col gap-8">
-                            <!-- Map / Location Panel -->
-                            <div id="mapPanel" class="glass-panel rounded-3xl overflow-hidden flex flex-col relative h-[350px] shadow-sm border border-gray-200/50 cursor-pointer group">
-                                <div class="absolute inset-0 bg-cover bg-center opacity-80 transition-transform duration-700 group-hover:scale-105" data-alt="Map background" style="background-image: url('map.png')"></div>
-                                <div class="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-gray-900/80 to-transparent z-10 flex justify-between items-end">
-                                    <div>
-                                        <h3 class="font-bold text-white text-xl">Explore Route</h3>
-                                        <p class="text-sm font-medium text-white/90">View Map</p>
-                                    </div>
-                                    <button id="viewMapBtn" class="w-12 h-12 rounded-full bg-white text-brand-blue flex items-center justify-center shadow-lg hover:scale-105 transition-transform pointer-events-none">
-                                        <i class="fa-solid fa-expand"></i>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Budget Breakdown -->
-                            <div class="glass-panel rounded-3xl p-8 shadow-sm border border-gray-200/50" id="itinBudget">
-                                <!-- Injected via JS -->
-                            </div>
-                        </div> <!-- End of Right Column -->
-                    </div>
-                </div>
-            </div> <!-- End of Tab Content -->
-        </div> <!-- End of Scrollable Canvas -->
-    </main> <!-- End of Main Content Area -->
-
-  <!-- Map Modal -->
-  <div id="mapModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/60 p-4">
-    <div id="mapModalCard" class="bg-white dark:bg-[#161B22] rounded-3xl shadow-2xl w-full max-w-5xl h-[80vh] max-h-[90vh] flex flex-col overflow-hidden">
-      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-        <h3 id="mapModalTitle" class="font-bold text-gray-900 text-lg flex items-center gap-2">
-          <i class="fa-solid fa-map text-primary"></i>
-          Trip Map
-        </h3>
-        <button id="closeMapBtn" class="w-10 h-10 rounded-full hover:bg-gray-100 flex items-center justify-center text-gray-600 transition-colors">
-          <i class="fa-solid fa-xmark text-lg"></i>
-        </button>
+            <div class="glass-panel rounded-3xl p-8 shadow-sm border border-gray-200/50 dark:bg-[#161B22] dark:border-white/[0.08]">
+              <h3 class="text-xl font-bold text-gray-900 dark:text-[#F1F3F4] mb-4">Travel Tips</h3>
+              <ul class="space-y-3 text-sm" id="overviewTips"></ul>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="relative h-[60vh] min-h-[300px]">
-        <div id="tripMap" class="absolute inset-0 w-full h-full"></div>
+
+      <div id="accommodationsTab" class="hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          <div class="lg:col-span-8 flex flex-col gap-10">
+            <section>
+              <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-[#F1F3F4]">Where You'll Stay</h2>
+                <span class="text-xs text-gray-500 dark:text-[#9AA0A6]">Powered by AI recommendations</span>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="accommodationsGrid"></div>
+            </section>
+          </div>
+
+          <div class="lg:col-span-4 flex flex-col gap-8">
+            <div class="glass-panel rounded-3xl p-8 shadow-sm border border-gray-200/50 dark:bg-[#161B22] dark:border-white/[0.08]">
+              <h3 class="text-xl font-bold text-gray-900 dark:text-[#F1F3F4] mb-4">Stay Summary</h3>
+              <ul class="space-y-4 text-sm" id="accommodationSummary"></ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="itineraryTab">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          <div class="lg:col-span-8 flex flex-col gap-10">
+            <section>
+              <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-[#F1F3F4]">Day-by-Day Plan</h2>
+                <button class="text-brand-blue text-sm font-semibold flex items-center gap-1 hover:underline">
+                  Expand All <i class="fa-solid fa-chevron-down text-xs"></i>
+                </button>
+              </div>
+              <div class="flex flex-col gap-6" id="itinTimeline"></div>
+            </section>
+
+            <section class="pt-4">
+              <div class="flex justify-between items-center mb-6">
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-[#F1F3F4]">Before You Go</h2>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-white dark:bg-[#161B22] rounded-3xl p-6 border border-gray-100 dark:border-white/[0.08] shadow-sm flex flex-col gap-4" id="itinWeather">
+                  <div class="w-12 h-12 bg-blue-50 dark:bg-[#1F2630] rounded-2xl flex items-center justify-center text-brand-blue dark:text-[#7EB8FF] text-xl mb-2">
+                    <i class="fa-solid fa-cloud-sun"></i>
+                  </div>
+                  <h3 class="font-bold text-gray-900 dark:text-[#F1F3F4] text-lg">Weather Outlook</h3>
+                  <p class="text-gray-600 dark:text-[#BDC1C6] text-sm">Loading weather data...</p>
+                </div>
+                <div class="bg-white dark:bg-[#161B22] rounded-3xl p-6 border border-gray-100 dark:border-white/[0.08] shadow-sm flex flex-col gap-4">
+                  <div class="w-12 h-12 bg-purple-50 dark:bg-[#1F2630] rounded-2xl flex items-center justify-center text-purple-500 text-xl mb-2">
+                    <i class="fa-solid fa-suitcase-rolling"></i>
+                  </div>
+                  <h3 class="font-bold text-gray-900 dark:text-[#F1F3F4] text-lg">Packing List</h3>
+                  <ul class="text-gray-600 dark:text-[#BDC1C6] text-sm space-y-2">
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500"></i> Comfortable walking shoes</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500"></i> Light jacket or sweater</li>
+                    <li class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500"></i> Universal power adapter</li>
+                  </ul>
+                </div>
+                <div class="bg-white dark:bg-[#161B22] rounded-3xl p-6 border border-gray-100 dark:border-white/[0.08] shadow-sm flex flex-col gap-4">
+                  <div class="w-12 h-12 bg-orange-50 dark:bg-[#1F2630] rounded-2xl flex items-center justify-center text-orange-500 text-xl mb-2">
+                    <i class="fa-solid fa-train-tram"></i>
+                  </div>
+                  <h3 class="font-bold text-gray-900 dark:text-[#F1F3F4] text-lg">Transport Tips</h3>
+                  <p class="text-gray-600 dark:text-[#BDC1C6] text-sm">Download local transit apps before arrival. Local passes can save money on daily commutes.</p>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <div class="lg:col-span-4 flex flex-col gap-8">
+            <div id="mapPanel" class="glass-panel rounded-3xl overflow-hidden flex flex-col relative h-[350px] shadow-sm border border-gray-200/50 cursor-pointer group">
+              <div class="absolute inset-0 bg-cover bg-center opacity-80 transition-transform duration-700 group-hover:scale-105" data-alt="Map background" style="background-image: url('map.png')"></div>
+              <div class="absolute inset-x-0 bottom-0 p-6 bg-gradient-to-t from-gray-900/80 to-transparent z-10 flex justify-between items-end">
+                <div>
+                  <h3 class="font-bold text-white text-xl">Explore Route</h3>
+                  <p class="text-sm font-medium text-white/90">View Map</p>
+                </div>
+                <button id="viewMapBtn" class="w-12 h-12 rounded-full bg-white text-brand-blue flex items-center justify-center shadow-lg hover:scale-105 transition-transform pointer-events-none">
+                  <i class="fa-solid fa-expand"></i>
+                </button>
+              </div>
+            </div>
+
+            <div class="glass-panel rounded-3xl p-8 shadow-sm border border-gray-200/50" id="itinBudget"></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+</main>
+
+<div id="mapModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-black/60 p-4">
+  <div id="mapModalCard" class="bg-white dark:bg-[#161B22] rounded-3xl shadow-2xl w-full max-w-5xl h-[80vh] max-h-[90vh] flex flex-col overflow-hidden">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+      <h3 id="mapModalTitle" class="font-bold text-gray-900 text-lg flex items-center gap-2">
+        <i class="fa-solid fa-map text-primary"></i>
+        Trip Map
+      </h3>
+      <button id="closeMapBtn" class="w-10 h-10 rounded-full hover:bg-gray-100 flex items-center justify-center text-gray-600 transition-colors">
+        <i class="fa-solid fa-xmark text-lg"></i>
+      </button>
+    </div>
+    <div class="relative h-[60vh] min-h-[300px]">
+      <div id="tripMap" class="absolute inset-0 w-full h-full"></div>
+    </div>
+  </div>
+</div>
 
 <div id="footerContainer"></div>
 
@@ -429,6 +359,6 @@
 <script src="js/planner.js?v=11"></script>
 <script src="js/app.js?v=11"></script>
 <script src="js/trips.js?v=11"></script>
-  <script src="js/overview.js?v=11"></script>
+<script src="js/overview.js?v=11"></script>
 </body>
 </html>
