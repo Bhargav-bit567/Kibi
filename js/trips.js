@@ -1040,6 +1040,7 @@ function initMapModal(itinerary) {
       document.body.appendChild(modal);
     }
     modal.classList.remove('hidden');
+    modal.classList.add('map-modal-open');
     document.body.style.overflow = 'hidden';
     document.documentElement.style.overflow = 'hidden';
 
@@ -1062,6 +1063,7 @@ function initMapModal(itinerary) {
 
   function closeModal() {
     modal.classList.add('hidden');
+    modal.classList.remove('map-modal-open');
     document.body.style.overflow = '';
     document.documentElement.style.overflow = '';
   }
