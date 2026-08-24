@@ -5,7 +5,8 @@
 window.KIBI_CONFIG = window.KIBI_CONFIG || {
   GOOGLE_CLIENT_ID: '',
   APPLE_CLIENT_ID: '',
-  APPLE_REDIRECT_URI: ''
+  APPLE_REDIRECT_URI: '',
+  geminiApiKey: ''
 };
 
 function loadKibiConfig() {

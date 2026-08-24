@@ -102,7 +102,10 @@
 
   /* ---------- Gemini helpers ---------- */
   async function askGeminiForOverview(destination) {
-    if (typeof GeminiAPI === 'undefined' || !GeminiAPI.askGemini) return null;
+    if (typeof GeminiAPI === 'undefined' || !GeminiAPI.askGemini) {
+      console.warn('[Overview] GeminiAPI.askGemini not available');
+      return null;
+    }
     const prompt = `For the travel destination "${destination}", return ONLY a valid JSON object (no markdown, no explanations) with this exact structure:
 {
   "description": "2-3 sentence overview of the destination",
@@ -155,7 +158,16 @@
   }
 
   /* ---------- Render sections ---------- */
+  function showLoadingState() {
+    const ids = ['overviewDescription', 'overviewBestTime', 'overviewCuisine', 'overviewTips', 'overviewAttractions'];
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && !el.dataset.loaded) el.innerHTML = '<span class="text-sm text-gray-400 dark:text-[#9AA0A6] flex items-center gap-2"><span class="material-symbols-outlined animate-spin text-base">progress_activity</span> Loading...</span>';
+    });
+  }
+
   async function renderOverview(itinerary) {
+    showLoadingState();
     const info = getDestinationInfo(itinerary.destination);
     const nights = Math.max(0, Math.round((new Date(itinerary.endDate) - new Date(itinerary.startDate)) / (1000 * 60 * 60 * 24)));
 
@@ -198,7 +210,10 @@
 
     // Description
     const descEl = document.getElementById('overviewDescription');
-    if (descEl) descEl.textContent = description;
+    if (descEl) {
+      descEl.textContent = description;
+      descEl.dataset.loaded = 'true';
+    }
     const introSection = document.getElementById('overviewIntro');
     if (introSection) introSection.querySelector('h2').textContent = `About ${itinerary.destination}`;
 
@@ -330,7 +345,10 @@
 
     // Best time
     const bestTimeEl = document.getElementById('overviewBestTime');
-    if (bestTimeEl) bestTimeEl.textContent = bestTime;
+    if (bestTimeEl) {
+      bestTimeEl.textContent = bestTime;
+      bestTimeEl.dataset.loaded = 'true';
+    }
 
     // Cuisine
     const cuisineEl = document.getElementById('overviewCuisine');
@@ -341,6 +359,7 @@
           <span>${item}</span>
         </li>
       `).join('');
+      cuisineEl.dataset.loaded = 'true';
     }
 
     // Tips
@@ -352,6 +371,7 @@
           <span>${tip}</span>
         </li>
       `).join('');
+      tipsEl.dataset.loaded = 'true';
     }
   }
 
