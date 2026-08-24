@@ -187,8 +187,8 @@
   <!-- HERO COVER & PROFILE SECTION (Matching User Reference Image) -->
   <section class="relative w-full">
     <!-- Hero Destination Cover Image -->
-    <div class="relative rounded-[28px] md:rounded-[36px] overflow-hidden shadow-lg h-64 sm:h-80 md:h-[380px] w-full">
-      <img src="assets/images/hero-mountain.jpg" alt="Mountain Landscape" class="w-full h-full object-cover"/>
+    <div id="heroCoverWrapper" class="relative rounded-[28px] md:rounded-[36px] overflow-hidden shadow-lg h-64 sm:h-80 md:h-[380px] w-full">
+      <img id="heroCoverImage" src="assets/images/hero-mountain.jpg" alt="Cover" class="w-full h-full object-cover"/>
       
       <!-- Top Left Floating Location Tag Badge -->
       <div class="absolute top-4 left-4 sm:top-6 sm:left-6 bg-white/75 dark:bg-slate-900/75 backdrop-blur-md px-4 py-2 rounded-full text-xs font-semibold text-slate-800 dark:text-slate-200 shadow-sm border border-white/50 dark:border-slate-700/50 flex items-center gap-2 z-10">
@@ -456,6 +456,20 @@
       </div>
 
       <div>
+        <label class="block font-heading font-semibold text-xs uppercase tracking-wider text-on-surface mb-2">Cover Photo</label>
+        <div class="flex items-center gap-4 p-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40">
+          <div id="editCoverPreview" class="w-24 h-14 rounded-lg bg-slate-200 dark:bg-slate-700 flex items-center justify-center overflow-hidden text-on-surface-variant flex-shrink-0 border-2 border-white dark:border-slate-600 shadow-sm">
+            <!-- Cover preview rendered by JS -->
+          </div>
+          <label class="cursor-pointer px-4 py-2.5 rounded-full border border-slate-300 dark:border-slate-600 text-on-surface font-heading font-semibold text-xs hover:bg-white dark:hover:bg-slate-700 shadow-sm transition-all">
+            Choose Cover
+            <input type="file" id="editCoverInput" accept="image/*" class="hidden"/>
+          </label>
+        </div>
+        <p class="text-[11px] text-on-surface-variant mt-1.5">Max size 3MB. Leave empty to keep the default mountain cover.</p>
+      </div>
+
+      <div>
         <label class="block font-heading font-semibold text-xs uppercase tracking-wider text-on-surface mb-2">Profile Picture</label>
         <div class="flex items-center gap-4 p-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/40">
           <div id="editAvatarPreview" class="w-14 h-14 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center overflow-hidden text-on-surface-variant flex-shrink-0 border-2 border-white dark:border-slate-600 shadow-sm">
@@ -636,6 +650,7 @@
     document.getElementById('editEmail').value = user.email || '';
     document.getElementById('editBio').value = user.bio || '';
     renderAvatarPreview(user);
+    renderCoverPreview(user);
   }
 
   function renderAvatarPreview(user) {
@@ -645,6 +660,21 @@
     preview.innerHTML = typeof renderAvatarHTML === 'function'
       ? renderAvatarHTML(user, 'w-full h-full object-cover', 'text-2xl')
       : `<div class="w-full h-full rounded-full bg-[#005da7] text-white flex items-center justify-center font-bold text-2xl">${user.name ? user.name.charAt(0).toUpperCase() : 'U'}</div>`;
+  }
+
+  function renderCoverPreview(user) {
+    const preview = document.getElementById('editCoverPreview');
+    if (!preview) return;
+    delete preview.dataset.cover;
+    const coverSrc = user.coverImage || 'assets/images/hero-mountain.jpg';
+    preview.innerHTML = `<img src="${coverSrc}" alt="Cover preview" class="w-full h-full object-cover"/>`;
+  }
+
+  function renderHeroCover(user) {
+    const coverImg = document.getElementById('heroCoverImage');
+    if (coverImg) {
+      coverImg.src = user.coverImage || 'assets/images/hero-mountain.jpg';
+    }
   }
 
   function openModal() {
@@ -659,10 +689,14 @@
     const modal = document.getElementById('editProfileModal');
     modal.classList.add('hidden');
     modal.classList.remove('flex');
-    const input = document.getElementById('editAvatarInput');
-    if (input) input.value = '';
-    const preview = document.getElementById('editAvatarPreview');
-    if (preview) delete preview.dataset.avatar;
+    const avatarInput = document.getElementById('editAvatarInput');
+    if (avatarInput) avatarInput.value = '';
+    const coverInput = document.getElementById('editCoverInput');
+    if (coverInput) coverInput.value = '';
+    const avatarPreview = document.getElementById('editAvatarPreview');
+    if (avatarPreview) delete avatarPreview.dataset.avatar;
+    const coverPreview = document.getElementById('editCoverPreview');
+    if (coverPreview) delete coverPreview.dataset.cover;
   }
 
   document.getElementById('editProfileBtn').addEventListener('click', openModal);
@@ -688,6 +722,25 @@
     reader.readAsDataURL(file);
   });
 
+  document.getElementById('editCoverInput').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    if (file.size > 3 * 1024 * 1024) {
+      if (typeof showToast === 'function') showToast('Cover image must be under 3MB', 'error');
+      e.target.value = '';
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const preview = document.getElementById('editCoverPreview');
+      if (preview) {
+        preview.innerHTML = `<img src="${event.target.result}" alt="Cover preview" class="w-full h-full object-cover"/>`;
+      }
+      preview.dataset.cover = event.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+
   document.getElementById('editProfileForm').addEventListener('submit', (e) => {
     e.preventDefault();
     const user = getCurrentUser();
@@ -699,9 +752,14 @@
       bio: document.getElementById('editBio').value.trim()
     };
 
-    const preview = document.getElementById('editAvatarPreview');
-    if (preview && preview.dataset.avatar) {
-      updates.avatar = preview.dataset.avatar;
+    const avatarPreview = document.getElementById('editAvatarPreview');
+    if (avatarPreview && avatarPreview.dataset.avatar) {
+      updates.avatar = avatarPreview.dataset.avatar;
+    }
+
+    const coverPreview = document.getElementById('editCoverPreview');
+    if (coverPreview && coverPreview.dataset.cover) {
+      updates.coverImage = coverPreview.dataset.cover;
     }
 
     if (typeof updateUser === 'function') {
@@ -713,6 +771,12 @@
     closeModal();
     renderDashboard();
   });
+
+  // Initial render of hero cover on page load
+  (function initHeroCover() {
+    const user = getCurrentUser();
+    if (user) renderHeroCover(user);
+  })();
 
   // Boot Navbar and Dashboard
   if (typeof initNav === 'function') {
