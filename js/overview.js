@@ -1,84 +1,83 @@
 /* ============================================
    Kibi — Itinerary Overview Module
-   Renders a rich Overview tab for any itinerary.
-   Uses TripMate/Geocoding data when available,
-   falls back to deterministic destination content.
+   Renders a rich Overview tab using real data.
+   Priority: TripMate APIs → Gemini AI → curated fallback.
    ============================================ */
 
 (function () {
   'use strict';
 
-  // Destination knowledge base for fallback content.
+  // Minimal curated fallback for when APIs fail entirely.
   const DESTINATION_INFO = {
     'paris': {
-      description: "Paris is a global center for art, fashion, gastronomy and culture. Its 19th-century cityscape is crisscrossed by wide boulevards and the River Seine. Beyond such landmarks as the Eiffel Tower and the 12th-century, Gothic Notre-Dame cathedral, the city is known for its cafe culture and designer boutiques.",
-      bestTime: "April to June and October to early November offer the most pleasant weather and fewer crowds.",
-      cuisine: ["Croissants & pastries", "Steak frites", "Coq au vin", "Macarons", "French onion soup"],
-      tips: ["Learn a few basic French phrases — locals appreciate the effort.", "Museums are often closed on Mondays or Tuesdays; check schedules.", "Use the Metro day pass for easy travel across arrondissements."],
-      attractions: ["Eiffel Tower", "Louvre Museum", "Notre-Dame Cathedral", "Montmartre", "Seine River Cruise", "Musée d'Orsay"]
+      description: "Paris is a global center for art, fashion, gastronomy and culture.",
+      bestTime: "April–June, September–October",
+      cuisine: ["Croissants", "Steak frites", "Coq au vin", "Macarons"],
+      tips: ["Learn a few French phrases.", "Check museum closing days.", "Use Metro day passes."],
+      attractions: ["Eiffel Tower", "Louvre Museum", "Notre-Dame Cathedral", "Montmartre"]
     },
     'tokyo': {
-      description: "Tokyo is Japan's busy capital, mixing the ultramodern and the traditional, from neon-lit skyscrapers to historic temples. The opulent Meiji Shinto Shrine is known for its towering gate and surrounding woods. The Imperial Palace sits amid large public gardens.",
-      bestTime: "March to May for cherry blossoms, or October to November for crisp autumn foliage.",
-      cuisine: ["Sushi & sashimi", "Ramen", "Tempura", "Tonkatsu", "Matcha desserts"],
-      tips: ["Get a Suica or Pasmo IC card for trains and convenience stores.", "Many restaurants only accept cash — keep yen handy.", "Tipping is not customary and can be considered rude."],
-      attractions: ["Senso-ji Temple", "Shibuya Crossing", "Tokyo Tower", "Meiji Shrine", "Tsukiji Outer Market", "Akihabara"]
+      description: "Tokyo mixes ultramodern neon-lit skyscrapers with historic temples.",
+      bestTime: "March–May, October–November",
+      cuisine: ["Sushi", "Ramen", "Tempura", "Tonkatsu"],
+      tips: ["Get a Suica/Pasmo card.", "Carry cash.", "Tipping is not customary."],
+      attractions: ["Senso-ji Temple", "Shibuya Crossing", "Tokyo Tower", "Meiji Shrine"]
     },
     'new york': {
-      description: "New York City comprises 5 boroughs sitting where the Hudson River meets the Atlantic Ocean. At its core is Manhattan, a densely populated borough that’s among the world’s major commercial, financial and cultural centers. Its iconic sites include skyscrapers such as the Empire State Building and sprawling Central Park.",
-      bestTime: "April to June and September to early November have the best weather for walking.",
-      cuisine: ["New York pizza", "Bagels with lox", "Cheesecake", "Hot dogs", "Pastrami sandwich"],
-      tips: ["Walk fast and keep to the right on escalators.", "Subway runs 24/7 — download a transit app.", "Book popular observation decks and shows in advance."],
-      attractions: ["Statue of Liberty", "Central Park", "Times Square", "Empire State Building", "Brooklyn Bridge", "Metropolitan Museum of Art"]
+      description: "NYC is a global hub of finance, culture, entertainment and dining.",
+      bestTime: "April–June, September–November",
+      cuisine: ["Pizza", "Bagels", "Cheesecake", "Pastrami sandwich"],
+      tips: ["Walk fast on sidewalks.", "Subway runs 24/7.", "Book shows in advance."],
+      attractions: ["Statue of Liberty", "Central Park", "Times Square", "Empire State Building"]
     },
     'rome': {
-      description: "Rome is the capital city and a special comune of Italy. Rome also serves as the capital of the Lazio region. With 2,860,009 residents in 1,285 km², it is also the country's most populated comune. It is the fourth-most populous city in the European Union.",
-      bestTime: "April to June and September to October are ideal for sightseeing without extreme heat.",
-      cuisine: ["Carbonara", "Cacio e pepe", "Pizza al taglio", "Gelato", "Supplì"],
-      tips: ["Carry cash for small trattorias and coffee bars.", "Dress modestly when visiting churches and the Vatican.", "Validate train and bus tickets before boarding."],
-      attractions: ["Colosseum", "Vatican Museums", "Trevi Fountain", "Pantheon", "Roman Forum", "Spanish Steps"]
+      description: "Rome is Italy's capital, packed with ancient ruins and Renaissance art.",
+      bestTime: "April–June, September–October",
+      cuisine: ["Carbonara", "Cacio e pepe", "Gelato", "Pizza al taglio"],
+      tips: ["Carry cash for small cafes.", "Dress modestly at churches.", "Validate transit tickets."],
+      attractions: ["Colosseum", "Vatican Museums", "Trevi Fountain", "Pantheon"]
     },
     'bali': {
-      description: "Bali is an Indonesian island known for its forested volcanic mountains, iconic rice paddies, beaches and coral reefs. The island is home to religious sites such as cliffside Uluwatu Temple. To the south, the beachside city of Kuta has lively bars, while Seminyak, Sanur and Nusa Dua are popular resort towns.",
-      bestTime: "April to October is the dry season with the best beach weather.",
-      cuisine: ["Nasi goreng", "Satay", "Babi guling", "Gado-gado", "Lawar"],
-      tips: ["Rent a scooter only if you are confident — traffic can be chaotic.", "Dress modestly when visiting temples; sarongs are usually provided.", "Drink bottled or filtered water only."],
-      attractions: ["Uluwatu Temple", "Tegallalang Rice Terrace", "Sacred Monkey Forest", "Tanah Lot", "Nusa Penida", "Seminyak Beach"]
+      description: "Bali is an Indonesian island known for beaches, temples and rice terraces.",
+      bestTime: "April–October",
+      cuisine: ["Nasi goreng", "Satay", "Babi guling", "Gado-gado"],
+      tips: ["Rent scooters carefully.", "Dress modestly at temples.", "Drink bottled water."],
+      attractions: ["Uluwatu Temple", "Tegallalang Rice Terrace", "Tanah Lot", "Sacred Monkey Forest"]
     },
     'manali': {
-      description: "Manali is a high-altitude Himalayan resort town in India's northern Himachal Pradesh state. It has a reputation as a backpacking center and honeymoon destination. Set on the Beas River, it’s a gateway for skiing in the Solang Valley and trekking in Parvati Valley.",
-      bestTime: "October to June for sightseeing and adventure; December to February for snow lovers.",
-      cuisine: ["Siddu", "Trout fish", "Chana madra", "Dham", "Momos"],
-      tips: ["Acclimatize for a day before high-altitude treks.", "Book adventure activities through registered operators.", "Carry warm layers even in summer — evenings get chilly."],
-      attractions: ["Solang Valley", "Rohtang Pass", "Hadimba Temple", "Old Manali", "Parvati Valley", "Jogini Waterfall"]
+      description: "Manali is a Himalayan resort town and adventure gateway in Himachal Pradesh.",
+      bestTime: "October–June; December–February for snow",
+      cuisine: ["Siddu", "Trout fish", "Chana madra", "Momos"],
+      tips: ["Acclimatize before treks.", "Book activities via registered operators.", "Carry warm layers."],
+      attractions: ["Solang Valley", "Rohtang Pass", "Hadimba Temple", "Old Manali"]
     },
     'goa': {
-      description: "Goa is a state in western India with coastlines stretching along the Arabian Sea. Its long history as a Portuguese colony prior to 1961 is evident in its preserved 17th-century churches and the area's tropical spice plantations. Goa is also known for its beaches, from popular stretches at Baga and Palolem.",
-      bestTime: "November to February offers the best beach weather and nightlife.",
-      cuisine: ["Fish curry rice", "Pork vindaloo", "Bebinca", "Prawn balchão", "Feni"],
-      tips: ["Rent a scooter to explore beaches at your own pace.", "Respect local customs away from tourist beaches.", "Carry sunscreen and stay hydrated."],
-      attractions: ["Baga Beach", "Dudhsagar Falls", "Basilica of Bom Jesus", "Anjuna Flea Market", "Fort Aguada", "Palolem Beach"]
+      description: "Goa is India's beach state with Portuguese heritage and nightlife.",
+      bestTime: "November–February",
+      cuisine: ["Fish curry rice", "Pork vindaloo", "Bebinca", "Feni"],
+      tips: ["Rent a scooter for beaches.", "Respect local customs.", "Use sunscreen."],
+      attractions: ["Baga Beach", "Dudhsagar Falls", "Basilica of Bom Jesus", "Fort Aguada"]
     },
     'dubai': {
-      description: "Dubai is a city and emirate in the United Arab Emirates known for luxury shopping, ultramodern architecture and a lively nightlife scene. Burj Khalifa, an 830m-tall tower, dominates the skyscraper-filled skyline. At its foot lies Dubai Fountain, with jets and lights choreographed to music.",
-      bestTime: "November to March has pleasant temperatures for outdoor activities.",
-      cuisine: ["Shawarma", "Hummus & falafel", "Lamb ouzi", "Kunafa", "Dates & Arabic coffee"],
-      tips: ["Dress modestly in malls and public areas.", "Taxis and Metro are reliable; ride-hailing apps work well.", "Friday timings may differ for attractions and restaurants."],
-      attractions: ["Burj Khalifa", "Dubai Mall", "Palm Jumeirah", "Dubai Marina", "Desert Safari", "Gold Souk"]
+      description: "Dubai is known for luxury shopping, ultramodern architecture and desert safaris.",
+      bestTime: "November–March",
+      cuisine: ["Shawarma", "Hummus & falafel", "Kunafa", "Dates & Arabic coffee"],
+      tips: ["Dress modestly in malls.", "Use Metro/taxis.", "Check Friday timings."],
+      attractions: ["Burj Khalifa", "Dubai Mall", "Palm Jumeirah", "Desert Safari"]
     },
     'london': {
-      description: "London, the capital of England and the United Kingdom, is a 21st-century city with history stretching back to Roman times. At its centre stand the imposing Houses of Parliament, the iconic 'Big Ben' clock tower and Westminster Abbey, site of British monarch coronations.",
-      bestTime: "May to September is the warmest, though rain is possible year-round.",
-      cuisine: ["Fish and chips", "Sunday roast", "Full English breakfast", "Afternoon tea", "Pie and mash"],
-      tips: ["Stand on the right on escalators.", "Many museums are free — arrive early to beat crowds.", "An Oyster card or contactless payment works on all public transport."],
-      attractions: ["British Museum", "Tower of London", "Buckingham Palace", "London Eye", "Westminster Abbey", "Hyde Park"]
+      description: "London blends centuries of history with world-class museums and parks.",
+      bestTime: "May–September",
+      cuisine: ["Fish and chips", "Sunday roast", "Full English", "Afternoon tea"],
+      tips: ["Stand right on escalators.", "Many museums are free.", "Use Oyster/contactless."],
+      attractions: ["British Museum", "Tower of London", "Buckingham Palace", "London Eye"]
     },
     'sydney': {
-      description: "Sydney, capital of New South Wales and one of Australia's largest cities, is best known for its harbourfront Sydney Opera House, with a distinctive sail-like design. Massive Darling Harbour and the smaller Circular Quay port are hubs of waterside life.",
-      bestTime: "September to November and March to May offer mild weather and fewer crowds.",
-      cuisine: ["Meat pie", "Fish and chips", "Barramundi", "Pavlova", "Flat white coffee"],
-      tips: ["Tap water is safe to drink.", "Public transport uses Opal cards or contactless payments.", "Be sun-safe — UV levels can be high even on cooler days."],
-      attractions: ["Sydney Opera House", "Harbour Bridge", "Bondi Beach", "Royal Botanic Garden", "Taronga Zoo", "The Rocks"]
+      description: "Sydney is famous for its harbourfront Opera House and beaches.",
+      bestTime: "September–November, March–May",
+      cuisine: ["Meat pie", "Fish and chips", "Barramundi", "Pavlova"],
+      tips: ["Tap water is safe.", "Use Opal/contactless.", "Be sun-safe."],
+      attractions: ["Sydney Opera House", "Harbour Bridge", "Bondi Beach", "Taronga Zoo"]
     }
   };
 
@@ -86,11 +85,6 @@
     if (!destination) return null;
     const key = Object.keys(DESTINATION_INFO).find(k => destination.toLowerCase().includes(k));
     return key ? DESTINATION_INFO[key] : null;
-  }
-
-  function getDestinationKey(destination) {
-    if (!destination) return null;
-    return Object.keys(DESTINATION_INFO).find(k => destination.toLowerCase().includes(k));
   }
 
   function formatDays(nights) {
@@ -106,55 +100,107 @@
     return set.size;
   }
 
-  function getTopHighlights(itinerary, info) {
-    const fallbackHighlights = [
-      { icon: '🏛️', title: 'Cultural Landmarks', desc: 'Explore iconic architecture and historic sites.' },
-      { icon: '🍽️', title: 'Local Food Scene', desc: 'Savor authentic dishes and regional specialties.' },
-      { icon: '🌿', title: 'Scenic Experiences', desc: 'Enjoy beautiful viewpoints and natural landscapes.' },
-      { icon: '🛍️', title: 'Shopping & Leisure', desc: 'Browse local markets, boutiques and souvenirs.' }
-    ];
-
-    const highlights = [];
-    const activities = [];
-    (itinerary.itinerary || []).forEach(day => {
-      (day.activities || []).forEach(act => activities.push(act));
-    });
-
-    // Build highlights from actual itinerary data
-    const food = activities.find(a => /food|restaurant|cafe|dining|lunch|dinner|breakfast/i.test(a.name));
-    const culture = activities.find(a => /temple|museum|palace|church|monument|fort|gallery|historic/i.test(a.name));
-    const nature = activities.find(a => /park|garden|beach|valley|mountain|lake|waterfall|viewpoint/i.test(a.name));
-    const market = activities.find(a => /market|shopping|mall|bazaar|souvenir/i.test(a.name));
-
-    if (culture) highlights.push({ icon: '🏛️', title: 'Cultural Landmarks', desc: `Visit places like ${culture.name}.` });
-    if (food) highlights.push({ icon: '🍽️', title: 'Local Food Scene', desc: `Enjoy meals at ${food.name}.` });
-    if (nature) highlights.push({ icon: '🌿', title: 'Scenic Experiences', desc: `Explore natural spots such as ${nature.name}.` });
-    if (market) highlights.push({ icon: '🛍️', title: 'Shopping & Leisure', desc: `Browse places like ${market.name}.` });
-
-    // Fill remaining slots with fallback highlights
-    fallbackHighlights.forEach(h => {
-      if (!highlights.find(x => x.title === h.title)) highlights.push(h);
-    });
-
-    return highlights.slice(0, 4);
+  /* ---------- Gemini helpers ---------- */
+  async function askGeminiForOverview(destination) {
+    if (typeof GeminiAPI === 'undefined' || !GeminiAPI.askGemini) return null;
+    const prompt = `For the travel destination "${destination}", return ONLY a valid JSON object (no markdown, no explanations) with this exact structure:
+{
+  "description": "2-3 sentence overview of the destination",
+  "bestTime": "short answer like 'March to May' or 'October to March'",
+  "cuisine": ["dish 1", "dish 2", "dish 3", "dish 4"],
+  "tips": ["tip 1", "tip 2", "tip 3"],
+  "attractions": ["attraction 1", "attraction 2", "attraction 3", "attraction 4", "attraction 5"]
+}`;
+    try {
+      const text = await GeminiAPI.askGemini(prompt, { temperature: 0.4, maxOutputTokens: 1024 });
+      if (!text) return null;
+      const cleaned = text.replace(/```(?:json)?\s*|\s*```/g, '').trim();
+      const firstBrace = cleaned.indexOf('{');
+      const lastBrace = cleaned.lastIndexOf('}');
+      if (firstBrace === -1 || lastBrace === -1 || lastBrace < firstBrace) return null;
+      return JSON.parse(cleaned.substring(firstBrace, lastBrace + 1));
+    } catch (e) {
+      console.warn('[Overview] Gemini overview fetch failed:', e);
+      return null;
+    }
   }
 
-  function renderOverview(itinerary) {
+  async function fetchAttractions(destination) {
+    const results = [];
+    if (typeof TripMateAPI !== 'undefined' && TripMateAPI.getAttractions) {
+      try {
+        const list = await TripMateAPI.getAttractions(destination);
+        if (list && list.length) {
+          list.slice(0, 6).forEach(a => {
+            if (a.name) results.push({ name: a.name, source: 'api' });
+          });
+        }
+      } catch (e) { console.warn('[Overview] TripMate attractions failed:', e); }
+    }
+    if (results.length >= 4) return results.map(r => r.name);
+
+    // Try Gemini fallback
+    if (typeof GeminiAPI !== 'undefined' && GeminiAPI.askGemini) {
+      try {
+        const prompt = `List the top 6 must-visit attractions in ${destination}. Return ONLY a JSON array of strings, no markdown, no explanations.`;
+        const text = await GeminiAPI.askGemini(prompt, { temperature: 0.3, maxOutputTokens: 512 });
+        if (text) {
+          const cleaned = text.replace(/```(?:json)?\s*|\s*```/g, '').trim();
+          const arr = JSON.parse(cleaned);
+          if (Array.isArray(arr) && arr.length) return arr.slice(0, 6);
+        }
+      } catch (e) { console.warn('[Overview] Gemini attractions failed:', e); }
+    }
+    return null;
+  }
+
+  /* ---------- Render sections ---------- */
+  async function renderOverview(itinerary) {
     const info = getDestinationInfo(itinerary.destination);
     const nights = Math.max(0, Math.round((new Date(itinerary.endDate) - new Date(itinerary.startDate)) / (1000 * 60 * 60 * 24)));
-    const totalActivities = countUniqueActivities(itinerary);
+
+    // Description: TripMate first, then Gemini, then fallback.
+    let description = itinerary.placeDescription || info?.description || null;
+    let bestTime = info?.bestTime || null;
+    let cuisine = info?.cuisine || null;
+    let tips = info?.tips || null;
+    let attractions = info?.attractions || null;
+
+    // Try TripMate place info for description
+    if (typeof TripMateAPI !== 'undefined' && TripMateAPI.getPlaceInfo) {
+      try {
+        const place = await TripMateAPI.getPlaceInfo(itinerary.destination);
+        if (place && place.description && !description) description = place.description;
+      } catch (e) { console.warn('[Overview] TripMate place info failed:', e); }
+    }
+
+    // Try Gemini for richer data
+    const geminiData = await askGeminiForOverview(itinerary.destination);
+    if (geminiData) {
+      if (geminiData.description && !description) description = geminiData.description;
+      if (geminiData.bestTime) bestTime = geminiData.bestTime;
+      if (geminiData.cuisine && geminiData.cuisine.length) cuisine = geminiData.cuisine;
+      if (geminiData.tips && geminiData.tips.length) tips = geminiData.tips;
+      if (geminiData.attractions && geminiData.attractions.length) attractions = geminiData.attractions;
+    }
+
+    // Attractions from API/Gemini if not already set
+    if (!attractions || attractions.length < 4) {
+      const fetched = await fetchAttractions(itinerary.destination);
+      if (fetched && fetched.length) attractions = fetched;
+    }
+
+    // Defaults if still missing
+    description = description || `${itinerary.destination} offers a wonderful mix of experiences for travelers. Plan your days to make the most of your trip.`;
+    bestTime = bestTime || 'Varies by season — check local climate before booking.';
+    cuisine = cuisine || ['Local street food', 'Regional specialties', 'Popular cafes', 'Traditional desserts'];
+    tips = tips || ['Keep digital copies of important documents.', 'Carry a portable charger and adapter.', 'Book popular attractions in advance when possible.'];
 
     // Description
     const descEl = document.getElementById('overviewDescription');
-    if (descEl) {
-      descEl.textContent = itinerary.placeDescription || (info ? info.description : `${itinerary.destination} offers a wonderful mix of experiences for travelers. Plan your days to make the most of your trip.`);
-    }
-
-    // Intro heading uses destination name
+    if (descEl) descEl.textContent = description;
     const introSection = document.getElementById('overviewIntro');
-    if (introSection) {
-      introSection.querySelector('h2').textContent = `About ${itinerary.destination}`;
-    }
+    if (introSection) introSection.querySelector('h2').textContent = `About ${itinerary.destination}`;
 
     // Stats
     const statsEl = document.getElementById('overviewStats');
@@ -165,7 +211,7 @@
           <div class="text-xs text-gray-500 dark:text-[#9AA0A6] mt-1">Duration</div>
         </div>
         <div class="bg-green-50 dark:bg-[#1F2630] rounded-2xl p-4 text-center">
-          <div class="text-2xl font-bold text-green-600 dark:text-green-400">${totalActivities}</div>
+          <div class="text-2xl font-bold text-green-600 dark:text-green-400">${countUniqueActivities(itinerary)}</div>
           <div class="text-xs text-gray-500 dark:text-[#9AA0A6] mt-1">Activities</div>
         </div>
         <div class="bg-purple-50 dark:bg-[#1F2630] rounded-2xl p-4 text-center">
@@ -179,10 +225,23 @@
       `;
     }
 
-    // Highlights
+    // Highlights from itinerary data
     const highlightsEl = document.getElementById('overviewHighlights');
     if (highlightsEl) {
-      const highlights = getTopHighlights(itinerary, info);
+      const activities = [];
+      (itinerary.itinerary || []).forEach(day => (day.activities || []).forEach(act => activities.push(act)));
+      const food = activities.find(a => /food|restaurant|cafe|dining|lunch|dinner|breakfast/i.test(a.name));
+      const culture = activities.find(a => /temple|museum|palace|church|monument|fort|gallery|historic/i.test(a.name));
+      const nature = activities.find(a => /park|garden|beach|valley|mountain|lake|waterfall|viewpoint/i.test(a.name));
+      const market = activities.find(a => /market|shopping|mall|bazaar|souvenir/i.test(a.name));
+      const highlights = [
+        culture && { icon: '🏛️', title: 'Cultural Landmarks', desc: `Visit places like ${culture.name}.` },
+        food && { icon: '🍽️', title: 'Local Food Scene', desc: `Enjoy meals at ${food.name}.` },
+        nature && { icon: '🌿', title: 'Scenic Experiences', desc: `Explore natural spots such as ${nature.name}.` },
+        market && { icon: '🛍️', title: 'Shopping & Leisure', desc: `Browse places like ${market.name}.` },
+        { icon: '✨', title: 'Personalized Plan', desc: 'Tailored to your travel style and interests.' }
+      ].filter(Boolean).slice(0, 4);
+
       highlightsEl.innerHTML = highlights.map(h => `
         <div class="glass-panel rounded-2xl p-6 flex items-start gap-4 dark:bg-[#161B22] dark:border-white/[0.08]">
           <div class="w-12 h-12 rounded-2xl bg-white dark:bg-[#1F2630] flex items-center justify-center text-2xl shadow-sm">${h.icon}</div>
@@ -197,15 +256,13 @@
     // Attractions
     const attractionsEl = document.getElementById('overviewAttractions');
     if (attractionsEl) {
-      const attractions = (info ? info.attractions : []);
-      // Mix itinerary activities if available
       const activityNames = [];
       (itinerary.itinerary || []).forEach(day => {
         (day.activities || []).forEach(act => {
           if (!activityNames.includes(act.name)) activityNames.push(act.name);
         });
       });
-      const combined = [...attractions, ...activityNames].slice(0, 6);
+      const combined = [...(attractions || []), ...activityNames].slice(0, 6);
       if (combined.length === 0) {
         attractionsEl.innerHTML = `<p class="text-sm text-gray-500 dark:text-[#9AA0A6] col-span-full">Attraction suggestions will appear once your itinerary is generated.</p>`;
       } else {
@@ -244,7 +301,7 @@
       }
     }
 
-    // Quick info
+    // Quick Info with icons
     const quickEl = document.getElementById('overviewQuickInfo');
     if (quickEl) {
       quickEl.innerHTML = `
@@ -258,11 +315,11 @@
         </li>
         <li class="flex items-center gap-3 text-gray-700 dark:text-[#BDC1C6]">
           <span class="material-symbols-outlined text-brand-blue dark:text-[#7EB8FF]">payments</span>
-          <span>₹${(itinerary.budgetBreakdown?.total || itinerary.totalBudget || itinerary.budget || 0).toLocaleString()} estimated</span>
+          <span>₹${(itinerary.budgetBreakdown?.total || itinerary.totalBudget || itinerary.budget || 0).toLocaleString()}</span>
         </li>
         <li class="flex items-center gap-3 text-gray-700 dark:text-[#BDC1C6]">
           <span class="material-symbols-outlined text-brand-blue dark:text-[#7EB8FF]">hiking</span>
-          <span>${itinerary.travelStyle || 'Travel'} style</span>
+          <span>${Array.isArray(itinerary.travelStyle) ? itinerary.travelStyle.join(', ') : (itinerary.travelStyle || 'Travel')}</span>
         </li>
         <li class="flex items-center gap-3 text-gray-700 dark:text-[#BDC1C6]">
           <span class="material-symbols-outlined text-brand-blue dark:text-[#7EB8FF]">group</span>
@@ -273,15 +330,12 @@
 
     // Best time
     const bestTimeEl = document.getElementById('overviewBestTime');
-    if (bestTimeEl) {
-      bestTimeEl.textContent = info ? info.bestTime : 'The best time to visit depends on your preferred weather and activities.';
-    }
+    if (bestTimeEl) bestTimeEl.textContent = bestTime;
 
     // Cuisine
     const cuisineEl = document.getElementById('overviewCuisine');
     if (cuisineEl) {
-      const cuisine = info ? info.cuisine : ['Local street food', 'Regional specialties', 'Popular cafes', 'Traditional desserts'];
-      cuisineEl.innerHTML = cuisine.map(item => `
+      cuisineEl.innerHTML = cuisine.slice(0, 5).map(item => `
         <li class="flex items-center gap-3 text-gray-700 dark:text-[#BDC1C6]">
           <span class="w-6 h-6 rounded-full bg-orange-100 dark:bg-[#1F2630] text-orange-500 flex items-center justify-center text-xs">🍴</span>
           <span>${item}</span>
@@ -292,37 +346,12 @@
     // Tips
     const tipsEl = document.getElementById('overviewTips');
     if (tipsEl) {
-      const tips = info ? info.tips : [
-        'Keep digital copies of important documents.',
-        'Carry a portable charger and adapter.',
-        'Book popular attractions in advance when possible.'
-      ];
-      tipsEl.innerHTML = tips.map(tip => `
+      tipsEl.innerHTML = tips.slice(0, 5).map(tip => `
         <li class="flex items-start gap-3 text-gray-700 dark:text-[#BDC1C6]">
           <span class="material-symbols-outlined text-brand-blue dark:text-[#7EB8FF] text-base mt-0.5">lightbulb</span>
           <span>${tip}</span>
         </li>
       `).join('');
-    }
-
-    // Try to enrich with TripMate/Geocoding data
-    enrichOverview(itinerary);
-  }
-
-  async function enrichOverview(itinerary) {
-    if (!itinerary.destination) return;
-
-    // Try TripMate place info for description and images
-    if (typeof TripMateAPI !== 'undefined') {
-      try {
-        const place = await TripMateAPI.getPlaceInfo(itinerary.destination);
-        if (place && place.description) {
-          const descEl = document.getElementById('overviewDescription');
-          if (descEl) descEl.textContent = place.description;
-        }
-      } catch (e) {
-        console.warn('[Overview] TripMate enrichment failed:', e);
-      }
     }
   }
 
@@ -341,45 +370,38 @@
     document.getElementById('overviewTab').classList.toggle('hidden', tabName !== 'overview');
     document.getElementById('itineraryTab').classList.toggle('hidden', tabName !== 'itinerary');
 
-    // Scroll to content
     const content = document.getElementById('tabContent');
     if (content && window.scrollY > content.offsetTop - 200) {
       content.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
 
-  // Wire up tab buttons
   function initOverviewTabs() {
     document.querySelectorAll('.itin-tab').forEach(btn => {
       btn.addEventListener('click', () => switchItinTab(btn.dataset.tab));
     });
   }
 
-  // Tab switching must be wired up as soon as DOM is ready.
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initOverviewTabs);
   } else {
     initOverviewTabs();
   }
 
-  // Hook into itinerary render lifecycle by wrapping renderLoadedItinerary.
-  // If trips.js loads later, re-wrap after it executes.
   function wrapRender() {
     const originalRender = window.renderLoadedItinerary;
     if (!originalRender || originalRender.__overviewWrapped) return;
-    window.renderLoadedItinerary = function (itinerary) {
+    window.renderLoadedItinerary = async function (itinerary) {
       window.__currentItinerary = itinerary;
       originalRender(itinerary);
-      renderOverview(itinerary);
+      await renderOverview(itinerary);
     };
     window.renderLoadedItinerary.__overviewWrapped = true;
-    // If an itinerary is already rendered, refresh overview.
     if (window.__currentItinerary) renderOverview(window.__currentItinerary);
   }
 
   wrapRender();
   document.addEventListener('DOMContentLoaded', wrapRender);
-  // Safety net: trips.js runs after this file; give it a moment then wrap again.
   setTimeout(wrapRender, 0);
   setTimeout(wrapRender, 100);
 })();

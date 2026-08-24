@@ -65,6 +65,38 @@ const GeminiAPI = {
   },
 
   /**
+   * Ask Gemini a free-form prompt and return the text response.
+   * @param {string} prompt
+   * @param {Object} opts - Optional { temperature, maxOutputTokens }
+   * @returns {Promise<string|null>}
+   */
+  async askGemini(prompt, opts = {}) {
+    if (!GEMINI_API_KEY) {
+      console.warn('[GeminiAPI] No API key configured.');
+      return null;
+    }
+    try {
+      const response = await fetch(`${GEMINI_BASE_URL}/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ role: "user", parts: [{ text: prompt }] }],
+          generationConfig: {
+            temperature: opts.temperature ?? 0.4,
+            maxOutputTokens: opts.maxOutputTokens ?? 2048
+          }
+        })
+      });
+      if (!response.ok) return null;
+      const data = await response.json();
+      return data.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || null;
+    } catch (err) {
+      console.warn('[GeminiAPI] askGemini failed:', err);
+      return null;
+    }
+  },
+
+  /**
    * Ask Gemini for a place image URL when TripMate has none
    * @param {string} destination
    * @returns {Promise<string|null>}
