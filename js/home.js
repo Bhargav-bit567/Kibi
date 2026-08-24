@@ -458,7 +458,7 @@
         if (!result) throw new Error('Itinerary generation failed');
 
         sessionStorage.setItem('wm_generated_itinerary', JSON.stringify(result));
-        window.location.href = 'itinerary.html';
+        window.location.href = 'itinerary.html#overview';
       } catch (err) {
         console.error('Home trip generation error:', err);
         showToast('Could not generate itinerary. Please try again.', 'error');
