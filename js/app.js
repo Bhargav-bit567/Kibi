@@ -218,7 +218,7 @@ function getAuthActionHTML(isMobile = false) {
         <button id="profileAvatarBtn" class="rounded-full overflow-hidden flex items-center justify-center transition-all hover:ring-2 hover:ring-[#005da7]/30 cursor-pointer" aria-label="Open profile menu">
           ${avatarBtn}
         </button>
-        <div id="profileDropdown" class="profile-dropdown absolute top-[calc(100%+8px)] right-0 w-[300px] bg-white border border-slate-200/60 shadow-xl shadow-black/8 rounded-xl overflow-hidden p-5 flex flex-col gap-4 z-[100] opacity-0 invisible translate-y-1 transition-all duration-200 pointer-events-none">
+        <div id="profileDropdown" class="profile-dropdown absolute top-[calc(100%+8px)] right-0 w-[300px] bg-white dark:bg-slate-900 border border-slate-200/60 dark:border-slate-700 shadow-xl shadow-black/8 rounded-xl overflow-hidden p-5 flex flex-col gap-4 z-[100] opacity-0 invisible translate-y-1 transition-all duration-200 pointer-events-none">
           <div class="flex items-center gap-3">
             ${avatarHeader}
             <div class="flex flex-col min-w-0">
