@@ -62,11 +62,8 @@ noscript body {
   transform: none !important;
 }
 
-/* Modal root must escape any body transform containing block */
-#mapModal,
-#mapModal * {
-  transform: none !important;
-}
+/* Modal root must escape any body transform containing block.
+   Use margin-based centering instead of flex/transform so Leaflet internals stay intact. */
 #mapModal {
   position: fixed !important;
   top: 0 !important;
@@ -74,18 +71,20 @@ noscript body {
   width: 100vw !important;
   height: 100vh !important;
   display: none;
-  align-items: center !important;
-  justify-content: center !important;
+  padding: 1rem !important;
 }
 #mapModal:not(.hidden) {
-  display: flex !important;
+  display: block !important;
 }
 #mapModalCard {
   position: relative !important;
-  width: calc(100% - 2rem) !important;
+  width: 100% !important;
   max-width: 64rem !important;
   height: 80vh !important;
-  max-height: 90vh !important;
+  max-height: calc(100vh - 2rem) !important;
+  margin: auto !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
 }
 
 body {
