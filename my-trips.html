@@ -160,27 +160,6 @@
 <h1 class="text-4xl md:text-5xl font-bold text-gradient mb-4">Your Journeys</h1>
 <p class="text-lg text-slate-600 max-w-2xl">Revisit past memories and prepare for upcoming adventures. Every trip is a new story.</p>
 </div>
-<!-- Saved Trips Section -->
-<section class="mb-16" id="savedTripsSection">
-<div class="flex items-center justify-between mb-8">
-<h2 class="text-2xl font-bold text-slate-800 flex items-center gap-3">
-<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">bookmark</span>
-                    Saved Trips
-                </h2>
-</div>
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="savedTripsGrid">
-<!-- Saved trips rendered dynamically -->
-</div>
-<div class="hidden text-center py-12" id="savedTripsEmpty">
-<div class="w-16 h-16 rounded-full bg-primary-fixed flex items-center justify-center mx-auto mb-4">
-<span class="material-symbols-outlined text-[28px] text-primary">bookmark_border</span>
-</div>
-<h3 class="text-xl font-bold text-slate-800 mb-2">No saved trips</h3>
-<p class="text-slate-500 text-sm mb-6">Save trips you're interested in and they'll appear here.</p>
-<a href="discover.html" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-white font-bold text-sm hover:bg-primary/90 transition-colors shadow-sm">Discover Trips</a>
-</div>
-</section>
-
 <!-- Upcoming Trips Section -->
 <section class="mb-16">
 <div class="flex items-center justify-between mb-8">
@@ -235,67 +214,11 @@
     const user = getCurrentUser();
     if (!user) return;
 
-    const savedGrid = document.getElementById('savedTripsGrid');
-    const savedEmpty = document.getElementById('savedTripsEmpty');
-    const savedSection = document.getElementById('savedTripsSection');
     const grid = document.getElementById('myTripsGrid');
     const empty = document.getElementById('myTripsEmpty');
     const pastSection = document.getElementById('pastMemoriesSection');
     const pastGrid = document.getElementById('pastTripsGrid');
     if (!grid || !empty) return;
-
-    // Render saved trips
-    const savedTrips = getSavedTrips(user.id);
-    if (savedGrid && savedEmpty) {
-      if (savedTrips.length === 0) {
-        savedGrid.classList.add('hidden');
-        savedEmpty.classList.remove('hidden');
-      } else {
-        savedEmpty.classList.add('hidden');
-        savedGrid.innerHTML = savedTrips.map((trip, idx) => {
-          // Embed full trip data into the URL so the page never needs storage lookup.
-          // Use encodeURIComponent -> btoa -> encodeURIComponent to support Unicode/emojis.
-          const encoded = encodeURIComponent(btoa(encodeURIComponent(JSON.stringify(trip))));
-          return `
-          <div class="glass-card rounded-[16px] overflow-hidden group hover:-translate-y-1 transition-transform duration-300 cursor-pointer" data-saved-id="${trip.id}" data-encoded-trip="${encoded}">
-            <div class="relative h-48 w-full" onclick="window.location.href='saved-itinerary.html?data=' + encodeURIComponent(this.closest('[data-encoded-trip]').dataset.encodedTrip)">
-              <img alt="${trip.destination || 'Trip'}" class="w-full h-full object-cover" src="${trip.image || 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80'}"/>
-              <div class="absolute top-4 right-4 bg-secondary-fixed/90 backdrop-blur-md text-on-secondary-fixed text-xs px-3 py-1.5 rounded-full font-semibold">Saved</div>
-            </div>
-            <div class="p-[24px]">
-              <h3 class="text-[20px] leading-[28px] font-bold text-slate-800 mb-2">${trip.title || trip.destination || 'Trip'}</h3>
-              <p class="text-slate-500 text-sm mb-1 flex items-center gap-2">
-                <span class="material-symbols-outlined text-[18px] text-primary">schedule</span> ${formatDateRange(trip.startDate, trip.endDate)}
-              </p>
-              <div class="text-xs text-slate-600 bg-slate-50 p-2 rounded mb-3">
-                <strong>Day 1 preview:</strong><br>
-                ${((trip.itinerary || [])[0]?.activities || []).slice(0,2).map(a => `• ${a.name} (${a.time || 'no time'})`).join('<br>') || 'No activities'}
-              </div>
-              <div class="flex gap-2">
-                <button class="view-saved-btn flex-1 py-3 rounded-full border border-primary text-primary font-bold text-sm hover:bg-primary/5 transition-colors" onclick="event.stopPropagation(); window.location.href='saved-itinerary.html?data=' + encodeURIComponent(this.closest('[data-encoded-trip]').dataset.encodedTrip)">View Itinerary</button>
-                <button class="delete-saved-btn px-4 py-3 rounded-full bg-error/10 border border-error text-error font-bold text-sm hover:bg-error/20 transition-colors" onclick="event.stopPropagation();">Delete</button>
-              </div>
-            </div>
-          </div>
-        `}).join('');
-
-        savedGrid.querySelectorAll('.delete-saved-btn').forEach((btn, idx) => {
-          btn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const trip = savedTrips[idx];
-            confirmModal(`Delete saved trip "${trip.title || trip.destination || 'this trip'}"? This cannot be undone.`, () => {
-              removeSavedItinerary(trip.id);
-              btn.closest('[data-saved-id]').remove();
-              showToast('Saved trip removed', 'default');
-              if (savedGrid.children.length === 0) {
-                savedGrid.classList.add('hidden');
-                savedEmpty.classList.remove('hidden');
-              }
-            });
-          });
-        });
-      }
-    }
 
     const trips = getUserTrips(user.id);
     const now = new Date();
