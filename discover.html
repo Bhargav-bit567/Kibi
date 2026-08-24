@@ -1,623 +1,814 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8" />
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
   <title>Kibi - Discover</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&family=Material+Symbols+Outlined&display=swap" rel="stylesheet">
+
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-
-
-  <script id="tailwind-config">
-    tailwind.config = {
-      darkMode: "class",
-      theme: {
-        extend: {
-          "colors": {
-            "brand": { "blue": "#5C9CE6", "dark": "#0A1B29", "light": "#F8F9FA" },
-            "on-primary-container": "#fdfcff",
-            "primary": "#005da7",
-            "primary-fixed": "#d4e3ff",
-            "on-error": "#ffffff",
-            "on-primary-fixed": "#001c39",
-            "secondary": "#01658c",
-            "tertiary-container": "#6e757c",
-            "surface-variant": "#e2e2e5",
-            "tertiary": "#555d63",
-            "on-tertiary-fixed": "#151c22",
-            "tertiary-fixed-dim": "#c0c7cf",
-            "on-primary": "#ffffff",
-            "surface": "#f9f9fc",
-            "background": "#f9f9fc",
-            "on-tertiary-container": "#fcfcff",
-            "on-secondary-container": "#005a7e",
-            "on-tertiary": "#ffffff",
-            "on-surface-variant": "#414751",
-            "on-surface": "#1a1c1e",
-            "primary-fixed-dim": "#a4c9ff",
-            "inverse-primary": "#a4c9ff",
-            "surface-bright": "#f9f9fc",
-            "outline-variant": "#c1c7d3",
-            "surface-container": "#eeeef0",
-            "on-primary-fixed-variant": "#004883",
-            "error-container": "#ffdad6",
-            "on-secondary": "#ffffff",
-            "inverse-surface": "#2f3133",
-            "surface-tint": "#0060ac",
-            "error": "#ba1a1a",
-            "tertiary-fixed": "#dce3eb",
-            "on-tertiary-fixed-variant": "#40484e",
-            "inverse-on-surface": "#f0f0f3",
-            "on-background": "#1a1c1e",
-            "surface-container-high": "#e8e8ea",
-            "on-secondary-fixed-variant": "#004c6b",
-            "surface-container-lowest": "#ffffff",
-            "surface-dim": "#dadadc",
-            "on-error-container": "#93000a",
-            "surface-container-highest": "#e2e2e5",
-            "outline": "#717783",
-            "on-secondary-fixed": "#001e2d",
-            "secondary-container": "#8bd2fe",
-            "surface-container-low": "#f3f3f6",
-            "primary-container": "#2976c7",
-            "secondary-fixed-dim": "#88cffb",
-            "secondary-fixed": "#c6e7ff"
-          },
-          "borderRadius": {
-            "DEFAULT": "0.25rem",
-            "lg": "0.5rem",
-            "xl": "0.75rem",
-            "full": "9999px"
-          },
-          "spacing": {
-            "base": "8px",
-            "gutter": "24px",
-            "container-padding": "24px",
-            "section-gap-desktop": "120px",
-            "section-gap-mobile": "64px"
-          },
-          "fontFamily": {
-            "label-md": [
-              "Inter"
-            ],
-            "headline-md": [
-              "Outfit"
-            ],
-            "headline-lg-mobile": [
-              "Outfit"
-            ],
-            "display-lg": [
-              "Outfit"
-            ],
-            "headline-lg": [
-              "Outfit"
-            ],
-            "body-md": [
-              "Inter"
-            ],
-            "label-sm": [
-              "Inter"
-            ],
-            "body-lg": [
-              "Inter"
-            ]
-          },
-          "fontSize": {
-            "label-md": [
-              "14px",
-              {
-                "lineHeight": "20px",
-                "letterSpacing": "0.02em",
-                "fontWeight": "600"
-              }
-            ],
-            "headline-md": [
-              "32px",
-              {
-                "lineHeight": "40px",
-                "fontWeight": "600"
-              }
-            ],
-            "headline-lg-mobile": [
-              "32px",
-              {
-                "lineHeight": "40px",
-                "fontWeight": "700"
-              }
-            ],
-            "display-lg": [
-              "72px",
-              {
-                "lineHeight": "84px",
-                "letterSpacing": "-0.02em",
-                "fontWeight": "700"
-              }
-            ],
-            "headline-lg": [
-              "48px",
-              {
-                "lineHeight": "56px",
-                "letterSpacing": "-0.01em",
-                "fontWeight": "700"
-              }
-            ],
-            "body-md": [
-              "16px",
-              {
-                "lineHeight": "24px",
-                "fontWeight": "400"
-              }
-            ],
-            "label-sm": [
-              "12px",
-              {
-                "lineHeight": "16px",
-                "fontWeight": "500"
-              }
-            ],
-            "body-lg": [
-              "18px",
-              {
-                "lineHeight": "28px",
-                "fontWeight": "400"
-              }
-            ]
-          }
-        }
-      }
-    }
-  </script>
-  
-  <style>
-    .glass-panel {
-      background: rgba(255, 255, 255, 0.7);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.5);
-    }
-
-    .ambient-shadow {
-      box-shadow: 0 20px 40px -10px rgba(0, 93, 167, 0.08);
-    }
-
-    .line-clamp-2 {
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-  </style>
 
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/animations.css">
   <link rel="stylesheet" href="css/responsive.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=Caveat:wght@400;500;600;700&display=swap"
-    rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-    rel="stylesheet" />
+
+          colors: {
+            "brand-dark": "#0A1B29",
+            primary: "#005da7",
+            "primary-container": "#2976c7",
+            "primary-fixed": "#d4e3ff",
+            "on-primary-fixed": "#001c39",
+            "on-primary-fixed-variant": "#004883",
+            surface: "#f9f9fc",
+            "surface-container": "#eeeef0",
+            "surface-container-low": "#f3f3f6",
+            "on-surface": "#1a1c1e",
+            "on-surface-variant": "#414751",
+            "outline-variant": "#c1c7d3",
+            "status-success": "#22c55e",
+            "status-warning": "#fbbf24",
+            background: "#f9f9fc"
+          }size: 13px; font-weight: 600; transition: all 0.2s ease;
+      white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;
+    }
+    .filter-pill:hover { border-color: #005da7; color: #005da7; }
+    .filter-pill.active { background: #005da7; color: #fff; border-color: #005da7; box-shadow: 0 4px 14px rgba(0,93,167,0.25); }
+
+    .search-input {
+      width: 100%; border: 1.5px solid #c1c7d3; border-radius: 12px;
+      padding: 12px 48px 12px 16px; font-size: 15px; background: #fff;
+      outline: none; transition: border-color 0.2s, box-shadow 0.2s, background 0.3s, color 0.3s;
+      font-family: 'Inter', sans-serif; color: #1a1c1e;
+    }
+    .search-input:focus { border-color: #005da7; box-shadow: 0 0 0 3px rgba(0,93,167,0.12); }
+    .search-input::placeholder { color: #9aa0a6; }
+
+    .discover-btn {
+      background: linear-gradient(135deg, #005da7, #2976c7); color: #fff;
+      border: none; border-radius: 12px; padding: 13px 28px;
+      font-size: 14px; font-weight: 700; cursor: pointer;
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: all 0.2s; box-shadow: 0 4px 16px rgba(0,93,167,0.3); white-space: nowrap;
+    }
+    .discover-btn:hover { background: linear-gradient(135deg, #004883, #005da7); transform: translateY(-1px); }
+    .discover-btn:active { transform: scale(0.98); }
+
+    .filter-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 13px; }
+    .active-tag {
+      display: inline-flex; align-items: center; gap: 5px;
+      background: #d4e3ff; color: #004883; border-radius: 9999px;
+      padding: 4px 12px; font-size: 12px; font-weight: 600;
+    }
+    .active-tag button { background: none; border: none; cursor: pointer; color: #004883; font-size: 14px; }
+
+    .place-card {
+      border-radius: 20px; overflow: hidden; position: relative;
+      cursor: pointer; background: #fff;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+    }
+    .place-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(0,93,167,0.14); }
+    .place-card img { width: 100%; height: 220px; object-fit: cover; display: block; transition: transform 0.5s; }
+    .place-card:hover img { transform: scale(1.06); }
+
+    .skeleton {
+      background: linear-gradient(90deg, #f2f4f6 25%, #e8e8ea 50%, #f2f4f6 75%);
+      background-size: 400% 100%; animation: shimmer 1.4s ease infinite; border-radius: 20px;
+    }
+    @keyframes shimmer { 0% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+    .empty-state { text-align: center; padding: 60px 20px; color: #414751; }
+    .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .section-label { font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 700; color: #1a1c1e; transition: color 0.3s; }
+
+    .pill-row { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; scrollbar-width: none; }
+    .pill-row::-webkit-scrollbar { display: none; }
+
+    .feat-card {
+      flex-shrink: 0; width: calc(33.333% - 14px); border-radius: 20px;
+      overflow: hidden; cursor: pointer; position: relative; background: #fff;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.07); transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+    }
+    @media (max-width: 768px)  { .feat-card { width: calc(80% - 10px); } }
+    @media (min-width: 769px) and (max-width: 1024px) { .feat-card { width: calc(50% - 12px); } }
+    .feat-card:hover { transform: translateY(-5px); box-shadow: 0 16px 40px rgba(0,93,167,0.14); }
+    .feat-card img { width: 100%; height: 200px; object-fit: cover; display: block; transition: transform 0.5s; }
+    .feat-card:hover img { transform: scale(1.06); }
+
+    .feat-dot { width: 8px; height: 8px; border-radius: 9999px; background: #c1c7d3; cursor: pointer; transition: all 0.3s; border: none; }
+    .feat-dot.active { background: #005da7; width: 24px; }
+
+    /* ── DARK MODE ────────────────────────────────────────────────────────── */
+
+    html.dark body {
+      background-color: #0B0F17;
+      color: #E8EAED;
+    }
+
+    /* Page background blobs */
+    html.dark .fixed.inset-0 > div:first-child  { background: #1a2a47 !important; opacity: 0.18 !important; }
+    html.dark .fixed.inset-0 > div:last-child   { background: #0d2a40 !important; opacity: 0.14 !important; }
+
+    /* Section labels & hero text */
+    html.dark .section-label,
+    html.dark #resultsTitle,
+    html.dark #featuredTitle { color: #F1F3F4 !important; }
+
+    html.dark #resultsSubtitle,
+    html.dark #featuredSubtitle { color: #BDC1C6 !important; }
+
+    html.dark h1 { color: #F1F3F4 !important; }
+    html.dark h1 span.text-\[\#005da7\] { color: #7EB8FF !important; }
+
+    /* Hero badge */
+    html.dark .bg-\[\#d4e3ff\] {
+      background-color: rgba(164, 201, 255, 0.12) !important;
+      color: #a4c9ff !important;
+    }
+    html.dark .text-\[\#001c39\] { color: #a4c9ff !important; }
+
+    /* Hero paragraph */
+    html.dark .text-\[\#414751\] { color: #BDC1C6 !important; }
+    html.dark .text-\[\#1a1c1e\] { color: #F1F3F4 !important; }
+
+    /* Glass filter panel */
+    html.dark .glass-panel {
+      background: rgba(22, 27, 34, 0.80) !important;
+      border-color: rgba(255,255,255,0.08) !important;
+      box-shadow: 0 20px 40px -10px rgba(0,0,0,0.35) !important;
+    }
+
+    /* Filter section labels */
+    html.dark .glass-panel .text-xs.font-bold { color: #9AA0A6 !important; }
+
+    /* Filter pills — default state */
+    html.dark .filter-pill {
+      background: #1F2630 !important;
+      border-color: rgba(255,255,255,0.1) !important;
+      color: #BDC1C6 !important;
+    }
+    html.dark .filter-pill:hover {
+      border-color: #7EB8FF !important;
+      color: #7EB8FF !important;
+    }
+    html.dark .filter-pill.active {
+      background: #005da7 !important;
+      color: #fff !important;
+      border-color: #005da7 !important;
+      box-shadow: 0 4px 14px rgba(0,93,167,0.35) !important;
+    }
+
+    /* Search input */
+    html.dark .search-input {
+      background: #1F2630 !important;
+      border-color: rgba(255,255,255,0.12) !important;
+      color: #E8EAED !important;
+    }
+    html.dark .search-input::placeholder { color: #5f6b7a !important; }
+    html.dark .search-input:focus {
+      border-color: #7EB8FF !important;
+      box-shadow: 0 0 0 3px rgba(126,184,255,0.12) !important;
+    }
+
+    /* Clear search button */
+    html.dark #clearSearch { color: #9AA0A6 !important; }
+    html.dark #clearSearch:hover { color: #E8EAED !important; }
+
+    /* Divider inside filter panel */
+    html.dark .border-\[\#c1c7d3\]\/40 { border-color: rgba(255,255,255,0.08) !important; }
+
+    /* Active filter bar tags */
+    html.dark .active-tag {
+      background: rgba(164,201,255,0.12) !important;
+      color: #a4c9ff !important;
+    }
+    html.dark .active-tag button { color: #a4c9ff !important; }
+    html.dark #activeFilterBar .text-xs.font-semibold { color: #9AA0A6 !important; }
+    html.dark #activeFilterBar .text-\[\#005da7\] { color: #7EB8FF !important; }
+
+    /* Result count badge */
+    html.dark #resultCountBadge { background: #005da7 !important; }
+
+    /* Place cards */
+    html.dark .place-card {
+      background: #161B22 !important;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3) !important;
+    }
+    html.dark .place-card:hover {
+      box-shadow: 0 16px 40px rgba(0,93,167,0.22) !important;
+    }
+
+    /* Card inner text */
+    html.dark .place-card h3 { color: #F1F3F4 !important; }
+    html.dark .place-card p  { color: #BDC1C6 !important; }
+    html.dark .place-card .border-t { border-color: rgba(255,255,255,0.08) !important; }
+    html.dark .place-card .text-\[\#414751\] { color: #9AA0A6 !important; }
+    html.dark .place-card .text-\[\#1a1c1e\] { color: #F1F3F4 !important; }
+
+    /* Card tags — mood (blue) */
+    html.dark .place-card .bg-\[\#d4e3ff\] {
+      background: rgba(164,201,255,0.14) !important;
+      color: #a4c9ff !important;
+    }
+    html.dark .place-card .text-\[\#004883\] { color: #a4c9ff !important; }
+
+    /* Card tags — genre (grey) */
+    html.dark .place-card .bg-\[\#eeeef0\],
+    html.dark .place-card .bg-\[\#f3f3f6\] {
+      background: rgba(255,255,255,0.08) !important;
+      color: #BDC1C6 !important;
+    }
+
+    /* "Plan Trip" link on card */
+    html.dark .place-card .text-\[\#005da7\] { color: #7EB8FF !important; }
+    html.dark .place-card .hover\:text-\[\#2976c7\]:hover { color: #a4c9ff !important; }
+
+    /* Skeleton shimmer */
+    html.dark .skeleton {
+      background: linear-gradient(90deg, #1a2030 25%, #222a3a 50%, #1a2030 75%) !important;
+      background-size: 400% 100% !important;
+    }
+
+    /* Empty state */
+    html.dark .empty-state { color: #BDC1C6 !important; }
+    html.dark .empty-state h3 { color: #7EB8FF !important; }
+    html.dark .empty-state p  { color: #9AA0A6 !important; }
+    html.dark .empty-state button {
+      background: #005da7 !important;
+      color: #fff !important;
+    }
+
+    /* Featured cards */
+    html.dark .feat-card {
+      background: #161B22 !important;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3) !important;
+    }
+    html.dark .feat-card:hover {
+      box-shadow: 0 16px 40px rgba(0,93,167,0.22) !important;
+    }
+
+    /* Featured slider nav buttons */
+    html.dark button[onclick="featSlide(-1)"],
+    html.dark button[onclick="featSlide(1)"] {
+      background: #1F2630 !important;
+      border-color: rgba(255,255,255,0.1) !important;
+      color: #BDC1C6 !important;
+    }
+    html.dark button[onclick="featSlide(-1)"]:hover,
+    html.dark button[onclick="featSlide(1)"]:hover {
+      border-color: #7EB8FF !important;
+      color: #7EB8FF !important;
+    }
+
+    /* Dots */
+    html.dark .feat-dot { background: rgba(255,255,255,0.2) !important; border: none !important; }
+    html.dark .feat-dot.active { background: #7EB8FF !important; }
+
+    /* Nav overrides for this page */
+    html.dark nav.hidden.md\:flex {
+      background: rgba(22,27,34,0.85) !important;
+      border-color: rgba(255,255,255,0.08) !important;
+    }
+    html.dark header a.flex.items-center { color: #fff !important; background: rgba(22,27,34,0.85) !important; }
+    html.dark #mobileMenu {
+      background: rgba(11,15,23,0.98) !important;
+    }
+    html.dark #mobileMenu a { color: #BDC1C6 !important; }
+    html.dark #mobileMenu a.text-\[\#005da7\] { color: #7EB8FF !important; }
+
+    /* Mobile menu button */
+    html.dark #mobile-menu-btn {
+      background: rgba(22,27,34,0.85) !important;
+      border-color: rgba(255,255,255,0.08) !important;
+    }
+    html.dark #mobile-menu-btn .material-symbols-outlined { color: #E8EAED !important; }
+  </style>
 </head>
 
-<body
-  class="bg-background text-on-background font-body-md text-body-md min-h-screen flex flex-col relative overflow-x-hidden">
-  <!-- Ambient Background Elements -->
+<body class="min-h-screen flex flex-col overflow-x-hidden">
+
   <div class="fixed inset-0 pointer-events-none z-[-1] overflow-hidden">
-    <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-primary-fixed rounded-full blur-[120px] opacity-30">
-    </div>
-    <div
-      class="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-secondary-fixed rounded-full blur-[150px] opacity-20">
-    </div>
+    <div class="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-[#d4e3ff] rounded-full blur-[120px] opacity-30"></div>
+    <div class="absolute bottom-[-10%] right-[-10%] w-[60%] h-[60%] bg-[#c6e7ff] rounded-full blur-[150px] opacity-20"></div>
   </div>
-  <!-- Header -->
+
   <header class="relative z-50 px-6 lg:px-12 flex justify-between items-center w-full max-w-7xl mx-auto pt-6 pb-4">
+    <a href="index.html" class="flex items-center h-10 px-5 bg-white/90 backdrop-blur rounded-full font-bold text-xl text-[#005da7] shadow-sm border border-white/20 hover:bg-white transition-colors" style="font-family:'Outfit',sans-serif;">Kibi</a>
 
-    <!-- Logo -->
-    <a href="index.html"
-      class="flex items-center justify-center h-10 px-5 bg-white/90 backdrop-blur-md rounded-full font-heading font-bold text-[1.25rem] tracking-tight text-[#005da7] hover:bg-white transition-colors shadow-sm border border-white/20">
-      Kibi
-    </a>
-
-    <!-- Center Nav Pill -->
-    <nav
-      class="hidden md:flex items-center bg-white/85 backdrop-blur-md rounded-full px-2 py-1.5 border border-white/40 shadow-sm relative">
-      <div id="navActivePill" class="absolute top-1/2 -translate-y-1/2 h-[calc(100%-12px)] rounded-full bg-white shadow-sm border border-slate-50 transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] pointer-events-none z-0" style="left:0;width:0;opacity:0"></div>
-      <ul class="flex items-center gap-1 lg:gap-2 text-[14px] relative z-10">
-        <li><a href="index.html" data-nav-pill-target="home" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 text-slate-700 hover:text-slate-900">Home</a></li>
-        <li><a href="discover.html" data-nav-pill-target="discover" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 text-slate-900">Discover</a></li>
-        <li><a href="plan-trip.html" data-nav-pill-target="plan-trip" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 text-slate-700 hover:text-slate-900">Plan Trip</a></li>
-        <li><a href="my-trips.html" data-nav-pill-target="my-trips" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 text-slate-700 hover:text-slate-900">My Trips</a></li>
-        <li><a href="about.html" data-nav-pill-target="about" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 text-slate-700 hover:text-slate-900">About Us</a></li>
+    <nav class="hidden md:flex items-center bg-white/85 backdrop-blur rounded-full px-2 py-1.5 border border-white/40 shadow-sm">
+      <ul class="flex items-center gap-1 text-sm font-medium">
+        <li><a href="index.html"     class="block px-5 py-2 rounded-full text-slate-600 hover:text-slate-900 hover:bg-white/60 transition-all">Home</a></li>
+        <li><a href="discover.html"  class="block px-5 py-2 rounded-full text-slate-900 bg-white shadow-sm font-semibold">Discover</a></li>
+        <li><a href="plan-trip.html" class="block px-5 py-2 rounded-full text-slate-600 hover:text-slate-900 hover:bg-white/60 transition-all">Plan Trip</a></li>
+        <li><a href="my-trips.html"  class="block px-5 py-2 rounded-full text-slate-600 hover:text-slate-900 hover:bg-white/60 transition-all">My Trips</a></li>
+        <li><a href="about.html"     class="block px-5 py-2 rounded-full text-slate-600 hover:text-slate-900 hover:bg-white/60 transition-all">About Us</a></li>
       </ul>
     </nav>
 
-    <!-- Right Action -->
     <div class="flex items-center gap-3">
       <div id="auth-action-container"></div>
-      <button id="mobile-menu-btn"
-        class="md:hidden w-10 h-10 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-slate-800 hover:bg-white transition-colors shadow-sm border border-white/20 relative">
-        <span class="hamburger-box"><span class="hamburger-line"></span><span class="hamburger-line"></span><span class="hamburger-line"></span></span>
+      <button id="mobile-menu-btn" class="md:hidden w-10 h-10 rounded-full bg-white/90 backdrop-blur flex items-center justify-center shadow-sm border border-white/20">
+        <span class="material-symbols-outlined text-slate-700">menu</span>
       </button>
     </div>
   </header>
-  <!-- Mobile Menu -->
-  <div id="mobileMenu"
-    class="fixed inset-0 z-40 bg-white/95 backdrop-blur-lg opacity-0 pointer-events-none transition-opacity duration-300 md:hidden flex flex-col items-center justify-center gap-6">
-    <a href="index.html"
-      class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">Home</a>
-    <a href="discover.html"
-      class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">Discover</a>
-    <a href="plan-trip.html"
-      class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">Plan Trip</a>
-    <a href="my-trips.html" class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">My
-      Trips</a>
-    <a href="about.html" class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">About
-      Us</a>
+
+  <div id="mobileMenu" class="fixed inset-0 z-40 bg-white/95 backdrop-blur-lg opacity-0 pointer-events-none transition-opacity duration-300 md:hidden flex flex-col items-center justify-center gap-6">
+    <a href="index.html"     class="text-2xl font-medium text-slate-700">Home</a>
+    <a href="discover.html"  class="text-2xl font-semibold text-[#005da7]">Discover</a>
+    <a href="plan-trip.html" class="text-2xl font-medium text-slate-700">Plan Trip</a>
+    <a href="my-trips.html"  class="text-2xl font-medium text-slate-700">My Trips</a>
+    <a href="about.html"     class="text-2xl font-medium text-slate-700">About Us</a>
     <div id="mobile-auth-action-container"></div>
   </div>
 
-  <main
-    class="flex-1 max-w-[1280px] mx-auto w-full px-container-padding py-section-gap-mobile md:py-section-gap-desktop flex flex-col gap-section-gap-mobile md:gap-section-gap-desktop">
-    <!-- Hero Section -->
-    <section class="flex flex-col items-center text-center gap-6 max-w-3xl mx-auto">
-      <span
-        class="bg-primary-fixed text-on-primary-fixed px-4 py-1.5 rounded-full font-label-sm text-label-sm inline-flex items-center gap-2">
-        <span class="material-symbols-outlined"
-          style="font-variation-settings: 'FILL' 1; font-size: 16px;">explore</span>
+  <main class="flex-1 max-w-[1280px] mx-auto w-full px-6 py-12 md:py-20 flex flex-col gap-14">
+
+    <!-- HERO -->
+    <section class="flex flex-col items-center text-center gap-5 max-w-3xl mx-auto">
+      <span class="bg-[#d4e3ff] text-[#001c39] px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider inline-flex items-center gap-2">
+        <span class="material-symbols-outlined" style="font-size:15px;font-variation-settings:'FILL' 1">explore</span>
         Discover the World
       </span>
-      <h1 class="font-display-lg text-headline-lg-mobile md:text-display-lg text-on-surface">
-        Find Your Next <br /> <span class="text-primary">Adventure</span>
+      <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-[#1a1c1e] leading-tight tracking-tight" style="font-family:'Outfit',sans-serif;">
+        Find Your Next <br/><span class="text-[#005da7]">Adventure</span>
       </h1>
-      <p class="font-body-lg text-body-lg text-on-surface-variant">
-        Explore our handpicked selection of extraordinary destinations, curated by AI and tailored for unforgettable
-        experiences.
+      <p class="text-lg text-[#414751] max-w-2xl leading-relaxed">
+        Explore our handpicked selection of extraordinary destinations, curated by AI and tailored for unforgettable experiences.
       </p>
     </section>
-    <!-- Categories -->
-    <section class="w-full max-w-5xl mx-auto">
-      <div class="glass-panel rounded-xl p-8 ambient-shadow flex flex-col gap-6">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="flex flex-col gap-2">
-            <label class="font-label-md text-label-md text-on-surface-variant">Destination</label>
-            <div class="relative">
-              <span
-                class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-primary opacity-60">location_on</span>
-              <input
-                class="w-full bg-white/50 border border-outline-variant rounded-lg py-2 pl-10 pr-4 font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
-                placeholder="Where to?" type="text" />
-            </div>
-          </div>
-          <div class="flex flex-col gap-2">
-            <label class="font-label-md text-label-md text-on-surface-variant">Travel Dates</label>
-            <div class="relative">
-              <span
-                class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-primary opacity-60">calendar_today</span>
-              <input
-                class="w-full bg-white/50 border border-outline-variant rounded-lg py-2 pl-10 pr-4 font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
-                placeholder="Select dates" type="text" />
-            </div>
-          </div>
-          <div class="flex flex-col gap-2">
-            <label class="font-label-md text-label-md text-on-surface-variant">Budget Range</label>
-            <div class="relative">
-              <span
-                class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-primary opacity-60">payments</span>
-              <select
-                class="w-full bg-white/50 border border-outline-variant rounded-lg py-2 pl-10 pr-4 font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all appearance-none">
-                <option>Economy</option>
-                <option>Standard</option>
-                <option>Luxury</option>
-              </select>
-            </div>
+
+    <!-- FILTER PANEL -->
+    <section class="w-full max-w-4xl mx-auto">
+      <div class="glass-panel rounded-2xl p-6 md:p-8 flex flex-col gap-6">
+
+        <div class="relative">
+          <input id="searchInput" type="text" class="search-input" placeholder="Search a place… e.g. Manali, Goa, Kashmir"/>
+          <button id="clearSearch" class="hidden absolute right-3.5 top-1/2 -translate-y-1/2 text-[#717783] hover:text-[#1a1c1e] transition-colors" onclick="clearSearchInput()">
+            <span class="material-symbols-outlined" style="font-size:20px">close</span>
+          </button>
+        </div>
+
+        <div class="flex flex-col gap-2">
+          <span class="text-xs font-bold text-[#414751] uppercase tracking-wider flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[#005da7]" style="font-size:16px">calendar_month</span>
+            When are you travelling?
+          </span>
+          <div class="pill-row">
+            <button class="filter-pill active" data-type="month" data-value="">✨ Any Month</button>
+            <button class="filter-pill" data-type="month" data-value="Jan">❄️ Jan</button>
+            <button class="filter-pill" data-type="month" data-value="Feb">❄️ Feb</button>
+            <button class="filter-pill" data-type="month" data-value="Mar">🌸 Mar</button>
+            <button class="filter-pill" data-type="month" data-value="Apr">🌸 Apr</button>
+            <button class="filter-pill" data-type="month" data-value="May">☀️ May</button>
+            <button class="filter-pill" data-type="month" data-value="Jun">☀️ Jun</button>
+            <button class="filter-pill" data-type="month" data-value="Jul">🌧️ Jul</button>
+            <button class="filter-pill" data-type="month" data-value="Aug">🌧️ Aug</button>
+            <button class="filter-pill" data-type="month" data-value="Sep">🌧️ Sep</button>
+            <button class="filter-pill" data-type="month" data-value="Oct">🍁 Oct</button>
+            <button class="filter-pill" data-type="month" data-value="Nov">🍁 Nov</button>
+            <button class="filter-pill" data-type="month" data-value="Dec">❄️ Dec</button>
           </div>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="flex flex-col gap-2">
-            <label class="font-label-md text-label-md text-on-surface-variant">Travel Style &amp; Interests</label>
-            <div class="relative">
-              <span
-                class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-primary opacity-60">auto_awesome</span>
-              <input
-                class="w-full bg-white/50 border border-outline-variant rounded-lg py-2 pl-10 pr-4 font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
-                placeholder="e.g. Adventure, Foodie" type="text" />
-            </div>
-          </div>
-          <div class="flex flex-col gap-2">
-            <label class="font-label-md text-label-md text-on-surface-variant">Group Size</label>
-            <div class="relative">
-              <span
-                class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-primary opacity-60">group</span>
-              <input
-                class="w-full bg-white/50 border border-outline-variant rounded-lg py-2 pl-10 pr-4 font-body-md focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
-                min="1" placeholder="1 Traveler" type="number" />
-            </div>
-          </div>
-          <div class="flex items-end">
-            <button
-              class="w-full bg-primary text-on-primary h-[42px] rounded-lg font-label-md text-label-md hover:opacity-90 transition-opacity flex items-center justify-center gap-2">
-              <span class="material-symbols-outlined">search</span>
-              Find My Trip
-            </button>
+
+        <div class="flex flex-col gap-2">
+          <span class="text-xs font-bold text-[#414751] uppercase tracking-wider flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[#005da7]" style="font-size:16px">mood</span>
+            What's your vibe?
+          </span>
+          <div class="pill-row">
+            <button class="filter-pill active" data-type="mood" data-value="">All Moods</button>
+            <button class="filter-pill" data-type="mood" data-value="Adventure">🧗 Adventure</button>
+            <button class="filter-pill" data-type="mood" data-value="Relaxed">🧘 Relaxed</button>
+            <button class="filter-pill" data-type="mood" data-value="Romantic">❤️ Romantic</button>
+            <button class="filter-pill" data-type="mood" data-value="Fun">🎉 Fun</button>
+            <button class="filter-pill" data-type="mood" data-value="Peaceful">😌 Peaceful</button>
+            <button class="filter-pill" data-type="mood" data-value="Explore">📸 Explore</button>
           </div>
         </div>
+
+        <div class="flex flex-col gap-2">
+          <span class="text-xs font-bold text-[#414751] uppercase tracking-wider flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[#005da7]" style="font-size:16px">landscape</span>
+            What kind of place?
+          </span>
+          <div class="pill-row">
+            <button class="filter-pill active" data-type="genre" data-value="">All Types</button>
+            <button class="filter-pill" data-type="genre" data-value="Mountains">🏔️ Mountains</button>
+            <button class="filter-pill" data-type="genre" data-value="Beaches">🏖️ Beaches</button>
+            <button class="filter-pill" data-type="genre" data-value="Nature">🌿 Nature</button>
+            <button class="filter-pill" data-type="genre" data-value="Culture">🏛️ Culture</button>
+            <button class="filter-pill" data-type="genre" data-value="Wildlife">🐅 Wildlife</button>
+            <button class="filter-pill" data-type="genre" data-value="Snow">❄️ Snow</button>
+            <button class="filter-pill" data-type="genre" data-value="Desert">🏜️ Desert</button>
+            <button class="filter-pill" data-type="genre" data-value="Lakes">🏞️ Lakes</button>
+            <button class="filter-pill" data-type="genre" data-value="Spiritual">🛕 Spiritual</button>
+            <button class="filter-pill" data-type="genre" data-value="Food">🍜 Food</button>
+          </div>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-2 border-t border-[#c1c7d3]/40">
+          <div id="activeFilterBar" class="filter-bar hidden"></div>
+          <button class="discover-btn ml-auto" onclick="applyFilters()">
+            <span class="material-symbols-outlined" style="font-size:18px">travel_explore</span>
+            Discover Places
+          </button>
+        </div>
+
       </div>
     </section>
-    <!-- India Pre-Planned Trips Grid -->
-    <section id="indiaTripsGrid" class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
-      <!-- Cards injected by JS -->
+
+    <!-- RESULTS -->
+    <section class="flex flex-col gap-6 w-full">
+      <div class="flex items-center justify-between flex-wrap gap-3">
+        <div>
+          <h2 class="section-label" id="resultsTitle">✨ Recommended for You</h2>
+          <p class="text-sm text-[#414751] mt-1" id="resultsSubtitle">Showing all destinations</p>
+        </div>
+        <div id="resultCountBadge" class="hidden items-center gap-2 bg-[#005da7] text-white text-xs font-bold px-4 py-2 rounded-full">
+          <span class="material-symbols-outlined" style="font-size:14px">map</span>
+          <span id="resultCountText">0 places</span>
+        </div>
+      </div>
+      <div id="placesGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="skeleton h-[360px]"></div>
+        <div class="skeleton h-[360px]"></div>
+        <div class="skeleton h-[360px]"></div>
+        <div class="skeleton h-[360px]"></div>
+        <div class="skeleton h-[360px]"></div>
+        <div class="skeleton h-[360px]"></div>
+      </div>
     </section>
+
+    <!-- FEATURED SLIDER -->
+    <section class="w-full flex flex-col gap-6">
+      <div class="flex items-center justify-between flex-wrap gap-3">
+        <div>
+          <h2 class="section-label" id="featuredTitle">🌟 Featured This Month</h2>
+          <p class="text-sm text-[#414751] mt-1" id="featuredSubtitle">Top picks based on the selected month</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="featSlide(-1)" class="w-9 h-9 rounded-full border border-[#c1c7d3] bg-white text-[#414751] hover:text-[#005da7] hover:border-[#005da7] flex items-center justify-center transition-all shadow-sm">
+            <span class="material-symbols-outlined" style="font-size:18px">chevron_left</span>
+          </button>
+          <button onclick="featSlide(1)" class="w-9 h-9 rounded-full border border-[#c1c7d3] bg-white text-[#414751] hover:text-[#005da7] hover:border-[#005da7] flex items-center justify-center transition-all shadow-sm">
+            <span class="material-symbols-outlined" style="font-size:18px">chevron_right</span>
+          </button>
+        </div>
+      </div>
+      <div class="relative overflow-hidden" id="featuredWrapper">
+        <div class="flex gap-5 transition-transform duration-500 ease-in-out" id="featuredTrack" style="will-change:transform;"></div>
+      </div>
+      <div class="flex items-center justify-center gap-2" id="featuredDots"></div>
+    </section>
+
   </main>
-<div id="footerContainer"></div>
-  <!-- API Layer & Scripts -->
+
+  <div id="footerContainer"></div>
+
   <script src="js/api/api-config.js?v=10"></script>
   <script src="js/api/api-cache.js?v=10"></script>
-  <script src="js/api/geocoding-api.js?v=10"></script>
-  <script src="js/api/weather-api.js?v=10"></script>
-  <script src="js/api/places-api.js?v=10"></script>
-  <script src="js/api/routing-api.js?v=10"></script>
   <script src="js/api/tripmate-api.js?v=10"></script>
   <script src="js/storage.js?v=10"></script>
-  <script src="js/matching.js?v=10"></script>
-  <script src="js/planner.js?v=10"></script>
   <script src="js/app.js?v=10"></script>
-  <script src="js/home.js"></script>
+
   <script>
-      (function () {
-        const INDIA_TRIPS = [
-          {
-            id: 'india_manali',
-            name: 'Manali',
-            state: 'Himachal Pradesh',
-            duration: '3D/2N',
-            numDays: 3,
-            budget: 12000,
-            bestFor: 'Adventure, mountains, friends',
-            travelStyle: ['Adventure'],
-            interests: ['Nature', 'Trekking', 'Photography'],
-            socialPreference: 'Small Group',
-            pace: 'Moderate',
-            lat: 32.2396,
-            lon: 77.1887
-          },
-          {
-            id: 'india_jibhi',
-            name: 'Jibhi–Tirthan Valley',
-            state: 'Himachal Pradesh',
-            duration: '3D/2N',
-            numDays: 3,
-            budget: 9000,
-            bestFor: 'Introverts, nature, peace',
-            travelStyle: ['Nature'],
-            interests: ['Slow Travel', 'Peace', 'Riverside'],
-            socialPreference: 'Solo',
-            pace: 'Slow',
-            lat: 31.8092,
-            lon: 77.3523
-          },
-          {
-            id: 'india_kashmir',
-            name: 'Kashmir',
-            state: 'Jammu and Kashmir',
-            duration: '4D/3N',
-            numDays: 4,
-            budget: 18000,
-            bestFor: 'Scenic, photography, couples',
-            travelStyle: ['Nature'],
-            interests: ['Photography', 'Scenic', 'Romance'],
-            socialPreference: '1-2 People',
-            pace: 'Moderate',
-            lat: 34.0837,
-            lon: 74.7973
-          },
-          {
-            id: 'india_rishikesh',
-            name: 'Rishikesh',
-            state: 'Uttarakhand',
-            duration: '3D/2N',
-            numDays: 3,
-            budget: 10000,
-            bestFor: 'Adventure + social',
-            travelStyle: ['Adventure'],
-            interests: ['Rafting', 'Yoga', 'Camping'],
-            socialPreference: 'Social',
-            pace: 'Fast',
-            lat: 30.0869,
-            lon: 78.2676
-          },
-          {
-            id: 'india_leh',
-            name: 'Leh–Ladakh',
-            state: 'Ladakh',
-            duration: '5D/4N',
-            numDays: 5,
-            budget: 25000,
-            bestFor: 'Adventure, photography',
-            travelStyle: ['Adventure'],
-            interests: ['Road Trip', 'Mountains', 'Photography'],
-            socialPreference: 'Small Group',
-            pace: 'Moderate',
-            lat: 34.1526,
-            lon: 77.5771
-          },
-          {
-            id: 'india_goa',
-            name: 'Goa',
-            state: 'Goa',
-            duration: '4D/3N',
-            numDays: 4,
-            budget: 15000,
-            bestFor: 'Social, friends, nightlife',
-            travelStyle: ['Relaxation'],
-            interests: ['Beach', 'Nightlife', 'Food'],
-            socialPreference: 'Social',
-            pace: 'Slow',
-            lat: 15.2993,
-            lon: 74.1240
-          },
-          {
-            id: 'india_munnar',
-            name: 'Munnar',
-            state: 'Kerala',
-            duration: '3D/2N',
-            numDays: 3,
-            budget: 11000,
-            bestFor: 'Nature, relaxed travelers',
-            travelStyle: ['Nature'],
-            interests: ['Tea Gardens', 'Wildlife', 'Relaxation'],
-            socialPreference: 'Small Group',
-            pace: 'Slow',
-            lat: 10.0889,
-            lon: 77.0595
-          },
-          {
-            id: 'india_udaipur',
-            name: 'Udaipur',
-            state: 'Rajasthan',
-            duration: '3D/2N',
-            numDays: 3,
-            budget: 13000,
-            bestFor: 'Culture, photography, couples',
-            travelStyle: ['Culture'],
-            interests: ['Heritage', 'Palaces', 'Photography'],
-            socialPreference: '1-2 People',
-            pace: 'Moderate',
-            lat: 24.5854,
-            lon: 73.7125
-          },
-          {
-            id: 'india_andaman',
-            name: 'Andaman Islands',
-            state: 'Andaman and Nicobar',
-            duration: '5D/4N',
-            numDays: 5,
-            budget: 30000,
-            bestFor: 'Beaches, adventure',
-            travelStyle: ['Adventure'],
-            interests: ['Beach', 'Water Sports', 'Scuba'],
-            socialPreference: 'Small Group',
-            pace: 'Moderate',
-            lat: 11.7401,
-            lon: 92.6586
-          },
-          {
-            id: 'india_meghalaya',
-            name: 'Meghalaya',
-            state: 'Meghalaya',
-            duration: '5D/4N',
-            numDays: 5,
-            budget: 20000,
-            bestFor: 'Nature, offbeat, explorers',
-            travelStyle: ['Nature'],
-            interests: ['Waterfalls', 'Caves', 'Trekking'],
-            socialPreference: 'Small Group',
-            pace: 'Moderate',
-            lat: 25.4670,
-            lon: 91.3662
-          }
-        ];
+  (function () {
 
-        function formatBudget(amount) {
-          return '₹' + amount.toLocaleString('en-IN');
+    const PLACES = [
+      { id:'manali',      name:'Manali',             state:'Himachal Pradesh', rating:4.8, moods:['Adventure','Explore','Relaxed'],    genres:['Mountains','Nature','Snow'],          months:['Oct','Nov','Dec','Jan','Feb','Mar','May','Jun'], desc:'Snow-capped Himalayan peaks, pine trails and roaring rivers.',               budget:12000, duration:'3D/2N' },
+      { id:'jibhi',       name:'Jibhi–Tirthan',      state:'Himachal Pradesh', rating:4.9, moods:['Peaceful','Relaxed'],               genres:['Mountains','Nature'],                 months:['Mar','Apr','May','Jun','Sep','Oct','Nov'],       desc:'Unspoiled cedar valley with wooden cottages and quiet streams.',             budget:9000,  duration:'3D/2N' },
+      { id:'kashmir',     name:'Kashmir',             state:'J&K',              rating:4.9, moods:['Romantic','Peaceful','Explore'],    genres:['Mountains','Nature','Snow'],          months:['Dec','Jan','Feb','Mar','Apr','May','Sep','Oct'], desc:'Dal Lake shikaras, Gulmarg snow slopes and lush alpine valleys.',            budget:18000, duration:'4D/3N' },
+      { id:'rishikesh',   name:'Rishikesh',           state:'Uttarakhand',      rating:4.7, moods:['Adventure','Fun','Peaceful'],       genres:['Nature','Spiritual','Mountains'],     months:['Sep','Oct','Nov','Dec','Feb','Mar','Apr'],       desc:'White-water rafting, serene ashrams and Ganga aarti ghats.',                budget:10000, duration:'3D/2N' },
+      { id:'leh',         name:'Leh–Ladakh',          state:'Ladakh',           rating:4.9, moods:['Adventure','Explore'],              genres:['Mountains','Snow','Nature'],          months:['May','Jun','Jul','Aug','Sep'],                   desc:'Azure Pangong Tso, high mountain passes and Buddhist monasteries.',          budget:25000, duration:'5D/4N' },
+      { id:'goa',         name:'Goa',                 state:'Goa',              rating:4.8, moods:['Fun','Relaxed','Romantic'],         genres:['Beaches','Food','Culture'],           months:['Nov','Dec','Jan','Feb','Mar','Oct'],             desc:'Sun-kissed beaches, vibrant shacks, heritage and seafood.',                  budget:15000, duration:'4D/3N' },
+      { id:'munnar',      name:'Munnar',              state:'Kerala',           rating:4.8, moods:['Peaceful','Romantic','Relaxed'],    genres:['Nature','Mountains','Food'],          months:['Sep','Oct','Nov','Dec','Jan','Feb','Mar'],       desc:'Rolling emerald tea gardens and mist-covered green hills.',                  budget:11000, duration:'3D/2N' },
+      { id:'udaipur',     name:'Udaipur',             state:'Rajasthan',        rating:4.9, moods:['Romantic','Peaceful','Explore'],    genres:['Culture','Food','Lakes'],             months:['Oct','Nov','Dec','Jan','Feb','Mar'],             desc:'Grand royal lake palaces and romantic golden sunsets.',                      budget:13000, duration:'3D/2N' },
+      { id:'andaman',     name:'Andaman Islands',     state:'A&N Islands',      rating:4.9, moods:['Adventure','Romantic','Relaxed'],   genres:['Beaches','Wildlife','Nature'],        months:['Oct','Nov','Dec','Jan','Feb','Mar','Apr'],       desc:'Turquoise waters, coral reef scuba diving and white sand beaches.',          budget:30000, duration:'5D/4N' },
+      { id:'meghalaya',   name:'Meghalaya',           state:'Meghalaya',        rating:4.8, moods:['Explore','Adventure','Peaceful'],   genres:['Nature','Wildlife','Mountains'],      months:['Jul','Aug','Sep','Oct','Nov'],                   desc:'Living root bridges, glass Dawki river and cloud waterfalls.',              budget:20000, duration:'5D/4N' },
+      { id:'coorg',       name:'Coorg',               state:'Karnataka',        rating:4.7, moods:['Relaxed','Peaceful','Romantic'],    genres:['Nature','Food','Mountains'],          months:['Sep','Oct','Nov','Dec','Jan','Feb','Mar'],       desc:'Coffee estates, spice aromas and misty mountain waterfalls.',               budget:11000, duration:'3D/2N' },
+      { id:'ooty',        name:'Ooty',                state:'Tamil Nadu',       rating:4.6, moods:['Relaxed','Romantic'],               genres:['Mountains','Nature'],                 months:['Oct','Nov','Dec','Jan','Feb','Mar','Apr','May'], desc:'Classic Nilgiri hills, heritage toy train and pine forests.',                budget:9000,  duration:'3D/2N' },
+      { id:'darjeeling',  name:'Darjeeling',          state:'West Bengal',      rating:4.8, moods:['Peaceful','Explore','Romantic'],    genres:['Mountains','Culture','Nature'],       months:['Mar','Apr','May','Oct','Nov','Dec'],             desc:'Kangchenjunga views, world-famous tea and heritage monasteries.',            budget:12000, duration:'4D/3N' },
+      { id:'varanasi',    name:'Varanasi',            state:'Uttar Pradesh',    rating:4.8, moods:['Explore','Peaceful'],               genres:['Spiritual','Culture','Food'],         months:['Oct','Nov','Dec','Jan','Feb','Mar'],             desc:'Sacred Ganga ghats, evening aarti and ancient alleyways.',                   budget:10000, duration:'3D/2N' },
+      { id:'pondicherry', name:'Pondicherry',         state:'Puducherry',       rating:4.7, moods:['Relaxed','Peaceful','Romantic'],    genres:['Beaches','Culture','Food'],           months:['Oct','Nov','Dec','Jan','Feb','Mar'],             desc:'French quarters, mustard yellow cafes and seaside promenades.',              budget:11000, duration:'3D/2N' },
+      { id:'spiti',       name:'Spiti Valley',        state:'Himachal Pradesh', rating:4.9, moods:['Explore','Adventure'],              genres:['Mountains','Snow','Nature'],          months:['May','Jun','Jul','Aug','Sep'],                   desc:'Key Monastery, Chandratal lake and starlit night skies.',                    budget:20000, duration:'5D/4N' },
+      { id:'jaipur',      name:'Jaipur',              state:'Rajasthan',        rating:4.8, moods:['Explore','Fun'],                    genres:['Culture','Food'],                     months:['Oct','Nov','Dec','Jan','Feb','Mar'],             desc:'Historic Amber Fort, Hawa Mahal and vibrant Rajasthani heritage.',           budget:13000, duration:'3D/2N' },
+      { id:'auli',        name:'Auli',                state:'Uttarakhand',      rating:4.9, moods:['Adventure','Romantic'],             genres:['Snow','Mountains','Nature'],          months:['Dec','Jan','Feb','Mar'],                         desc:'Premier Himalayan ski slopes and stunning Nanda Devi views.',               budget:18000, duration:'3D/2N' },
+      { id:'alleppey',    name:'Alleppey Backwaters', state:'Kerala',           rating:4.8, moods:['Peaceful','Romantic','Relaxed'],    genres:['Nature','Food','Beaches','Lakes'],    months:['Oct','Nov','Dec','Jan','Feb','Mar'],             desc:'Tranquil houseboat cruises along palm-lined canals.',                        budget:14000, duration:'3D/2N' },
+      { id:'agra',        name:'Agra',                state:'Uttar Pradesh',    rating:4.9, moods:['Explore','Romantic'],               genres:['Culture','Food'],                     months:['Oct','Nov','Dec','Jan','Feb','Mar'],             desc:'Taj Mahal sunrise, Agra Fort and Mughal splendor.',                          budget:12000, duration:'2D/1N' },
+      { id:'pushkar',     name:'Pushkar',             state:'Rajasthan',        rating:4.7, moods:['Explore','Peaceful','Fun'],         genres:['Culture','Spiritual','Desert','Food'],months:['Oct','Nov','Dec','Jan','Feb','Mar'],             desc:'Sacred lake, camel fair and colorful desert bazaars.',                       budget:10000, duration:'2D/1N' },
+      { id:'rann-kutch',  name:'Rann of Kutch',       state:'Gujarat',          rating:4.8, moods:['Explore','Adventure','Fun'],        genres:['Desert','Culture','Nature'],          months:['Oct','Nov','Dec','Jan','Feb','Mar'],             desc:'Infinite white salt desert, cultural festivals and sunset magic.',           budget:15000, duration:'3D/2N' },
+      { id:'varkala',     name:'Varkala',             state:'Kerala',           rating:4.7, moods:['Relaxed','Peaceful','Adventure'],   genres:['Beaches','Nature','Food','Spiritual'],months:['Oct','Nov','Dec','Jan','Feb','Mar'],             desc:'Dramatic cliff beaches, yoga retreats and seafood shacks.',                  budget:11000, duration:'3D/2N' },
+      { id:'gangtok',     name:'Gangtok',             state:'Sikkim',           rating:4.8, moods:['Peaceful','Explore','Adventure'],   genres:['Mountains','Nature','Culture','Snow'],months:['Mar','Apr','May','Oct','Nov','Dec'],             desc:'Kanchenjunga panorama, Rumtek monastery and alpine flowers.',                budget:15000, duration:'4D/3N' },
+      { id:'lonavala',    name:'Lonavala',            state:'Maharashtra',      rating:4.5, moods:['Relaxed','Fun','Romantic'],         genres:['Nature','Mountains','Food'],          months:['Jul','Aug','Sep','Oct','Nov','Dec'],             desc:'Monsoon paradise, misty ghats and Bhaja ancient caves.',                     budget:8000,  duration:'2D/1N' },
+    ];
+
+    const MONTH_FEATURED = {
+      Jan:['kashmir','auli','goa','andaman','jaipur','udaipur'],
+      Feb:['kashmir','goa','andaman','udaipur','pondicherry','varkala'],
+      Mar:['darjeeling','rishikesh','coorg','jibhi','gangtok','lonavala'],
+      Apr:['ooty','munnar','jibhi','darjeeling','gangtok','alleppey'],
+      May:['leh','spiti','manali','darjeeling','gangtok','jibhi'],
+      Jun:['leh','spiti','manali','rishikesh','jibhi','kashmir'],
+      Jul:['meghalaya','lonavala','rishikesh','alleppey','varkala','coorg'],
+      Aug:['meghalaya','lonavala','alleppey','munnar','coorg','varanasi'],
+      Sep:['meghalaya','rishikesh','coorg','munnar','jibhi','gangtok'],
+      Oct:['goa','udaipur','jaipur','andaman','kashmir','darjeeling'],
+      Nov:['goa','andaman','udaipur','jaipur','varanasi','pondicherry'],
+      Dec:['goa','kashmir','auli','andaman','jaipur','rann-kutch'],
+    };
+
+    const FALLBACKS = {
+      manali:     'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=800&q=80',
+      jibhi:      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
+      kashmir:    'https://images.unsplash.com/photo-1566837945700-30057527ade0?w=800&q=80',
+      rishikesh:  'https://images.unsplash.com/photo-1591780512803-b054238e8ec4?w=800&q=80',
+      leh:        'https://images.unsplash.com/photo-1581793745862-99fde7fa73d2?w=800&q=80',
+      goa:        'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=800&q=80',
+      munnar:     'https://images.unsplash.com/photo-1590176296553-18b8d66f7e06?w=800&q=80',
+      udaipur:    'https://images.unsplash.com/photo-1615836245337-f5b9b2303f1c?w=800&q=80',
+      andaman:    'https://images.unsplash.com/photo-1589308078059-be1415eab4c3?w=800&q=80',
+      meghalaya:  'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80',
+      coorg:      'https://images.unsplash.com/photo-1571401835393-8c5f35328320?w=800&q=80',
+      ooty:       'https://images.unsplash.com/photo-1503455637927-730bce8583c0?w=800&q=80',
+      darjeeling: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?w=800&q=80',
+      varanasi:   'https://images.unsplash.com/photo-1561361513-2d000a50f0dc?w=800&q=80',
+      pondicherry:'https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=800&q=80',
+      spiti:      'https://images.unsplash.com/photo-1609766857041-ed402ea8069a?w=800&q=80',
+      jaipur:     'https://images.unsplash.com/photo-1477587458883-47145ed94245?w=800&q=80',
+      auli:       'https://images.unsplash.com/photo-1548013146-72479768bada?w=800&q=80',
+      alleppey:   'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?w=800&q=80',
+      agra:       'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800&q=80',
+      pushkar:    'https://images.unsplash.com/photo-1599831013079-b8f5e3f14d60?w=800&q=80',
+      'rann-kutch':'https://images.unsplash.com/photo-1573408301185-9519f94816b5?w=800&q=80',
+      varkala:    'https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=800&q=80',
+      gangtok:    'https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=800&q=80',
+      lonavala:   'https://images.unsplash.com/photo-1601580563081-27a44d6c9c09?w=800&q=80',
+    };
+
+    const MONTHS_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const MONTHS_FULL  = {Jan:'January',Feb:'February',Mar:'March',Apr:'April',May:'May',Jun:'June',Jul:'July',Aug:'August',Sep:'September',Oct:'October',Nov:'November',Dec:'December'};
+
+    let activeMonth = '', activeMood = '', activeGenre = '', searchQuery = '';
+    let featIndex = 0, featCards = [];
+    const imageCache = {};
+
+    const fallback = id => FALLBACKS[id] || 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=800&q=80';
+    const curMonth = () => MONTHS_SHORT[new Date().getMonth()];
+
+    async function fetchImg(name) {
+      try {
+        if (window.TripMateAPI) {
+          const info = await TripMateAPI.getPlaceInfo(name + ' India');
+          if (info?.image && !info.image.includes('locator') && !info.image.includes('map'))
+            return info.image;
         }
+      } catch (_) {}
+      return null;
+    }
 
-        function addDays(date, days) {
-          const result = new Date(date);
-          result.setDate(result.getDate() + days);
-          return result.toISOString().split('T')[0];
-        }
+    // ── PILLS & SEARCH ────────────────────────────────────────────────────────
+    function setupPills() {
+      document.querySelectorAll('.filter-pill').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const { type, value } = btn.dataset;
+          document.querySelectorAll(`.filter-pill[data-type="${type}"]`).forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          if (type === 'month') activeMonth = value;
+          if (type === 'mood')  activeMood  = value;
+          if (type === 'genre') activeGenre = value;
+          updateActiveBar();
+        });
+      });
+    }
 
-        function renderCard(trip, place, idx) {
-          const isLarge = idx < 2;
-          const image = place?.image || `https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80`;
-          const description = place?.description || `Explore ${trip.name}, ${trip.state}. Perfect for ${trip.bestFor}.`;
-          return `
-      <div class="${isLarge ? 'md:col-span-6' : 'md:col-span-4'} rounded-xl overflow-hidden relative group h-[360px] cursor-pointer ambient-shadow" onclick="window.generateIndiaTrip('${trip.id}')">
-        <img alt="${trip.name}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" src="${image}" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80'">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
-        <div class="absolute top-4 left-4">
-          <span class="bg-white/20 backdrop-blur-md text-white px-3 py-1 rounded-full font-label-sm text-label-sm">${trip.state}</span>
-        </div>
-        <div class="absolute bottom-0 left-0 p-6 w-full flex flex-col gap-3">
-          <h3 class="font-headline-md text-[22px] leading-[30px] font-semibold text-white">${trip.name}</h3>
-          <p class="text-white/80 text-sm line-clamp-2">${description.slice(0, 120)}</p>
-          <div class="flex flex-wrap items-center gap-4 text-white/90 text-label-sm">
-            <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">calendar_month</span> ${trip.duration}</span>
-            <span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">payments</span> ${formatBudget(trip.budget)}</span>
-          </div>
-          <div class="mt-1 flex items-center gap-2 text-primary text-label-sm font-semibold">
-            <span>View Itinerary</span>
-            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-          </div>
-        </div>
-      </div>
-    `;
-        }
+    function setupSearch() {
+      const input    = document.getElementById('searchInput');
+      const clearBtn = document.getElementById('clearSearch');
+      input.addEventListener('input', () => {
+        searchQuery = input.value.trim();
+        clearBtn.classList.toggle('hidden', !searchQuery);
+      });
+      input.addEventListener('keydown', e => { if (e.key === 'Enter') applyFilters(); });
+    }
 
-        async function renderGrid() {
-          const grid = document.getElementById('indiaTripsGrid');
-          if (!grid) return;
+    window.clearSearchInput = function () {
+      document.getElementById('searchInput').value = '';
+      searchQuery = '';
+      document.getElementById('clearSearch').classList.add('hidden');
+      applyFilters();
+    };
 
-          grid.innerHTML = '<div class="md:col-span-12 text-center py-12 text-on-surface-variant">Loading curated trips...</div>';
+    // ── ACTIVE FILTER BAR ─────────────────────────────────────────────────────
+    function updateActiveBar() {
+      const bar  = document.getElementById('activeFilterBar');
+      const tags = [
+        activeMonth && { label: activeMonth, type: 'month' },
+        activeMood  && { label: activeMood,  type: 'mood'  },
+        activeGenre && { label: activeGenre, type: 'genre' },
+      ].filter(Boolean);
 
-          const placeInfos = await Promise.all(
-            INDIA_TRIPS.map(t => TripMateAPI.getPlaceInfo(t.name).catch(() => null))
-          );
+      if (!tags.length) { bar.classList.add('hidden'); bar.innerHTML = ''; return; }
 
-          grid.innerHTML = INDIA_TRIPS.map((trip, idx) => renderCard(trip, placeInfos[idx], idx)).join('');
-        }
+      bar.classList.remove('hidden');
+      bar.innerHTML = `
+        <span class="material-symbols-outlined text-[#005da7]" style="font-size:16px">tune</span>
+        <span class="text-xs font-semibold text-[#414751]">Active:</span>
+        ${tags.map(t => `<span class="active-tag">${t.label}<button onclick="clearFilter('${t.type}')" title="Remove">×</button></span>`).join('')}
+        <button onclick="clearAllFilters()" class="text-xs text-[#005da7] font-semibold hover:underline ml-1">Clear all</button>`;
+    }
 
-        window.generateIndiaTrip = async function (tripId) {
-          const trip = INDIA_TRIPS.find(t => t.id === tripId);
-          if (!trip) return;
+    window.clearFilter = function (type) {
+      if (type === 'month') activeMonth = '';
+      if (type === 'mood')  activeMood  = '';
+      if (type === 'genre') activeGenre = '';
+      document.querySelectorAll(`.filter-pill[data-type="${type}"]`).forEach(b => b.classList.remove('active'));
+      document.querySelector(`.filter-pill[data-type="${type}"][data-value=""]`)?.classList.add('active');
+      updateActiveBar(); applyFilters();
+    };
 
-          const startDate = addDays(new Date(), 7);
-          const endDate = addDays(startDate, trip.numDays);
+    window.clearAllFilters = function () {
+      activeMonth = ''; activeMood = ''; activeGenre = ''; searchQuery = '';
+      document.getElementById('searchInput').value = '';
+      document.getElementById('clearSearch').classList.add('hidden');
+      document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.filter-pill[data-value=""]').forEach(b => b.classList.add('active'));
+      updateActiveBar(); applyFilters();
+    };
 
-          const btn = event?.currentTarget;
-          if (btn) {
-            btn.style.pointerEvents = 'none';
-            btn.style.opacity = '0.7';
-          }
+    // ── FILTER + RENDER ───────────────────────────────────────────────────────
+    window.applyFilters = async function () {
+      const q = searchQuery.toLowerCase();
+      const filtered = PLACES.filter(p => {
+        if (q) return p.name.toLowerCase().includes(q) || p.state.toLowerCase().includes(q) ||
+                      p.desc.toLowerCase().includes(q) || p.moods.some(m => m.toLowerCase().includes(q)) ||
+                      p.genres.some(g => g.toLowerCase().includes(q));
+        if (activeMonth && !p.months.includes(activeMonth)) return false;
+        if (activeMood  && !p.moods.includes(activeMood))   return false;
+        if (activeGenre && !p.genres.includes(activeGenre)) return false;
+        return true;
+      });
 
-          try {
-            showToast(`Planning your ${trip.name} trip...`, 'default');
-            const result = await generateItinerary({
-              destinationId: trip.id,
-              destinationName: trip.name,
-              lat: trip.lat,
-              lon: trip.lon,
-              startDate,
-              endDate,
-              budget: trip.budget,
-              travelStyle: trip.travelStyle,
-              interests: trip.interests,
-              socialPreference: trip.socialPreference,
-              travelPace: trip.pace
-            });
+      const title    = document.getElementById('resultsTitle');
+      const subtitle = document.getElementById('resultsSubtitle');
+      const badge    = document.getElementById('resultCountBadge');
 
-            if (!result) throw new Error('Itinerary generation failed');
+      if (q) {
+        title.textContent    = `🔍 Results for "${searchQuery}"`;
+        subtitle.textContent = `${filtered.length} place${filtered.length !== 1 ? 's' : ''} matched`;
+      } else if (activeMonth || activeMood || activeGenre) {
+        title.textContent    = `✨ Places for ${[activeMonth,activeMood,activeGenre].filter(Boolean).join(' · ')}`;
+        subtitle.textContent = `${filtered.length} destination${filtered.length !== 1 ? 's' : ''} found`;
+      } else {
+        title.textContent    = '✨ Recommended for You';
+        subtitle.textContent = 'Showing all destinations';
+      }
 
-            sessionStorage.setItem('wm_generated_itinerary', JSON.stringify(result));
-            window.location.href = 'itinerary.html';
-          } catch (err) {
-            console.error('India trip generation error:', err);
-            showToast('Could not generate itinerary. Please try again.', 'error');
-            if (btn) {
-              btn.style.pointerEvents = '';
-              btn.style.opacity = '';
-            }
-          }
-        };
+      badge.classList.toggle('hidden', !filtered.length);
+      badge.classList.toggle('flex',    !!filtered.length);
+      document.getElementById('resultCountText').textContent = `${filtered.length} place${filtered.length !== 1 ? 's' : ''}`;
 
-        if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', renderGrid);
-        } else {
-          renderGrid();
-        }
+      // Skeletons → cards
+      const grid = document.getElementById('placesGrid');
+      grid.innerHTML = Array(6).fill('<div class="skeleton h-[360px]"></div>').join('');
+
+      if (!filtered.length) {
+        grid.innerHTML = `<div class="col-span-full empty-state"><div style="font-size:56px;margin-bottom:12px">🔍</div>
+          <h3 class="text-xl font-bold text-[#005da7] mb-2">No places found</h3>
+          <p class="text-sm text-[#414751] max-w-sm mx-auto">Try a different month, mood, or genre.</p>
+          <button onclick="clearAllFilters()" class="mt-5 bg-[#005da7] text-white px-6 py-2.5 rounded-full text-sm font-bold hover:bg-[#2976c7] transition-colors">Show All</button>
+        </div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(p => cardHTML(p)).join('');
+
+      await Promise.allSettled(filtered.map(async p => {
+        if (!imageCache[p.id]) imageCache[p.id] = (await fetchImg(p.name)) || fallback(p.id);
+        const el = document.getElementById(`img-${p.id}`);
+        if (el) el.src = imageCache[p.id];
+      }));
+
+      renderFeatured(activeMonth || curMonth());
+    };
+
+    function cardHTML(p) {
+      const img    = imageCache[p.id] || fallback(p.id);
+      const status = (() => {
+        const c = curMonth(), nx = MONTHS_SHORT[(new Date().getMonth()+1)%12];
+        return p.months.includes(c) ? 'great' : p.months.includes(nx) ? 'good' : 'avoid';
       })();
-  </script>
-</body>
+      const dot   = status === 'great' ? 'bg-green-500' : status === 'good' ? 'bg-amber-400' : 'bg-red-400';
+      const label = status === 'great' ? 'Great time' : status === 'good' ? 'Good next month' : 'Off-season';
+      return `
+        <div class="place-card" onclick="planDestination('${p.name}')">
+          <div class="overflow-hidden relative">
+            <img id="img-${p.id}" src="${img}" alt="${p.name}" loading="lazy" onerror="this.src='${fallback(p.id)}'"/>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent pointer-events-none"></div>
+            <span class="absolute top-3 left-3 bg-white/20 backdrop-blur text-white text-xs font-semibold px-3 py-1 rounded-full border border-white/30">${p.state}</span>
+            <span class="absolute top-3 right-3 bg-black/40 backdrop-blur text-amber-300 text-xs font-bold px-2.5 py-1 rounded-full flex items-center gap-1">
+              <span class="material-symbols-outlined" style="font-size:12px;font-variation-settings:'FILL' 1">star</span>${p.rating}
+            </span>
+          </div>
+          <div class="p-5 flex flex-col gap-3">
+            <div>
+              <h3 class="text-lg font-bold text-[#1a1c1e]" style="font-family:'Outfit',sans-serif;">${p.name}</h3>
+              <p class="text-sm text-[#414751] mt-1 line-clamp-2">${p.desc}</p>
+            </div>
+            <div class="flex flex-wrap gap-1.5">
+              <span class="inline-flex items-center gap-1 text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#f3f3f6] text-[#414751]">
+                <span class="w-2 h-2 rounded-full ${dot} inline-block"></span>${label}
+              </span>
+              ${p.moods.slice(0,2).map(m=>`<span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-[#d4e3ff] text-[#004883]">${m}</span>`).join('')}
+              ${p.genres.slice(0,2).map(g=>`<span class="text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-[#eeeef0] text-[#414751]">${g}</span>`).join('')}
+            </div>
+            <div class="flex items-center justify-between pt-3 border-t border-[#c1c7d3]/40">
+              <div class="flex items-center gap-3 text-xs text-[#414751]">
+                <span class="flex items-center gap-1"><span class="material-symbols-outlined" style="font-size:14px">calendar_month</span>${p.duration}</span>
+                <span class="flex items-center gap-1"><span class="material-symbols-outlined" style="font-size:14px">payments</span>₹${(p.budget/1000).toFixed(0)}k</span>
+              </div>
+              <button class="flex items-center gap-1 text-xs font-bold text-[#005da7] hover:text-[#2976c7] transition-colors">
+                Plan Trip <span class="material-symbols-outlined" style="font-size:14px">arrow_forward</span>
+              </button>
+            </div>
+          </div>
+        </div>`;
+    }
 
+    // ── FEATURED SLIDER ───────────────────────────────────────────────────────
+    function renderFeatured(month) {
+      featCards  = (MONTH_FEATURED[month] || PLACES.slice(0,6).map(p=>p.id)).map(id => PLACES.find(p=>p.id===id)).filter(Boolean);
+      featIndex  = 0;
+      const lbl  = MONTHS_FULL[month] || 'This Month';
+      document.getElementById('featuredTitle').textContent    = `🌟 Featured in ${lbl}`;
+      document.getElementById('featuredSubtitle').textContent = `${featCards.length} handpicked destinations for ${lbl}`;
+
+      document.getElementById('featuredTrack').innerHTML = featCards.map(p => {
+        const img = imageCache[p.id] || fallback(p.id);
+        return `<div class="feat-card" onclick="planDestination('${p.name}')">
+          <div style="overflow:hidden"><img id="feat-img-${p.id}" src="${img}" alt="${p.name}" onerror="this.src='${fallback(p.id)}'"/></div>
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent pointer-events-none"></div>
+          <div class="absolute bottom-0 left-0 right-0 p-4 text-white">
+            <span class="text-[10px] font-bold uppercase tracking-wide text-white/70 block">${p.state}</span>
+            <h3 class="font-bold text-base leading-snug" style="font-family:'Outfit',sans-serif;">${p.name}</h3>
+            <p class="text-[11px] text-white/80 mt-0.5 line-clamp-1">${p.moods.slice(0,2).join(' · ')} · ${p.genres[0]}</p>
+            <div class="flex items-center justify-between mt-2">
+              <span class="text-xs text-white/70">${p.duration} · ₹${(p.budget/1000).toFixed(0)}k</span>
+              <span class="text-xs font-bold text-white flex items-center gap-0.5">Plan Trip <span class="material-symbols-outlined" style="font-size:13px">arrow_forward</span></span>
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+
+      document.getElementById('featuredDots').innerHTML = featCards.map((_,i) =>
+        `<button class="feat-dot${i===0?' active':''}" onclick="goToFeatSlide(${i})"></button>`
+      ).join('');
+
+      applyFeatTransform();
+
+      featCards.forEach(async p => {
+        if (!imageCache[p.id]) imageCache[p.id] = (await fetchImg(p.name)) || fallback(p.id);
+        const el = document.getElementById(`feat-img-${p.id}`);
+        if (el) el.src = imageCache[p.id];
+      });
+    }
+
+    function applyFeatTransform() {
+      const track = document.getElementById('featuredTrack');
+      if (!track) return;
+      const cardW = (track.children[0]?.offsetWidth || 340) + 20;
+      track.style.transform = `translateX(-${featIndex * cardW}px)`;
+      document.querySelectorAll('.feat-dot').forEach((d,i) => d.classList.toggle('active', i === featIndex));
+    }
+
+    const visibleCount = () => window.innerWidth < 769 ? 1 : window.innerWidth < 1025 ? 2 : 3;
+
+    window.featSlide = dir => {
+      featIndex = Math.max(0, Math.min(featCards.length - visibleCount(), featIndex + dir));
+      applyFeatTransform();
+    };
+    window.goToFeatSlide = idx => { featIndex = idx; applyFeatTransform(); };
+    window.planDestination = name => { sessionStorage.setItem('wm_plan_destination', name); window.location.href = 'plan-trip.html'; };
+
+    setInterval(() => {
+      if (!featCards.length) return;
+      featIndex = featIndex >= featCards.length - visibleCount() ? 0 : featIndex + 1;
+      applyFeatTransform();
+    }, 4000);
+
+    // ── BOOT ─────────────────────────────────────────────────────────────────
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof initNav === 'function') initNav('discover');
+      setupPills();
+      setupSearch();
+      applyFilters();
+    });
+
+  })();
+  </script>
+
+</body>
 </html>

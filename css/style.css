@@ -1876,3 +1876,196 @@ html.dark .filter-btn:not(.active) {
   color: #BDC1C6 !important;
   border-color: rgba(255, 255, 255, 0.08) !important;
 }
+
+/* ── Discover page dark mode ─────────────────────────────────────────────── */
+
+/* Page background */
+html.dark .discover-page,
+html.dark body {
+  background-color: #0B0F17 !important;
+}
+
+/* Hero heading & subtext */
+html.dark .text-\[\#1a1c1e\] {
+  color: #F1F3F4 !important;
+}
+html.dark .text-\[\#414751\] {
+  color: #BDC1C6 !important;
+}
+
+/* Hero search bar */
+html.dark .glass-panel {
+  background: rgba(22, 27, 34, 0.85) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+html.dark .search-input {
+  background: #1C2128 !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #E8EAED !important;
+}
+html.dark .search-input::placeholder {
+  color: #6E7681 !important;
+}
+html.dark .search-input:focus {
+  border-color: #7EB8FF !important;
+  box-shadow: 0 0 0 3px rgba(126, 184, 255, 0.15) !important;
+}
+
+/* Filter pills */
+html.dark .filter-pill {
+  background: #1C2128 !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #BDC1C6 !important;
+}
+html.dark .filter-pill:hover {
+  border-color: #7EB8FF !important;
+  color: #7EB8FF !important;
+}
+html.dark .filter-pill.active {
+  background: #005da7 !important;
+  border-color: #005da7 !important;
+  color: #fff !important;
+}
+
+/* Active filter tags */
+html.dark .active-tag {
+  background: rgba(0, 93, 167, 0.25) !important;
+  color: #7EB8FF !important;
+}
+html.dark .active-tag button {
+  color: #7EB8FF !important;
+}
+
+/* Section labels */
+html.dark .section-label {
+  color: #F1F3F4 !important;
+}
+
+/* Skeleton shimmer */
+html.dark .skeleton {
+  background: linear-gradient(90deg, #1C2128 25%, #242B35 50%, #1C2128 75%) !important;
+  background-size: 400% 100% !important;
+}
+
+/* Place cards */
+html.dark .place-card {
+  background: #161B22 !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45) !important;
+}
+html.dark .place-card:hover {
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6) !important;
+}
+html.dark .place-card h3 {
+  color: #F1F3F4 !important;
+}
+html.dark .place-card p {
+  color: #BDC1C6 !important;
+}
+
+/* Card tags — season status pill */
+html.dark .place-card .bg-\[\#f3f3f6\] {
+  background: rgba(255, 255, 255, 0.07) !important;
+  color: #BDC1C6 !important;
+}
+
+/* Card tags — mood pills (blue) */
+html.dark .place-card .bg-\[\#d4e3ff\] {
+  background: rgba(0, 93, 167, 0.3) !important;
+  color: #a4c9ff !important;
+}
+
+/* Card tags — genre pills (grey) */
+html.dark .place-card .bg-\[\#eeeef0\] {
+  background: rgba(255, 255, 255, 0.07) !important;
+  color: #9AA0A6 !important;
+}
+
+/* Card footer border + meta text */
+html.dark .place-card .border-t {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+html.dark .place-card .text-xs.text-\[\#414751\] {
+  color: #9AA0A6 !important;
+}
+
+/* Plan Trip link on card */
+html.dark .place-card button.text-\[\#005da7\] {
+  color: #7EB8FF !important;
+}
+html.dark .place-card button.text-\[\#005da7\]:hover {
+  color: #a4c9ff !important;
+}
+
+/* Featured cards */
+html.dark .feat-card {
+  background: #161B22 !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Featured slider nav buttons */
+html.dark button.border-\[\#c1c7d3\] {
+  background: #1C2128 !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: #BDC1C6 !important;
+}
+html.dark button.border-\[\#c1c7d3\]:hover {
+  border-color: #7EB8FF !important;
+  color: #7EB8FF !important;
+}
+
+/* Result count badge stays blue — no override needed */
+
+/* Dot indicators */
+html.dark .feat-dot {
+  background: rgba(255, 255, 255, 0.2) !important;
+}
+html.dark .feat-dot.active {
+  background: #7EB8FF !important;
+}
+
+/* Result title / subtitle */
+html.dark #resultsTitle,
+html.dark #featuredTitle {
+  color: #F1F3F4 !important;
+}
+html.dark #resultsSubtitle,
+html.dark #featuredSubtitle {
+  color: #9AA0A6 !important;
+}
+
+/* Filter panel label icons + text */
+html.dark .text-xs.font-bold.text-\[\#414751\] {
+  color: #9AA0A6 !important;
+}
+
+/* Filter panel divider */
+html.dark .border-t.border-\[\#c1c7d3\]\/40 {
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Hero badge */
+html.dark .bg-\[\#d4e3ff\].text-\[\#001c39\] {
+  background: rgba(0, 93, 167, 0.3) !important;
+  color: #a4c9ff !important;
+}
+
+/* Discover button — keep gradient, just ensure contrast */
+html.dark .discover-btn {
+  box-shadow: 0 4px 20px rgba(0, 93, 167, 0.4) !important;
+}
+
+/* Mobile menu */
+html.dark #mobileMenu a.text-slate-700 {
+  color: #BDC1C6 !important;
+}
+html.dark #mobileMenu a.text-\[\#005da7\] {
+  color: #7EB8FF !important;
+}
+
+/* Empty state */
+html.dark .empty-state h3 {
+  color: #7EB8FF !important;
+}
+html.dark .empty-state p {
+  color: #9AA0A6 !important;
+}
