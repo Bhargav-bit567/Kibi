@@ -1036,7 +1036,9 @@ function initMapModal(itinerary) {
 
   function openModal() {
     modal.classList.remove('hidden');
-    modal.classList.add('flex');
+    modal.style.display = 'flex';
+    modal.style.alignItems = 'center';
+    modal.style.justifyContent = 'center';
     document.body.style.overflow = 'hidden';
     document.documentElement.style.overflow = 'hidden';
 
@@ -1059,7 +1061,9 @@ function initMapModal(itinerary) {
 
   function closeModal() {
     modal.classList.add('hidden');
-    modal.classList.remove('flex');
+    modal.style.display = '';
+    modal.style.alignItems = '';
+    modal.style.justifyContent = '';
     document.body.style.overflow = '';
     document.documentElement.style.overflow = '';
   }
@@ -1127,6 +1131,7 @@ function initMapModal(itinerary) {
     const rect = mapContainer.getBoundingClientRect();
     console.log('[Kibi Map] initMap called with lat/lon:', lat, lon);
     console.log('[Kibi Map] container dimensions:', rect);
+    console.log('[Kibi Map] modal position:', modal.getBoundingClientRect());
     if (rect.width === 0 || rect.height === 0) {
       console.warn('[Kibi Map] container has zero size; delaying init.');
       setTimeout(() => initMap(), 300);
