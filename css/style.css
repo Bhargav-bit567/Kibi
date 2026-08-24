@@ -63,18 +63,19 @@ noscript body {
 }
 
 /* Modal root must escape any body transform containing block.
-   Only reset transform on the modal root itself; children keep their transforms. */
+   Use a dedicated open class toggled by JS. */
 #mapModal {
   position: fixed !important;
   inset: 0 !important;
   transform: none !important;
   display: none;
+  padding: 1rem !important;
+  z-index: 9999 !important;
+}
+#mapModal.map-modal-open {
+  display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  padding: 1rem !important;
-}
-#mapModal:not(.hidden) {
-  display: flex !important;
 }
 #mapModalCard {
   position: relative !important;
