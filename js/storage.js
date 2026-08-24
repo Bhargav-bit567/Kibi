@@ -95,6 +95,98 @@ function updateUser(userId, updates) {
   return null;
 }
 
+/* --- Admin Functions --- */
+const USER_ROLES = { ADMIN: 'admin', MODERATOR: 'moderator', USER: 'user' };
+const USER_STATUS = { ACTIVE: 'active', SUSPENDED: 'suspended', BANNED: 'banned' };
+const ACTIVITY_LOG_KEY = 'wm_activity_log';
+
+function isUserAdmin(user) {
+  return !!user && (user.role === USER_ROLES.ADMIN || user.role === USER_ROLES.MODERATOR);
+}
+
+function anyAdminExists() {
+  return getUsers().some(user => user.role === USER_ROLES.ADMIN);
+}
+
+function setUserRole(userId, role) {
+  const user = updateUser(userId, { role });
+  if (user) saveActivityLog('role_change', `${user.name || user.email || userId} role changed to ${role}`);
+  return user;
+}
+
+function setUserStatus(userId, status, reason) {
+  const user = updateUser(userId, { status, statusReason: reason || '' });
+  if (user) saveActivityLog('status_change', `${user.name || user.email || userId} status changed to ${status}`);
+  return user;
+}
+
+function deleteUser(userId) {
+  setStore(STORAGE_KEYS.USERS, getUsers().filter(user => user.id !== userId));
+  setStore(STORAGE_KEYS.TRIPS, getTrips().filter(trip => trip.createdBy !== userId));
+  setStore(STORAGE_KEYS.JOIN_REQUESTS, getJoinRequests().filter(request => request.userId !== userId));
+  saveActivityLog('user_deleted', `User ${userId} deleted`);
+}
+
+function setTripFeatured(tripId, featured) {
+  const trip = updateTrip(tripId, { featured });
+  if (trip) saveActivityLog('trip_featured', `${trip.title || trip.destination || tripId} ${featured ? 'featured' : 'unfeatured'}`);
+  return trip;
+}
+
+function adminDeleteTrip(tripId) {
+  deleteTrip(tripId);
+  setStore(STORAGE_KEYS.JOIN_REQUESTS, getJoinRequests().filter(request => request.tripId !== tripId));
+  saveActivityLog('trip_deleted', `Trip ${tripId} deleted`);
+}
+
+function approveJoinRequest(requestId) {
+  const request = updateJoinRequest(requestId, { status: 'approved' });
+  if (request) saveActivityLog('join_approved', `Join request ${requestId} approved`);
+  return request;
+}
+
+function rejectJoinRequest(requestId) {
+  const request = updateJoinRequest(requestId, { status: 'rejected' });
+  if (request) saveActivityLog('join_rejected', `Join request ${requestId} rejected`);
+  return request;
+}
+
+function deleteJoinRequest(requestId) {
+  setStore(STORAGE_KEYS.JOIN_REQUESTS, getJoinRequests().filter(request => request.id !== requestId));
+}
+
+function getActivityLog() {
+  return getStore(ACTIVITY_LOG_KEY) || [];
+}
+
+function saveActivityLog(action, details) {
+  const log = getActivityLog();
+  log.unshift({ id: generateId(), action, details, actorId: getCurrentUser()?.id || null, createdAt: new Date().toISOString() });
+  setStore(ACTIVITY_LOG_KEY, log.slice(0, 500));
+}
+
+function clearActivityLog() {
+  setStore(ACTIVITY_LOG_KEY, []);
+}
+
+function getAdminStats() {
+  const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+  const users = getUsers();
+  const trips = getTrips();
+  const requests = getJoinRequests();
+  return {
+    totalUsers: users.length,
+    admins: users.filter(user => user.role === USER_ROLES.ADMIN).length,
+    suspended: users.filter(user => user.status === USER_STATUS.SUSPENDED).length,
+    totalTrips: trips.length,
+    openTrips: trips.filter(trip => (trip.status || 'open') === 'open').length,
+    totalRequests: requests.length,
+    pendingRequests: requests.filter(request => request.status === 'pending').length,
+    newUsersThisWeek: users.filter(user => new Date(user.createdAt || 0).getTime() >= weekAgo).length,
+    newTripsThisWeek: trips.filter(trip => new Date(trip.createdAt || 0).getTime() >= weekAgo).length
+  };
+}
+
 /* --- Preferences Functions --- */
 function savePreferences(userId, prefs) {
   const allPrefs = getStore(STORAGE_KEYS.PREFERENCES) || {};
