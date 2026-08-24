@@ -278,7 +278,7 @@
   <!-- MAIN DASHBOARD CONTENT GRID -->
   <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start pt-2">
 
-    <!-- LEFT COLUMN: MY TRIPS -->
+    <!-- LEFT COLUMN: MY TRIPS + BOTTOM WIDGETS -->
     <div class="lg:col-span-8 space-y-10">
 
       <!-- MY TRIPS GALLERY -->
@@ -301,11 +301,80 @@
         </div>
       </section>
 
+      <!-- BOTTOM WIDGET ROW -->
+      <section class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Travel Documents -->
+        <div class="glass-panel p-6 rounded-3xl space-y-4 border border-slate-200/80 dark:border-slate-800">
+          <h3 class="font-heading font-bold text-lg text-on-surface flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">folder_managed</span>
+            Important Info & Tools
+          </h3>
+          <div class="space-y-3">
+            <div class="p-3.5 rounded-2xl border border-slate-200/60 dark:border-slate-700 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 transition-all cursor-pointer flex items-center justify-between group">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-blue-500/10 dark:bg-blue-400/10 text-primary dark:text-blue-300 flex items-center justify-center flex-shrink-0">
+                  <span class="material-symbols-outlined text-xl">badge</span>
+                </div>
+                <div>
+                  <h4 class="font-heading font-semibold text-sm text-on-surface">Travel Documents</h4>
+                  <p class="text-xs text-on-surface-variant">Passports, Visas, E-Tickets</p>
+                </div>
+              </div>
+              <span class="material-symbols-outlined text-slate-400 dark:text-slate-500 group-hover:translate-x-1 transition-transform">chevron_right</span>
+            </div>
+            <div class="p-3.5 rounded-2xl border border-slate-200/60 dark:border-slate-700 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 transition-all cursor-pointer flex items-center justify-between group">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-teal-500/10 dark:bg-teal-400/10 text-teal-600 dark:text-teal-300 flex items-center justify-center flex-shrink-0">
+                  <span class="material-symbols-outlined text-xl">tune</span>
+                </div>
+                <div>
+                  <h4 class="font-heading font-semibold text-sm text-on-surface">Preferences</h4>
+                  <p class="text-xs text-on-surface-variant">Dietary, Seating & Alerts</p>
+                </div>
+              </div>
+              <span class="material-symbols-outlined text-slate-400 dark:text-slate-500 group-hover:translate-x-1 transition-transform">chevron_right</span>
+            </div>
+            <div class="p-3.5 rounded-2xl border border-slate-200/60 dark:border-slate-700 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 transition-all cursor-pointer flex items-center justify-between group">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-amber-500/10 dark:bg-amber-400/10 text-amber-600 dark:text-amber-300 flex items-center justify-center flex-shrink-0">
+                  <span class="material-symbols-outlined text-xl">credit_card</span>
+                </div>
+                <div>
+                  <h4 class="font-heading font-semibold text-sm text-on-surface">Payment Methods</h4>
+                  <p class="text-xs text-on-surface-variant">Cards & Currency details</p>
+                </div>
+              </div>
+              <span class="material-symbols-outlined text-slate-400 dark:text-slate-500 group-hover:translate-x-1 transition-transform">chevron_right</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Weather & Travel Advisory -->
+        <div class="rounded-3xl p-6 bg-gradient-to-br from-slate-900 to-slate-800 text-white shadow-xl space-y-3 relative overflow-hidden flex flex-col justify-between">
+          <div class="absolute -right-6 -bottom-6 w-28 h-28 bg-primary/20 rounded-full blur-xl pointer-events-none"></div>
+          <div class="flex items-center justify-between">
+            <span class="px-2.5 py-1 rounded-full bg-white/10 text-xs font-semibold text-slate-200 flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-sm text-sky-400">cloud</span> Travel Weather Assistant
+            </span>
+            <span class="text-xs text-slate-400">Live</span>
+          </div>
+          <div>
+            <h4 class="font-heading font-bold text-lg">Ready for departure?</h4>
+            <p class="text-xs text-slate-300 leading-relaxed mt-1">Check weather forecast and localized packing recommendations before your journey starts.</p>
+          </div>
+          <div class="pt-2">
+            <a href="plan-trip.html" class="inline-flex items-center gap-1.5 text-xs font-bold text-sky-300 hover:text-white transition-colors">
+              Check Travel Checklist <span class="material-symbols-outlined text-xs">arrow_forward</span>
+            </a>
+          </div>
+        </div>
+      </section>
+
     </div>
 
     <!-- RIGHT COLUMN: SIDEBAR WIDGETS -->
     <aside class="lg:col-span-4 space-y-6">
-      
+
       <!-- QUICK ACTION HUB -->
       <div class="glass-panel p-6 rounded-3xl space-y-4 border border-slate-200/80 dark:border-slate-800">
         <h3 class="font-heading font-bold text-lg text-on-surface flex items-center gap-2">
@@ -341,76 +410,40 @@
         </div>
       </div>
 
-      <!-- IMPORTANT TRAVEL INFORMATION -->
+      <!-- Mini Stats / Travel Stats -->
       <div class="glass-panel p-6 rounded-3xl space-y-4 border border-slate-200/80 dark:border-slate-800">
         <h3 class="font-heading font-bold text-lg text-on-surface flex items-center gap-2">
-          <span class="material-symbols-outlined text-primary">folder_managed</span>
-          Important Info & Tools
+          <span class="material-symbols-outlined text-primary">emoji_events</span>
+          Travel Stats
         </h3>
-        <div class="space-y-3">
-          
-          <!-- Document Card -->
-          <div class="p-3.5 rounded-2xl border border-slate-200/60 dark:border-slate-700 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 transition-all cursor-pointer flex items-center justify-between group">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl bg-blue-500/10 dark:bg-blue-400/10 text-primary dark:text-blue-300 flex items-center justify-center flex-shrink-0">
-                <span class="material-symbols-outlined text-xl">badge</span>
-              </div>
-              <div>
-                <h4 class="font-heading font-semibold text-sm text-on-surface">Travel Documents</h4>
-                <p class="text-xs text-on-surface-variant">Passports, Visas, E-Tickets</p>
-              </div>
-            </div>
-            <span class="material-symbols-outlined text-slate-400 dark:text-slate-500 group-hover:translate-x-1 transition-transform">chevron_right</span>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="bg-primary/5 dark:bg-primary/10 rounded-2xl p-4 text-center">
+            <div id="dashStatTrips" class="text-2xl font-bold text-primary">0</div>
+            <div class="text-xs text-on-surface-variant mt-1">Planned Trips</div>
           </div>
-
-          <!-- Preferences Card -->
-          <div class="p-3.5 rounded-2xl border border-slate-200/60 dark:border-slate-700 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 transition-all cursor-pointer flex items-center justify-between group">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl bg-teal-500/10 dark:bg-teal-400/10 text-teal-600 dark:text-teal-300 flex items-center justify-center flex-shrink-0">
-                <span class="material-symbols-outlined text-xl">tune</span>
-              </div>
-              <div>
-                <h4 class="font-heading font-semibold text-sm text-on-surface">Preferences</h4>
-                <p class="text-xs text-on-surface-variant">Dietary, Seating & Alerts</p>
-              </div>
-            </div>
-            <span class="material-symbols-outlined text-slate-400 dark:text-slate-500 group-hover:translate-x-1 transition-transform">chevron_right</span>
+          <div class="bg-secondary/5 dark:bg-secondary/10 rounded-2xl p-4 text-center">
+            <div id="dashStatDays" class="text-2xl font-bold text-secondary">0</div>
+            <div class="text-xs text-on-surface-variant mt-1">Travel Days</div>
           </div>
-
-          <!-- Payment Card -->
-          <div class="p-3.5 rounded-2xl border border-slate-200/60 dark:border-slate-700 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 transition-all cursor-pointer flex items-center justify-between group">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl bg-amber-500/10 dark:bg-amber-400/10 text-amber-600 dark:text-amber-300 flex items-center justify-center flex-shrink-0">
-                <span class="material-symbols-outlined text-xl">credit_card</span>
-              </div>
-              <div>
-                <h4 class="font-heading font-semibold text-sm text-on-surface">Payment Methods</h4>
-                <p class="text-xs text-on-surface-variant">Cards & Currency details</p>
-              </div>
-            </div>
-            <span class="material-symbols-outlined text-slate-400 dark:text-slate-500 group-hover:translate-x-1 transition-transform">chevron_right</span>
+          <div class="bg-amber-500/5 dark:bg-amber-400/10 rounded-2xl p-4 text-center">
+            <div id="dashStatDestinations" class="text-2xl font-bold text-amber-600 dark:text-amber-400">0</div>
+            <div class="text-xs text-on-surface-variant mt-1">Destinations</div>
           </div>
-
+          <div class="bg-blue-500/5 dark:bg-blue-400/10 rounded-2xl p-4 text-center">
+            <div id="dashStatActivities" class="text-2xl font-bold text-blue-600 dark:text-blue-300">0</div>
+            <div class="text-xs text-on-surface-variant mt-1">Activities</div>
+          </div>
         </div>
       </div>
 
-      <!-- WEATHER & TRAVEL ADVISORY CARD -->
-      <div class="rounded-3xl p-6 bg-gradient-to-br from-slate-900 to-slate-800 text-white shadow-xl space-y-3 relative overflow-hidden">
-        <div class="absolute -right-6 -bottom-6 w-28 h-28 bg-primary/20 rounded-full blur-xl pointer-events-none"></div>
-        <div class="flex items-center justify-between">
-          <span class="px-2.5 py-1 rounded-full bg-white/10 text-xs font-semibold text-slate-200 flex items-center gap-1.5">
-            <span class="material-symbols-outlined text-sm text-sky-400">cloud</span> Travel Weather Assistant
-          </span>
-          <span class="text-xs text-slate-400">Live</span>
-        </div>
-        <div>
-          <h4 class="font-heading font-bold text-lg">Ready for departure?</h4>
-          <p class="text-xs text-slate-300 leading-relaxed mt-1">Check weather forecast and localized packing recommendations before your journey starts.</p>
-        </div>
-        <div class="pt-2">
-          <a href="plan-trip.html" class="inline-flex items-center gap-1.5 text-xs font-bold text-sky-300 hover:text-white transition-colors">
-            Check Travel Checklist <span class="material-symbols-outlined text-xs">arrow_forward</span>
-          </a>
+      <!-- Upcoming Trip Teaser -->
+      <div class="glass-panel p-6 rounded-3xl space-y-4 border border-slate-200/80 dark:border-slate-800">
+        <h3 class="font-heading font-bold text-lg text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary">upcoming</span>
+          Next Adventure
+        </h3>
+        <div id="dashNextTrip" class="text-sm text-on-surface-variant">
+          No upcoming trips yet. Plan one to see it here.
         </div>
       </div>
 
@@ -529,6 +562,48 @@
     document.getElementById('statDestinations').textContent = user.destinationsVisited || Math.min(trips.length + 3, 99);
     document.getElementById('statMiles').textContent = user.milesTraveled || '45k+';
     document.getElementById('statStyle').textContent = user.personalityName || getTravelPersonality(user);
+
+    // Sidebar mini stats
+    const totalDays = trips.reduce((sum, t) => {
+      const d1 = new Date(t.startDate);
+      const d2 = new Date(t.endDate);
+      return sum + (isNaN(d2 - d1) ? 0 : Math.round((d2 - d1) / (1000 * 60 * 60 * 24)));
+    }, 0);
+    const totalActivities = trips.reduce((sum, t) => {
+      return sum + ((t.itinerary || []).reduce((a, day) => a + ((day.activities || []).length), 0));
+    }, 0);
+    const uniqueDests = new Set(trips.map(t => t.destination).filter(Boolean));
+
+    const dashStatTrips = document.getElementById('dashStatTrips');
+    const dashStatDays = document.getElementById('dashStatDays');
+    const dashStatDestinations = document.getElementById('dashStatDestinations');
+    const dashStatActivities = document.getElementById('dashStatActivities');
+    if (dashStatTrips) dashStatTrips.textContent = trips.length;
+    if (dashStatDays) dashStatDays.textContent = totalDays;
+    if (dashStatDestinations) dashStatDestinations.textContent = uniqueDests.size;
+    if (dashStatActivities) dashStatActivities.textContent = totalActivities;
+
+    // Next upcoming trip teaser
+    const nextTripEl = document.getElementById('dashNextTrip');
+    if (nextTripEl) {
+      const upcoming = trips
+        .filter(t => new Date(t.startDate) >= new Date())
+        .sort((a, b) => new Date(a.startDate) - new Date(b.startDate))[0];
+      if (upcoming) {
+        nextTripEl.innerHTML = `
+          <div class="flex items-center gap-3">
+            <div class="w-12 h-12 rounded-xl bg-slate-100 dark:bg-slate-800 overflow-hidden flex-shrink-0">
+              <img src="${upcoming.image || 'assets/images/hero-mountain.jpg'}" alt="" class="w-full h-full object-cover"/>
+            </div>
+            <div class="min-w-0">
+              <p class="font-heading font-semibold text-on-surface truncate">${upcoming.title || upcoming.destination}</p>
+              <p class="text-xs text-on-surface-variant">${formatDateRange(upcoming.startDate, upcoming.endDate)}</p>
+            </div>
+          </div>
+          <a href="itinerary.html?id=${upcoming.id}" class="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-primary hover:text-primary-container transition-colors">View Itinerary <span class="material-symbols-outlined text-xs">arrow_forward</span></a>
+        `;
+      }
+    }
 
     // Trips Grid Render
     const grid = document.getElementById('profileTripsGrid');
