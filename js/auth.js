@@ -68,6 +68,15 @@ function restoreSession() {
   }
 }
 
+function getPasswordValidationError(password) {
+  if (!password) return 'Password is required';
+  if (password.length < 8) return 'Password must be at least 8 characters';
+  if (!/[A-Z]/.test(password)) return 'Password must include an uppercase letter';
+  if (!/[a-z]/.test(password)) return 'Password must include a lowercase letter';
+  if (!/[0-9]/.test(password)) return 'Password must include a number';
+  return '';
+}
+
 /* --- Login Form --- */
 function initLoginForm(form) {
   form.addEventListener('submit', (e) => {
@@ -79,7 +88,8 @@ function initLoginForm(form) {
 
     if (!email) return showFieldError('email', 'Email is required');
     if (!isValidEmail(email)) return showFieldError('email', 'Please enter a valid email');
-    if (!password) return showFieldError('password', 'Password is required');
+    const passwordError = getPasswordValidationError(password);
+    if (passwordError) return showFieldError('password', passwordError);
 
     const user = getUserByEmail(email);
     if (!user) return showFieldError('email', 'No account found with this email');
@@ -122,8 +132,8 @@ function initSignupForm(form) {
     if (name.length < 2) return showFieldError('name', 'Name must be at least 2 characters');
     if (!email) return showFieldError('email', 'Email is required');
     if (!isValidEmail(email)) return showFieldError('email', 'Please enter a valid email');
-    if (!password) return showFieldError('password', 'Password is required');
-    if (password.length < 4) return showFieldError('password', 'Password must be at least 4 characters');
+    const passwordError = getPasswordValidationError(password);
+    if (passwordError) return showFieldError('password', passwordError);
     if (password !== confirmPassword) return showFieldError('confirmPassword', 'Passwords do not match');
     if (terms && !terms.checked) {
       return showFieldError('terms', 'You must agree to the Terms of Service and Privacy Policy');
