@@ -68,14 +68,14 @@ function getNavHTML(activePage = "", darkHero = false) {
 
   const desktopLinks = pages.map(p => {
     const isActive = p.id === activePage;
-    return `<li><a href="${p.href}" data-nav-pill-target="${p.id}" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 ${isActive ? 'text-slate-900' : 'text-slate-700 hover:text-slate-900'}">${p.label}</a></li>`;
+    return `<li><a href="${p.href}" data-nav-pill-target="${p.id}" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 ${isActive ? 'text-slate-900 dark:text-white' : 'text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white'}">${p.label}</a></li>`;
   }).join('');
 
   const mobileLinks = pages.map(p => {
     const cls = p.id === activePage
-      ? 'text-2xl font-medium text-slate-900'
-      : 'text-2xl font-medium text-slate-700';
-    return `<a href="${p.href}" class="${cls} py-2 hover:text-brand-blue transition-colors">${p.label}</a>`;
+      ? 'text-2xl font-medium text-slate-900 dark:text-white'
+      : 'text-2xl font-medium text-slate-700 dark:text-slate-300';
+    return `<a href="${p.href}" class="${cls} py-2 hover:text-brand-blue dark:hover:text-brand-blue transition-colors">${p.label}</a>`;
   }).join('');
 
   window.__mobileLinksHTML = mobileLinks;
@@ -88,8 +88,8 @@ function getNavHTML(activePage = "", darkHero = false) {
   </a>
 
   <!-- Center Nav Pill -->
-  <nav class="hidden md:flex items-center bg-white/85 backdrop-blur-md rounded-full px-2 py-1.5 border border-white/40 shadow-sm relative">
-    <div id="navActivePill" class="absolute top-1/2 -translate-y-1/2 h-[calc(100%-12px)] rounded-full bg-white shadow-sm border border-slate-50 transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] pointer-events-none z-0" style="left:0;width:0;opacity:0"></div>
+  <nav class="hidden md:flex items-center bg-white/85 dark:bg-slate-900/85 backdrop-blur-md rounded-full px-2 py-1.5 border border-white/40 dark:border-white/10 shadow-sm relative">
+    <div id="navActivePill" class="absolute top-1/2 -translate-y-1/2 h-[calc(100%-12px)] rounded-full bg-white dark:bg-slate-800 shadow-sm border border-slate-50 dark:border-slate-700 transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] pointer-events-none z-0" style="left:0;width:0;opacity:0"></div>
     <ul class="flex items-center gap-1 lg:gap-2 text-[14px] relative z-10">
       ${desktopLinks}
     </ul>
@@ -109,7 +109,7 @@ function getNavHTML(activePage = "", darkHero = false) {
 </header>
 
 <!-- Mobile Menu -->
-<div id="mobileMenu" class="fixed inset-0 z-40 bg-white/95 backdrop-blur-lg opacity-0 pointer-events-none transition-opacity duration-300 md:hidden flex flex-col items-center justify-center gap-6">
+<div id="mobileMenu" class="fixed inset-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-lg opacity-0 pointer-events-none transition-opacity duration-300 md:hidden flex flex-col items-center justify-center gap-6">
   ${mobileLinks}
   <div id="mobile-auth-action-container"></div>
 </div>`;

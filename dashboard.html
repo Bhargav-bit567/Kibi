@@ -81,7 +81,7 @@
     }
     html.dark body.dashboard-page .glass-panel {
       background: rgba(15, 23, 42, 0.85) !important;
-      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      border-color: rgba(255, 255, 255, 0.08) !important;
       box-shadow: 0 10px 30px 0 rgba(0, 0, 0, 0.4) !important;
     }
     html.dark body.dashboard-page .text-on-surface {
@@ -90,27 +90,47 @@
     html.dark body.dashboard-page .text-on-surface-variant {
       color: #94A3B8 !important;
     }
-    html.dark body.dashboard-page header nav {
-      background: rgba(15, 23, 42, 0.85) !important;
+
+    /* Dashboard cards dark mode */
+    html.dark body.dashboard-page .stat-card,
+    html.dark body.dashboard-page .trip-card,
+    html.dark body.dashboard-page .traveler-card {
+      background-color: #0F172A !important;
       border-color: rgba(255, 255, 255, 0.08) !important;
     }
-    html.dark body.dashboard-page #editProfileModal {
-      background-color: rgba(0, 0, 0, 0.75) !important;
-    }
-    html.dark body.dashboard-page #editProfileModal > div {
-      background-color: #0F172A !important;
-      border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    }
-    html.dark body.dashboard-page #editProfileModal input,
-    html.dark body.dashboard-page #editProfileModal textarea {
-      background-color: #1E293B !important;
-      border-color: #334155 !important;
+    html.dark body.dashboard-page .stat-value,
+    html.dark body.dashboard-page .card-title,
+    html.dark body.dashboard-page .traveler-name,
+    html.dark body.dashboard-page .heading-2,
+    html.dark body.dashboard-page .heading-4,
+    html.dark body.dashboard-page .text-charcoal {
       color: #F8FAFC !important;
     }
-    html.dark body.dashboard-page #editProfileModal input::placeholder,
-    html.dark body.dashboard-page #editProfileModal textarea::placeholder {
+    html.dark body.dashboard-page .stat-label,
+    html.dark body.dashboard-page .card-subtitle,
+    html.dark body.dashboard-page .text-text-secondary,
+    html.dark body.dashboard-page .text-text-muted,
+    html.dark body.dashboard-page .text-muted {
+      color: #94A3B8 !important;
+    }
+    html.dark body.dashboard-page .tag {
+      background-color: rgba(255, 255, 255, 0.08) !important;
+      color: #CBD5E1 !important;
+    }
+    html.dark body.dashboard-page .tag-sage {
+      background-color: rgba(107, 142, 110, 0.18) !important;
+      color: #A3C9A5 !important;
+    }
+    html.dark body.dashboard-page .bg-cream-dark {
+      background-color: rgba(255, 255, 255, 0.08) !important;
+    }
+    html.dark body.dashboard-page .compat-bar {
+      background-color: rgba(255, 255, 255, 0.08) !important;
+    }
+    html.dark body.dashboard-page .empty-state svg {
       color: #64748B !important;
     }
+
     html.dark body.dashboard-page footer {
       background-color: #030712 !important;
     }
@@ -119,7 +139,7 @@
 <body class="dashboard-page bg-background text-on-surface min-h-screen flex flex-col font-sans antialiased selection:bg-primary/20 selection:text-primary">
 
 <!-- Global Navigation Bar Container -->
-<div id="navContainer" class="sticky top-0 z-50 backdrop-blur-md"></div>
+<div id="navContainer"></div>
 
 <main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8 space-y-10">
 
@@ -368,7 +388,7 @@
 <div id="footerContainer"></div>
 
 <!-- EDIT PROFILE MODAL -->
-<div id="editProfileModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-900/60 backdrop-blur-md p-4 transition-all duration-300">
+<div id="editProfileModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-900/60 dark:bg-black/75 backdrop-blur-md p-4 transition-all duration-300">
   <div class="bg-white dark:bg-slate-900 rounded-3xl shadow-2xl w-full max-w-md p-6 md:p-8 space-y-6 border border-slate-200 dark:border-slate-800 transform transition-all scale-100">
     
     <div class="flex justify-between items-center pb-2 border-b border-slate-100 dark:border-slate-800">
