@@ -48,17 +48,9 @@
     initFAQ();
   }
 
-  /* ---------- Mobile menu for Kibi landing page ---------- */
+  /* ---------- Mobile menu is handled by js/app.js ---------- */
   function initMobileMenu() {
-    const btn = document.getElementById('mobile-menu-btn');
-    const menu = document.getElementById('mobile-menu');
-    if (!btn || !menu) return;
-    btn.addEventListener('click', () => {
-      menu.classList.toggle('hidden');
-    });
-    menu.querySelectorAll('a').forEach(link => {
-      link.addEventListener('click', () => menu.classList.add('hidden'));
-    });
+    // app.js creates and wires the full-screen mobile overlay on all pages.
   }
 
   /* ---------- Auth Action (Desktop Header) ---------- */
@@ -97,6 +89,11 @@
                 <svg class="w-[18px] h-[18px] text-slate-400 group-hover:text-[#005da7] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
                 <span class="text-[14px] font-semibold">Dashboard</span>
               </a>
+              <button id="homeThemeToggleBtn" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-slate-100 text-slate-700 hover:text-slate-900 transition-colors duration-150 group w-full text-left cursor-pointer">
+                <svg id="homeThemeIconMoon" class="w-[18px] h-[18px] text-slate-400 group-hover:text-slate-700 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
+                <svg id="homeThemeIconSun" class="w-[18px] h-[18px] text-slate-400 group-hover:text-slate-700 transition-colors hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                <span id="homeThemeToggleLabel" class="text-[14px] font-semibold">Dark Mode</span>
+              </button>
               <button id="homeDropdownLogoutBtn" class="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-red-50 text-red-500 hover:text-red-600 transition-colors duration-150 group w-full text-left cursor-pointer">
                 <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
                 <span class="text-[14px] font-semibold">Logout</span>
@@ -138,6 +135,15 @@
           dropdown.classList.remove('opacity-100', 'visible', 'translate-y-0', 'pointer-events-auto');
         }
       });
+
+      // Theme toggle
+      const homeThemeBtn = document.getElementById('homeThemeToggleBtn');
+      if (homeThemeBtn) {
+        homeThemeBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          toggleTheme();
+        });
+      }
 
       // Logout handler
       const logoutBtn = document.getElementById('homeDropdownLogoutBtn');
@@ -373,8 +379,11 @@
 
     function renderFallback() {
       grid.innerHTML = CURATED.map((dest, i) => renderCard(dest, i === 0)).join('');
-      wireCardClicks(() => {
-        window.location.href = 'plan-trip.html';
+      wireCardClicks((e) => {
+        const card = e.currentTarget;
+        const idx = Array.from(grid.children).indexOf(card);
+        const dest = CURATED[idx];
+        if (dest) generateHomeTrip(dest.name, null, null, e);
       });
     }
 

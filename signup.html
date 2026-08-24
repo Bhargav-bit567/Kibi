@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="light" lang="en">
+<html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -137,9 +137,28 @@
     .toast.active { opacity: 1; transform: translateY(0); }
     .toast.success { background: #1b5e20; }
     .toast.error { background: #c62828; }
+
+    /* Dark mode overrides */
+    html.dark body { background-color: #0B0F17; color: #E8EAED; }
+    html.dark .bg-surface-container-lowest { background-color: #121821 !important; }
+    html.dark .bg-surface-container-low { background-color: #151d26 !important; }
+    html.dark .bg-surface { background-color: #0B0F17 !important; }
+    html.dark .bg-surface-container-high { background-color: #1b2430 !important; }
+    html.dark .text-on-surface { color: #E8EAED !important; }
+    html.dark .text-on-surface-variant { color: #A8B0BC !important; }
+    html.dark .text-outline-variant { color: #6B7685 !important; }
+    html.dark .border-outline-variant { border-color: #2A3441 !important; }
+    html.dark input::placeholder { color: #6B7685 !important; }
+    html.dark .glass { background: rgba(18,24,33,0.78); border-color: rgba(255,255,255,0.08); }
+    html.dark .shadow-glow { box-shadow: 0 4px 40px rgba(0,0,0,0.25); }
+    html.dark #themeToggleBtn { background-color: rgba(27,36,48,0.85); border-color: rgba(42,52,65,0.6); color: #E8EAED; }
 </style>
 </head>
-<body class="bg-background text-on-surface font-body-md antialiased min-h-screen flex flex-col selection:bg-primary-fixed selection:text-on-primary-fixed">
+<body class="bg-background text-on-surface font-body-md antialiased min-h-screen flex flex-col selection:bg-primary-fixed selection:text-on-primary-fixed transition-colors duration-300">
+  <button id="themeToggleBtn" type="button" aria-label="Toggle dark mode" class="fixed top-4 right-4 z-50 p-2.5 rounded-full bg-surface-container-high/80 backdrop-blur-md border border-outline-variant/40 text-on-surface shadow-sm hover:bg-surface-container-high transition-colors">
+    <span id="themeIconMoon" class="material-symbols-outlined text-xl">dark_mode</span>
+    <span id="themeIconSun" class="material-symbols-outlined text-xl hidden">light_mode</span>
+  </button>
 <!-- Suppress TopNavBar and Footer for Linear/Transactional Signup flow as per instructions -->
 <main class="flex-grow flex w-full min-h-screen">
 <!-- Left Side: Inspiring Imagery -->
@@ -206,7 +225,7 @@
 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
 <span class="material-symbols-outlined text-outline-variant" data-icon="lock">lock</span>
 </div>
-<input class="form-input block w-full pl-11 pr-12 py-3 bg-surface-container-lowest border border-outline-variant rounded-lg text-on-surface placeholder-on-surface-variant/50 focus:ring-2 focus:ring-primary focus:border-primary transition-all shadow-sm" id="password" minlength="8" name="password" placeholder="••••••••" required type="password"/>
+<input class="form-input block w-full pl-11 pr-12 py-3 bg-surface-container-lowest border border-outline-variant rounded-lg text-on-surface placeholder-on-surface-variant/50 focus:ring-2 focus:ring-primary focus:border-primary transition-all shadow-sm" id="password" name="password" placeholder="••••••••" type="password" minlength="8" required/>
 <button class="password-toggle absolute right-3 top-1/2 -translate-y-1/2 text-outline-variant hover:text-on-surface transition-colors focus:outline-none" type="button" aria-label="Toggle password visibility">
 <span class="material-symbols-outlined text-[20px]">visibility_off</span>
 </button>
@@ -219,7 +238,7 @@
 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
 <span class="material-symbols-outlined text-outline-variant" data-icon="lock_reset">lock_reset</span>
 </div>
-<input class="form-input block w-full pl-11 pr-12 py-3 bg-surface-container-lowest border border-outline-variant rounded-lg text-on-surface placeholder-on-surface-variant/50 focus:ring-2 focus:ring-primary focus:border-primary transition-all shadow-sm" id="confirmPassword" minlength="8" name="confirmPassword" placeholder="••••••••" required type="password"/>
+<input class="form-input block w-full pl-11 pr-12 py-3 bg-surface-container-lowest border border-outline-variant rounded-lg text-on-surface placeholder-on-surface-variant/50 focus:ring-2 focus:ring-primary focus:border-primary transition-all shadow-sm" id="confirmPassword" name="confirmPassword" placeholder="••••••••" type="password" minlength="8" required/>
 <button class="password-toggle absolute right-3 top-1/2 -translate-y-1/2 text-outline-variant hover:text-on-surface transition-colors focus:outline-none" type="button" aria-label="Toggle confirm password visibility">
 <span class="material-symbols-outlined text-[20px]">visibility_off</span>
 </button>
@@ -263,12 +282,12 @@
 </svg>
                             Google
                         </button>
-<button class="social-btn w-full inline-flex justify-center items-center py-2.5 px-4 border border-outline-variant rounded-lg bg-surface-container-lowest font-label-md text-label-md text-on-surface hover:bg-surface-container-low transition-colors duration-200 shadow-sm" type="button" data-provider="apple">
-<svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-  <path d="M17.05 20.28c-.98 1.44-2.04 2.46-3.55 2.46-1.5 0-2.1-.94-3.92-.94-1.82 0-2.42.96-3.93.96-1.5 0-2.7-1.42-3.72-2.88C1.24 16.98-.18 13.32.02 9.74c.18-2.84 1.9-4.88 4.18-5.82 1.72-.72 3.62-.7 5.04-.04 1.04.48 1.76.48 2.84.04 1.64-.7 3.3-.72 4.9.04 1.34.62 2.44 1.68 3.12 3.06-.08.04-2.56 1.52-2.54 4.52.02 3.56 3.1 4.74 3.48 4.84zM12.04 7.24c-.12-2.06 1.6-3.84 3.58-4.04.22 2.18-1.78 4.22-3.58 4.04z"/>
-</svg>
-                            Apple
-                        </button>
+<button class="social-btn w-full inline-flex justify-center items-center py-2.5 px-4 border border-outline-variant rounded-lg bg-surface-container-lowest font-label-md text-label-md text-on-surface hover:bg-surface-container-low transition-colors duration-200 shadow-sm gap-2" type="button" data-provider="apple">
+  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18.71 19.268c-.953 1.402-2.514 2.52-4.206 2.52-1.306 0-2.058-.69-3.43-.69-1.418 0-2.17.69-3.43.69-2.142 0-4.39-2.11-5.456-4.53C.98 13.99-.22 10.43.02 7.03.34 2.56 3.33.16 6.41.16c1.52 0 2.84.99 3.91.99 1.14 0 2.65-1.09 4.3-1.09 1.72 0 3.52.95 4.67 2.42-3.64 1.85-2.96 6.66.72 7.96-.86 2.23-2.02 4.46-2.9 5.83zM12.2 2.93c.72-1.03 1.72-1.92 2.96-1.92.14 1.55-.45 3.06-1.39 4.12-.78.87-1.87 1.54-3.01 1.34.17-1.48.78-2.93 1.44-3.54z"/>
+  </svg>
+  Apple
+</button>
 </div>
 </div>
 <p class="mt-8 text-center font-body-md text-body-md text-on-surface-variant text-sm">
@@ -286,6 +305,12 @@
 <script src="js/storage.js"></script>
 <script src="js/app.js"></script>
 <script src="js/auth.js"></script>
+<script>
+  (function(){
+    const btn = document.getElementById('themeToggleBtn');
+    if (btn) btn.addEventListener('click', toggleTheme);
+  })();
+</script>
 <script>
 (function () {
   // Password visibility toggles

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Trip details — Kibi">
+  <title>Trip Details — Kibi</title>
+  <script src="js/tailwind-config.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body data-page="trip-details" class="bg-cream text-text-main font-sans antialiased">
+  <div id="navContainer"></div>
+
+  <!-- Hero Header -->
+  <div class="relative w-full h-96 md:h-[28rem] -mt-20 bg-cover bg-center rounded-b-2xl overflow-hidden" id="tripHeader"></div>
+
+  <main class="pb-16">
+    <div class="max-w-7xl mx-auto px-6 pt-8">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Main Content -->
+        <div class="lg:col-span-2 space-y-8">
+          <!-- Description -->
+          <div class="reveal" id="tripDescription"></div>
+
+          <!-- Itinerary -->
+          <div class="reveal">
+            <h2 class="font-serif text-2xl text-charcoal mb-6">Itinerary</h2>
+            <div id="tripItinerary"></div>
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="space-y-6">
+          <!-- Compatibility -->
+          <div class="card rounded-2xl shadow-soft p-6 reveal text-center" id="tripCompat"></div>
+
+          <!-- Members -->
+          <div class="card rounded-2xl shadow-soft p-6 reveal">
+            <h3 class="font-serif text-xl text-charcoal mb-4">Travelers</h3>
+            <div id="tripMembers"></div>
+          </div>
+
+          <!-- Actions -->
+          <div class="card rounded-2xl shadow-soft p-6 reveal">
+            <button class="btn btn-accent w-full mb-4 rounded-full" id="joinBtn">Request to Join</button>
+            <button class="btn btn-secondary w-full rounded-full" id="saveBtn">Save Trip</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="footerContainer"></div>
+
+  <!-- API Layer -->
+  <script src="js/api/api-config.js"></script>
+  <script src="js/api/api-cache.js"></script>
+  <script src="js/api/geocoding-api.js"></script>
+  <script src="js/api/weather-api.js"></script>
+  <script src="js/api/places-api.js"></script>
+  <script src="js/api/routing-api.js"></script>
+
+  <script src="js/storage.js?v=10"></script>
+  <script src="js/matching.js?v=10"></script>
+  <script src="js/planner.js?v=10"></script>
+  <script src="js/app.js?v=10"></script>
+  <script src="js/animations.js?v=10"></script>
+  <script src="js/trips.js?v=10"></script>
+</body>
+</html>

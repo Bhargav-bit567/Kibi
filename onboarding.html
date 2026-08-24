@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kibi — Travel Onboarding</title>
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Be+Vietnam+Pro:wght@400;500;600;700&family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            background: "#f9f9fc",
+            surface: "#f9f9fc",
+            "surface-container": "#eeeef0",
+            "surface-container-low": "#f3f3f6",
+            "surface-container-high": "#e8e8ea",
+            "surface-container-lowest": "#ffffff",
+            "surface-variant": "#e2e2e5",
+            outline: "#717783",
+            "outline-variant": "#c1c7d3",
+            primary: "#005da7",
+            "primary-container": "#2976c7",
+            "primary-fixed": "#d4e3ff",
+            "primary-fixed-dim": "#a4c9ff",
+            secondary: "#01658c",
+            "secondary-container": "#8bd2fe",
+            "secondary-fixed": "#c6e7ff",
+            "secondary-fixed-dim": "#88cffb",
+            "on-surface": "#1a1c1e",
+            "on-surface-variant": "#414751"
+          },
+          fontFamily: {
+            headline: ["Plus Jakarta Sans", "sans-serif"],
+            body: ["Be Vietnam Pro", "sans-serif"]
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: "Be Vietnam Pro", sans-serif;
+      color: #1a1c1e;
+      background: #f9f9fc;
+      overflow-x: hidden;
+    }
+    h1,h2,h3,h4,h5,h6,.headline,.label,.brand {
+      font-family: "Plus Jakarta Sans", sans-serif;
+    }
+
+    .ambient {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      overflow: hidden;
+      pointer-events: none;
+      background: linear-gradient(135deg,#f9f9fc 0%,#eef5ff 55%,#f9fbff 100%);
+    }
+    .orb {
+      position: absolute;
+      border-radius: 999px;
+      filter: blur(90px);
+      opacity: .42;
+      animation: float 18s ease-in-out infinite alternate;
+    }
+    .orb.one { width: 420px; height: 420px; background:#a4c9ff; top:-130px; left:-100px; }
+    .orb.two { width: 360px; height:360px; background:#8bd2fe; right:-100px; bottom:5%; animation-delay:-6s; }
+    .orb.three { width:240px; height:240px; background:#d4e3ff; left:42%; top:45%; animation-delay:-10s; }
+    @keyframes float { to { transform:translate(45px,35px) scale(1.05); } }
+
+    .topbar {
+      position: fixed; top:0; left:0; right:0; z-index:50;
+      background:rgba(249,249,252,.78);
+      backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+      box-shadow:0 20px 40px rgba(0,93,167,.06);
+    }
+    .glass {
+      background:rgba(255,255,255,.72);
+      backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
+      border:1px solid rgba(255,255,255,.55);
+      box-shadow:0 8px 32px rgba(0,93,167,.055);
+    }
+    .step-panel { display:none; animation: stepIn .38s ease both; }
+    .step-panel.active { display:block; }
+    @keyframes stepIn {
+      from { opacity:0; transform:translateY(10px); }
+      to { opacity:1; transform:translateY(0); }
+    }
+
+    .option {
+      cursor:pointer;
+      transition:.25s ease;
+      border:1px solid #c1c7d3;
+      background:#fff;
+    }
+    .option:hover {
+      transform:translateY(-3px);
+      border-color:#a4c9ff;
+      box-shadow:0 12px 30px rgba(0,93,167,.10);
+    }
+    .option.selected {
+      border-color:#005da7;
+      box-shadow:0 0 0 2px #005da7, 0 12px 30px rgba(0,93,167,.10);
+      background:#f9f9fc;
+    }
+    .option.selected .icon-wrap {
+      background:#d4e3ff;
+      color:#001c39;
+    }
+    .interest {
+      position:relative;
+      min-height:190px;
+      overflow:hidden;
+      border-radius:24px;
+      background:#dceaff;
+      color:white;
+      border:4px solid transparent;
+      transition:.3s ease;
+    }
+    html.dark .interest { background:#1b2430; }
+    html.dark .interest.selected { border-color:#a4c9ff; box-shadow:0 0 0 2px #005da7; }
+    html.dark body { background:#0B0F17; color:#E8EAED; }
+    html.dark .ambient { background: linear-gradient(135deg,#0B0F17 0%,#111a28 55%,#0B0F17 100%); }
+    html.dark .orb.one { background:#1b3a5f; opacity:.35; }
+    html.dark .orb.two { background:#1a4a66; opacity:.35; }
+    html.dark .orb.three { background:#1b3a5f; opacity:.35; }
+    html.dark .topbar { background:rgba(11,15,23,.85); box-shadow:0 20px 40px rgba(0,0,0,.15); }
+    html.dark .glass { background:rgba(18,24,33,.72); border-color:rgba(255,255,255,.08); }
+    html.dark .option { background:#121821; border-color:#2A3441; color:#E8EAED; }
+    html.dark .option:hover { border-color:#a4c9ff; box-shadow:0 12px 30px rgba(0,0,0,.25); }
+    html.dark .option.selected { border-color:#005da7; background:#0B0F17; box-shadow:0 0 0 2px #005da7, 0 12px 30px rgba(0,0,0,.25); }
+    html.dark .option.selected .icon-wrap { background:#1b3a5f; color:#a4c9ff; }
+    html.dark .nav-btn.secondary { background:rgba(18,24,33,.75); color:#E8EAED; border-color:#2A3441; }
+    html.dark .progress-segment { background:#2A3441; }
+    html.dark .progress-segment.active { background:#005da7; }
+    html.dark .profile-choice { background:rgba(18,24,33,.72); border-color:rgba(255,255,255,.08); }
+    html.dark .profile-choice.selected { border-color:#005da7; }
+    html.dark .profile-choice.dim { opacity:.45; }
+    html.dark h1, html.dark h2, html.dark h3, html.dark .headline, html.dark .label, html.dark .brand { color:#E8EAED; }
+    html.dark p, html.dark small { color:#A8B0BC; }
+    html.dark #stepLabel { color:#a4c9ff; }
+    html.dark #profileTags span { background:#1b3a5f !important; color:#a4c9ff !important; }
+    html.dark .rounded-2xl.bg-white\/70 { background:rgba(18,24,33,.7) !important; border-color:rgba(255,255,255,.08) !important; }
+    html.dark .text-\[\#414751\] { color:#A8B0BC !important; }
+    html.dark .text-\[\#717783\] { color:#6B7685 !important; }
+    html.dark .text-\[\#005da7\] { color:#a4c9ff !important; }
+    html.dark .bg-\[\#d4e3ff\] { background:#1b3a5f !important; }
+    html.dark .bg-\[\#e2e2e5\] { background:#2A3441 !important; }
+    html.dark .text-\[\#005da7\].material-symbols-outlined { color:#a4c9ff !important; }
+    html.dark .bg-\[\#eeeef0\] { background:#1b2430 !important; }
+    html.dark .bg-\[\#f3f3f6\] { background:#121821 !important; }
+    html.dark .bg-\[\#f9f9fc\] { background:#0B0F17 !important; }
+    html.dark .border-\[\#c1c7d3\] { border-color:#2A3441 !important; }
+    html.dark .text-\[\#1a1c1e\] { color:#E8EAED !important; }
+    html.dark .option .label { color:#E8EAED; }
+    html.dark .option.selected .label { color:#E8EAED; }
+    html.dark .option small { color:#A8B0BC; }
+    html.dark .option.selected small { color:#A8B0BC; }
+    html.dark .step-panel h2 { color:#E8EAED !important; }
+    html.dark .step-panel h1 { color:#E8EAED !important; }
+    html.dark .step-panel .headline { color:#E8EAED !important; }
+    html.dark .step-panel .text-tertiary { color:#8B95A3 !important; }
+    html.dark .step-panel .material-symbols-outlined.text-\[\#01658c\] { color:#a4c9ff !important; }
+    html.dark .step-panel .material-symbols-outlined.text-\[\#2976c7\] { color:#a4c9ff !important; }
+    html.dark .step-panel .material-symbols-outlined.text-\[\#8bd2fe\] { color:#a4c9ff !important; }
+    html.dark .step-panel .material-symbols-outlined.text-\[\#005da7\] { color:#a4c9ff !important; }
+    html.dark .step-panel .bg-white\/70 { background:rgba(18,24,33,.7) !important; border-color:rgba(255,255,255,.08) !important; }
+    html.dark .step-panel .bg-white { background:#121821 !important; color:#E8EAED !important; }
+    html.dark .step-panel .text-\[\#414751\] { color:#A8B0BC !important; }
+    html.dark .step-panel .text-\[\#555d63\] { color:#8B95A3 !important; }
+    html.dark .step-panel .text-\[\#717783\] { color:#6B7685 !important; }
+    html.dark .step-panel .border-white\/10 { border-color:rgba(255,255,255,.08) !important; }
+    html.dark .step-panel .border-white\/20 { border-color:rgba(255,255,255,.08) !important; }
+    html.dark .step-panel .border-white { border-color:rgba(255,255,255,.08) !important; }
+    html.dark .step-panel .bg-black\/30 { background:rgba(0,0,0,.25) !important; }
+    .interest:hover { transform:translateY(-3px); }
+    .interest.selected { border-color:#a4c9ff; box-shadow:0 0 0 2px #005da7; }
+    .interest::after {
+      content:"";
+      position:absolute; inset:0;
+      background:linear-gradient(to top,rgba(10,24,42,.78),rgba(10,24,42,.10) 65%,transparent);
+    }
+    .interest-bg {
+      position:absolute; inset:0;
+      background-size:cover; background-position:center;
+      transition:transform .65s ease;
+    }
+    .interest:hover .interest-bg { transform:scale(1.08); }
+    .interest-content { position:absolute; z-index:2; left:18px; right:18px; bottom:18px; }
+    .check {
+      position:absolute; z-index:3; top:12px; right:12px;
+      width:34px; height:34px; border-radius:50%;
+      background:#005da7; display:grid; place-items:center;
+      opacity:0; transform:scale(.8); transition:.2s ease;
+    }
+    .interest.selected .check { opacity:1; transform:scale(1); }
+
+    .progress-segment { height:5px; border-radius:999px; background:#e2e2e5; flex:1; transition:.35s ease; }
+    .progress-segment.active { background:#005da7; }
+
+    .nav-btn {
+      border:0; cursor:pointer; transition:.2s ease;
+      font-family:"Plus Jakarta Sans",sans-serif; font-weight:600;
+    }
+    .nav-btn:hover { transform:translateY(-1px); }
+    .nav-btn.primary { background:#005da7; color:white; box-shadow:0 10px 24px rgba(0,93,167,.20); }
+    .nav-btn.secondary { background:rgba(255,255,255,.75); color:#414751; border:1px solid #c1c7d3; }
+
+    .profile-choice { transition:.25s ease; }
+    .profile-choice.dim { opacity:.55; }
+    .profile-choice.selected { opacity:1; border-color:#005da7; box-shadow:0 0 0 2px #005da7; }
+
+    @media (max-width: 640px) {
+      .interest { min-height:150px; }
+      .glass { border-radius:20px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *,*::before,*::after { animation-duration:.01ms !important; transition-duration:.01ms !important; scroll-behavior:auto !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="ambient">
+    <div class="orb one"></div>
+    <div class="orb two"></div>
+    <div class="orb three"></div>
+  </div>
+
+  <header class="topbar">
+    <div class="max-w-7xl mx-auto px-5 md:px-8 py-4 flex items-center justify-between">
+      <button id="backTop" aria-label="Go back" class="p-2 rounded-full hover:bg-slate-100/20 transition-colors text-slate-600 dark:text-slate-300 invisible">
+        <span class="material-symbols-outlined">arrow_back</span>
+      </button>
+      <div class="brand text-2xl font-bold text-[#005da7]">Kibi</div>
+      <div class="flex items-center gap-2">
+        <button id="themeToggleBtn" type="button" aria-label="Toggle dark mode" class="p-2.5 rounded-full bg-white/80 dark:bg-slate-800/80 border border-outline-variant/30 text-slate-700 dark:text-slate-200 shadow-sm hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors">
+          <span id="themeIconMoon" class="material-symbols-outlined text-xl">dark_mode</span>
+          <span id="themeIconSun" class="material-symbols-outlined text-xl hidden">light_mode</span>
+        </button>
+        <button id="closeBtn" aria-label="Close onboarding" class="p-2 rounded-full hover:bg-slate-100/20 transition-colors text-slate-600 dark:text-slate-300">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="min-h-screen pt-28 pb-28 px-5 md:px-8">
+    <div class="max-w-5xl mx-auto">
+
+      <div class="max-w-xl mx-auto mb-10">
+        <div class="flex gap-2 mb-4">
+          <div class="progress-segment active"></div>
+          <div class="progress-segment"></div>
+          <div class="progress-segment"></div>
+          <div class="progress-segment"></div>
+        </div>
+        <div class="text-center text-xs uppercase tracking-[.18em] font-semibold text-[#005da7]" id="stepLabel">Step 1 of 4</div>
+      </div>
+
+      <!-- STEP 1 -->
+      <section class="step-panel active" data-step="1">
+        <div class="text-center max-w-3xl mx-auto mb-10">
+          <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-4">Let's get to know your travel style.</h1>
+          <p class="text-lg md:text-xl leading-8 text-[#414751]">Tell us what makes a trip exciting for you. We'll use it to personalize Kibi.</p>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-5">
+          <button class="interest text-left" data-group="interests" data-value="Mountains">
+            <div class="interest-bg" style="background-image:url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=900&q=85')"></div>
+            <div class="check"><span class="material-symbols-outlined text-white">check</span></div>
+            <div class="interest-content"><span class="material-symbols-outlined text-3xl">landscape</span><div class="headline text-lg font-semibold mt-1">Mountains</div></div>
+          </button>
+          <button class="interest text-left" data-group="interests" data-value="Beaches">
+            <div class="interest-bg" style="background-image:url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=85')"></div>
+            <div class="check"><span class="material-symbols-outlined text-white">check</span></div>
+            <div class="interest-content"><span class="material-symbols-outlined text-3xl">beach_access</span><div class="headline text-lg font-semibold mt-1">Beaches</div></div>
+          </button>
+          <button class="interest text-left md:col-span-2" data-group="interests" data-value="Nature">
+            <div class="interest-bg" style="background-image:url('https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=1200&q=85')"></div>
+            <div class="check"><span class="material-symbols-outlined text-white">check</span></div>
+            <div class="interest-content"><span class="material-symbols-outlined text-3xl">forest</span><div class="headline text-lg font-semibold mt-1">Nature</div></div>
+          </button>
+          <button class="interest text-left" data-group="interests" data-value="Culture">
+            <div class="interest-bg" style="background-image:url('https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=900&q=85')"></div>
+            <div class="check"><span class="material-symbols-outlined text-white">check</span></div>
+            <div class="interest-content"><span class="material-symbols-outlined text-3xl">museum</span><div class="headline text-lg font-semibold mt-1">Culture</div></div>
+          </button>
+          <button class="interest text-left" data-group="interests" data-value="Food">
+            <div class="interest-bg" style="background-image:url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=900&q=85')"></div>
+            <div class="check"><span class="material-symbols-outlined text-white">check</span></div>
+            <div class="interest-content"><span class="material-symbols-outlined text-3xl">restaurant</span><div class="headline text-lg font-semibold mt-1">Food</div></div>
+          </button>
+          <button class="interest text-left" data-group="interests" data-value="Photography">
+            <div class="interest-bg" style="background-image:url('https://images.unsplash.com/photo-1452780212940-6f5c0d14d848?auto=format&fit=crop&w=900&q=85')"></div>
+            <div class="check"><span class="material-symbols-outlined text-white">check</span></div>
+            <div class="interest-content"><span class="material-symbols-outlined text-3xl">photo_camera</span><div class="headline text-lg font-semibold mt-1">Photography</div></div>
+          </button>
+          <button class="interest text-left" data-group="interests" data-value="Adventure">
+            <div class="interest-bg" style="background-image:url('https://images.unsplash.com/photo-1522163182402-834f871fd851?auto=format&fit=crop&w=900&q=85')"></div>
+            <div class="check"><span class="material-symbols-outlined text-white">check</span></div>
+            <div class="interest-content"><span class="material-symbols-outlined text-3xl">hiking</span><div class="headline text-lg font-semibold mt-1">Adventure</div></div>
+          </button>
+          <button class="interest text-left" data-group="interests" data-value="Nightlife">
+            <div class="interest-bg" style="background-image:url('https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=900&q=85')"></div>
+            <div class="check"><span class="material-symbols-outlined text-white">check</span></div>
+            <div class="interest-content"><span class="material-symbols-outlined text-3xl">nightlife</span><div class="headline text-lg font-semibold mt-1">Nightlife</div></div>
+          </button>
+        </div>
+      </section>
+
+      <!-- STEP 2 -->
+      <section class="step-panel" data-step="2">
+        <div class="glass rounded-3xl p-7 md:p-12">
+          <div class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-4">How do you like to travel?</h1>
+            <p class="text-lg text-[#414751]">Choose the kind of company and pace that feels right.</p>
+          </div>
+
+          <div class="mb-12">
+            <h2 class="text-2xl md:text-3xl font-semibold mb-6 text-center">Your travel companions</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <button class="option rounded-2xl p-6 flex flex-col items-center gap-4" data-single="companions" data-value="Solo">
+                <span class="icon-wrap w-16 h-16 rounded-full bg-[#eeeef0] flex items-center justify-center text-[#005da7]"><span class="material-symbols-outlined text-3xl">person</span></span>
+                <span class="label font-semibold">Solo</span>
+              </button>
+              <button class="option rounded-2xl p-6 flex flex-col items-center gap-4" data-single="companions" data-value="1–2 people">
+                <span class="icon-wrap w-16 h-16 rounded-full bg-[#eeeef0] flex items-center justify-center text-[#005da7]"><span class="material-symbols-outlined text-3xl">group</span></span>
+                <span class="label font-semibold">1–2 people</span>
+              </button>
+              <button class="option rounded-2xl p-6 flex flex-col items-center gap-4" data-single="companions" data-value="Small group">
+                <span class="icon-wrap w-16 h-16 rounded-full bg-[#eeeef0] flex items-center justify-center text-[#005da7]"><span class="material-symbols-outlined text-3xl">groups</span></span>
+                <span class="label font-semibold">Small group</span>
+              </button>
+              <button class="option rounded-2xl p-6 flex flex-col items-center gap-4" data-single="companions" data-value="Large/social group">
+                <span class="icon-wrap w-16 h-16 rounded-full bg-[#eeeef0] flex items-center justify-center text-[#005da7]"><span class="material-symbols-outlined text-3xl">diversity_3</span></span>
+                <span class="label font-semibold">Large/social group</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="h-px bg-[#c1c7d3]/40 mb-10"></div>
+
+          <div>
+            <h2 class="text-2xl md:text-3xl font-semibold mb-6 text-center">What's your travel vibe?</h2>
+            <div class="grid md:grid-cols-2 gap-4">
+              <button class="option rounded-2xl p-6 flex items-center gap-5 text-left" data-single="vibe" data-value="Relaxed">
+                <span class="icon-wrap w-14 h-14 rounded-full bg-[#eeeef0] flex items-center justify-center text-[#005da7] shrink-0"><span class="material-symbols-outlined">self_improvement</span></span>
+                <span><b class="label block">Relaxed</b><small class="text-[#414751]">Slow mornings and leisurely experiences.</small></span>
+              </button>
+              <button class="option rounded-2xl p-6 flex items-center gap-5 text-left" data-single="vibe" data-value="Balanced">
+                <span class="icon-wrap w-14 h-14 rounded-full bg-[#eeeef0] flex items-center justify-center text-[#005da7] shrink-0"><span class="material-symbols-outlined">balance</span></span>
+                <span><b class="label block">Balanced</b><small class="text-[#414751]">A mix of exploration and downtime.</small></span>
+              </button>
+              <button class="option rounded-2xl p-6 flex items-center gap-5 text-left" data-single="vibe" data-value="Adventure">
+                <span class="icon-wrap w-14 h-14 rounded-full bg-[#eeeef0] flex items-center justify-center text-[#005da7] shrink-0"><span class="material-symbols-outlined">bolt</span></span>
+                <span><b class="label block">Adventure</b><small class="text-[#414751]">Keep moving and chase memorable experiences.</small></span>
+              </button>
+              <button class="option rounded-2xl p-6 flex items-center gap-5 text-left" data-single="vibe" data-value="Packed itinerary">
+                <span class="icon-wrap w-14 h-14 rounded-full bg-[#eeeef0] flex items-center justify-center text-[#005da7] shrink-0"><span class="material-symbols-outlined">schedule</span></span>
+                <span><b class="label block">Packed itinerary</b><small class="text-[#414751]">Make the most of every day.</small></span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- STEP 3 -->
+      <section class="step-panel" data-step="3">
+        <div class="glass rounded-3xl p-7 md:p-12">
+          <div class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-4">Crafting your vibe</h1>
+            <p class="text-lg text-[#414751]">Let's fine-tune the details to match your pace and pocket.</p>
+          </div>
+
+          <div class="mb-12">
+            <h2 class="text-2xl md:text-3xl font-semibold mb-6 flex items-center gap-3"><span class="material-symbols-outlined text-[#005da7]">account_balance_wallet</span>What's your typical budget?</h2>
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <button class="option rounded-2xl p-6 text-center" data-single="budget" data-value="₹5K–₹10K">
+                <span class="material-symbols-outlined text-4xl text-[#01658c] mb-3">savings</span>
+                <b class="label block">Modest</b><span class="text-sm text-[#414751]">₹5K – ₹10K</span>
+              </button>
+              <button class="option rounded-2xl p-6 text-center" data-single="budget" data-value="₹10K–₹20K">
+                <span class="material-symbols-outlined text-4xl text-[#005da7] mb-3">payments</span>
+                <b class="label block">Comfortable</b><span class="text-sm text-[#414751]">₹10K – ₹20K</span>
+              </button>
+              <button class="option rounded-2xl p-6 text-center" data-single="budget" data-value="₹20K–₹40K">
+                <span class="material-symbols-outlined text-4xl text-[#2976c7] mb-3">credit_card</span>
+                <b class="label block">Premium</b><span class="text-sm text-[#414751]">₹20K – ₹40K</span>
+              </button>
+              <button class="option rounded-2xl p-6 text-center" data-single="budget" data-value="₹40K+">
+                <span class="material-symbols-outlined text-4xl text-[#8bd2fe] mb-3">diamond</span>
+                <b class="label block">Luxury</b><span class="text-sm text-[#414751]">₹40K+</span>
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <h2 class="text-2xl md:text-3xl font-semibold mb-3 flex items-center gap-3"><span class="material-symbols-outlined text-[#005da7]">star</span>What matters most to you?</h2>
+            <p class="text-[#414751] mb-6">Select up to 3 priorities.</p>
+            <div class="flex flex-wrap gap-3">
+              <button class="option rounded-full px-5 py-3" data-multi="priorities" data-value="Budget"><span class="material-symbols-outlined align-middle text-lg mr-1">money_off</span>Budget</button>
+              <button class="option rounded-full px-5 py-3" data-multi="priorities" data-value="Comfort"><span class="material-symbols-outlined align-middle text-lg mr-1">weekend</span>Comfort</button>
+              <button class="option rounded-full px-5 py-3" data-multi="priorities" data-value="Experiences"><span class="material-symbols-outlined align-middle text-lg mr-1">explore</span>Experiences</button>
+              <button class="option rounded-full px-5 py-3" data-multi="priorities" data-value="Food"><span class="material-symbols-outlined align-middle text-lg mr-1">restaurant</span>Food</button>
+              <button class="option rounded-full px-5 py-3" data-multi="priorities" data-value="Nature"><span class="material-symbols-outlined align-middle text-lg mr-1">forest</span>Nature</button>
+              <button class="option rounded-full px-5 py-3" data-multi="priorities" data-value="Meeting people"><span class="material-symbols-outlined align-middle text-lg mr-1">diversity_3</span>Meeting people</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- STEP 4 -->
+      <section class="step-panel" data-step="4">
+        <div class="grid md:grid-cols-12 gap-8 items-center">
+          <div class="md:col-span-5">
+            <h1 class="text-4xl md:text-5xl font-bold tracking-tight mb-4">Your travel personality</h1>
+            <p class="text-lg leading-8 text-[#414751] mb-7">We've crafted your unique profile from your choices.</p>
+            <div class="space-y-3" id="profileChoices"></div>
+          </div>
+
+          <div class="md:col-span-7">
+            <div class="glass rounded-3xl p-7 md:p-10 relative overflow-hidden">
+              <div class="absolute -top-12 -right-12 w-40 h-40 rounded-full bg-[#8bd2fe]/50 blur-2xl"></div>
+              <div class="absolute -bottom-12 -left-12 w-48 h-48 rounded-full bg-[#a4c9ff]/50 blur-2xl"></div>
+
+              <div class="relative">
+                <div class="h-36 rounded-2xl overflow-hidden mb-7">
+                  <img id="profileImage" class="w-full h-full object-cover" alt="Travel landscape">
+                </div>
+                <div class="flex items-center justify-center mb-5">
+                  <div class="w-24 h-24 rounded-full bg-white shadow-lg p-1 -mt-16 relative z-10">
+                    <div class="w-full h-full rounded-full bg-[#d4e3ff] flex items-center justify-center text-[#005da7]">
+                      <span id="profileIcon" class="material-symbols-outlined text-4xl">nature_people</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="text-center">
+                  <p class="text-sm uppercase tracking-[.18em] text-[#005da7] font-semibold mb-2">Your Kibi profile</p>
+                  <h2 id="profileName" class="text-3xl md:text-4xl font-bold mb-3">Quiet Explorer</h2>
+                  <p id="profileDesc" class="text-[#414751] max-w-xl mx-auto mb-7">Nature, photography and meaningful small-group experiences.</p>
+                  <div id="profileTags" class="flex flex-wrap justify-center gap-2"></div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 mt-7 text-left">
+                  <div class="rounded-2xl bg-white/70 border border-white p-4">
+                    <p class="text-xs uppercase tracking-wider text-[#717783]">Travel with</p>
+                    <p id="summaryCompanions" class="label font-semibold mt-1">—</p>
+                  </div>
+                  <div class="rounded-2xl bg-white/70 border border-white p-4">
+                    <p class="text-xs uppercase tracking-wider text-[#717783]">Budget</p>
+                    <p id="summaryBudget" class="label font-semibold mt-1">—</p>
+                  </div>
+                  <div class="rounded-2xl bg-white/70 border border-white p-4 col-span-2">
+                    <p class="text-xs uppercase tracking-wider text-[#717783]">Travel vibe</p>
+                    <p id="summaryVibe" class="label font-semibold mt-1">—</p>
+                  </div>
+                </div>
+
+                <button id="finishBtn" class="nav-btn primary w-full mt-7 rounded-xl px-6 py-4 text-base">
+                  Discover My Trips <span class="material-symbols-outlined align-middle ml-1">arrow_forward</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div id="error" class="hidden text-center text-red-600 text-sm mt-6"></div>
+
+      <div class="flex justify-between items-center mt-10">
+        <button id="backBtn" class="nav-btn secondary rounded-xl px-5 py-3 invisible">
+          <span class="material-symbols-outlined align-middle text-lg">arrow_back</span> Back
+        </button>
+        <button id="nextBtn" class="nav-btn primary rounded-xl px-7 py-3">
+          Continue <span class="material-symbols-outlined align-middle text-lg">arrow_forward</span>
+        </button>
+      </div>
+    </div>
+  </main>
+
+<script>
+  const data = {
+    interests: [],
+    companions: "",
+    vibe: "",
+    budget: "",
+    priorities: []
+  };
+
+  let currentStep = 1;
+
+  const profileTypes = {
+    quiet: {
+      name: "Quiet Explorer",
+      icon: "nature_people",
+      desc: "You enjoy nature, photography and meaningful experiences without the pressure of a huge crowd.",
+      tags: ["Nature", "Photography", "Small groups"],
+      image: "https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1200&q=85"
+    },
+    social: {
+      name: "Social Adventurer",
+      icon: "groups",
+      desc: "You love meeting people, sharing experiences and turning every trip into a story.",
+      tags: ["People", "Adventure", "Experiences"],
+      image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=85"
+    },
+    weekend: {
+      name: "Weekend Wanderer",
+      icon: "luggage",
+      desc: "You want easy-to-plan escapes, balanced days and memorable experiences without overthinking them.",
+      tags: ["Short trips", "Balanced", "Flexible"],
+      image: "https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=1200&q=85"
+    },
+    culture: {
+      name: "Culture Seeker",
+      icon: "museum",
+      desc: "You travel to understand places through their history, food, people and local culture.",
+      tags: ["Culture", "Food", "Photography"],
+      image: "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=1200&q=85"
+    }
+  };
+
+  const $ = s => document.querySelector(s);
+  const $$ = s => [...document.querySelectorAll(s)];
+
+  function showError(message) {
+    const el = $("#error");
+    el.textContent = message;
+    el.classList.remove("hidden");
+  }
+  function clearError() {
+    $("#error").classList.add("hidden");
+  }
+
+  function validateStep() {
+    if (currentStep === 1 && data.interests.length === 0) return "Choose at least one interest.";
+    if (currentStep === 2 && (!data.companions || !data.vibe)) return "Choose your travel group and travel vibe.";
+    if (currentStep === 3 && (!data.budget || data.priorities.length === 0)) return "Choose a budget and at least one priority.";
+    return "";
+  }
+
+  function renderStep() {
+    $$(".step-panel").forEach(p => p.classList.toggle("active", +p.dataset.step === currentStep));
+    $$(".progress-segment").forEach((p, i) => p.classList.toggle("active", i < currentStep));
+    $("#stepLabel").textContent = `Step ${currentStep} of 4`;
+
+    $("#backBtn").classList.toggle("invisible", currentStep === 1);
+    $("#backTop").classList.toggle("invisible", currentStep === 1);
+    $("#nextBtn").classList.toggle("hidden", currentStep === 4);
+
+    if (currentStep === 4) renderProfile();
+    window.scrollTo({top: 0, behavior: "smooth"});
+  }
+
+  function renderProfile() {
+    let type = "quiet";
+    const i = data.interests;
+    if (data.companions === "Large/social group" || i.includes("Nightlife") || data.priorities.includes("Meeting people")) type = "social";
+    else if (i.includes("Culture") || i.includes("Food")) type = "culture";
+    else if (data.vibe === "Packed itinerary" || data.vibe === "Adventure") type = "weekend";
+
+    const p = profileTypes[type];
+    $("#profileName").textContent = p.name;
+    $("#profileIcon").textContent = p.icon;
+    $("#profileDesc").textContent = p.desc;
+    $("#profileImage").src = p.image;
+    $("#summaryCompanions").textContent = data.companions || "—";
+    $("#summaryBudget").textContent = data.budget || "—";
+    $("#summaryVibe").textContent = data.vibe || "—";
+    $("#profileTags").innerHTML = [...new Set([...p.tags, ...data.interests.slice(0,2)])]
+      .slice(0,5).map(t => `<span class="rounded-full bg-[#d4e3ff] text-[#005da7] px-3 py-1.5 text-sm font-semibold">${t}</span>`).join("");
+
+    const choices = [
+      ["quiet","Quiet Explorer","Nature, Photography, Small Groups","nature_people"],
+      ["social","Social Adventurer","People, Adventure, Experiences","groups"],
+      ["weekend","Weekend Wanderer","Short Trips, Balanced, Flexible","luggage"],
+      ["culture","Culture Seeker","Culture, Food, Photography","museum"]
+    ];
+    $("#profileChoices").innerHTML = choices.map(([key,name,desc,icon]) => `
+      <div class="profile-choice glass rounded-xl p-4 flex items-center gap-4 ${key===type ? "selected" : "dim"}">
+        <div class="w-10 h-10 rounded-full ${key===type ? "bg-[#d4e3ff] text-[#005da7]" : "bg-[#e2e2e5] text-[#414751]"} flex items-center justify-center">
+          <span class="material-symbols-outlined">${icon}</span>
+        </div>
+        <div>
+          <div class="label font-semibold">${name}</div>
+          <div class="text-sm text-[#414751] mt-1">${desc}</div>
+        </div>
+        ${key===type ? '<span class="material-symbols-outlined text-[#005da7] ml-auto">check_circle</span>' : ''}
+      </div>`).join("");
+  }
+
+  $$(".interest").forEach(card => {
+    card.addEventListener("click", () => {
+      const value = card.dataset.value;
+      card.classList.toggle("selected");
+      if (card.classList.contains("selected")) data.interests.push(value);
+      else data.interests = data.interests.filter(x => x !== value);
+      clearError();
+    });
+  });
+
+  $$("[data-single]").forEach(option => {
+    option.addEventListener("click", () => {
+      const group = option.dataset.single;
+      $$(`[data-single="${group}"]`).forEach(x => x.classList.remove("selected"));
+      option.classList.add("selected");
+      data[group] = option.dataset.value;
+      clearError();
+    });
+  });
+
+  $$("[data-multi]").forEach(option => {
+    option.addEventListener("click", () => {
+      const value = option.dataset.value;
+      if (data.priorities.includes(value)) {
+        data.priorities = data.priorities.filter(x => x !== value);
+        option.classList.remove("selected");
+      } else if (data.priorities.length < 3) {
+        data.priorities.push(value);
+        option.classList.add("selected");
+      } else {
+        showError("You can select up to 3 priorities.");
+      }
+      clearError();
+    });
+  });
+
+  $("#nextBtn").addEventListener("click", () => {
+    const error = validateStep();
+    if (error) return showError(error);
+    clearError();
+    currentStep++;
+    renderStep();
+  });
+
+  $("#backBtn").addEventListener("click", () => {
+    clearError();
+    currentStep = Math.max(1, currentStep - 1);
+    renderStep();
+  });
+
+  $("#backTop").addEventListener("click", () => {
+    currentStep = Math.max(1, currentStep - 1);
+    renderStep();
+  });
+
+  $("#closeBtn").addEventListener("click", () => {
+    if (confirm("Leave onboarding? Your current choices will not be saved.")) history.back();
+  });
+
+  function computePersonality() {
+    const i = data.interests;
+    if (data.companions === "Large/social group" || i.includes("Nightlife") || data.priorities.includes("Meeting people")) return "social";
+    if (i.includes("Culture") || i.includes("Food")) return "culture";
+    if (data.vibe === "Packed itinerary" || data.vibe === "Adventure") return "weekend";
+    return "quiet";
+  }
+
+  $("#finishBtn").addEventListener("click", () => {
+    const personalityKey = computePersonality();
+    const personality = profileTypes[personalityKey];
+    localStorage.setItem("kibiOnboarding", JSON.stringify({
+      ...data,
+      completed: true,
+      personalityKey,
+      personalityName: personality.name,
+      completedAt: new Date().toISOString()
+    }));
+
+    // Persist preferences + personality to logged-in user profile if available
+    const user = typeof getCurrentUser === 'function' ? getCurrentUser() : null;
+    if (user && typeof savePreferences === 'function') {
+      savePreferences(user.id, {
+        travelStyle: data.interests,
+        budget: data.budget,
+        socialPreference: data.companions,
+        travelPace: data.vibe,
+        priorities: data.priorities,
+        personalityKey,
+        personalityName: personality.name
+      });
+    }
+
+    window.location.href = "dashboard.html";
+  });
+
+  renderStep();
+</script>
+</body>
+</html>

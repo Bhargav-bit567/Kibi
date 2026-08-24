@@ -48,11 +48,23 @@
   <link rel="stylesheet" href="css/responsive.css">
   <style data-purpose="custom-styles">
     body {
-      
+
       background-color: #F8FAFC;
       color: #1E293B;
       overflow-x: hidden;
+      transition: background-color 400ms ease, color 400ms ease;
     }
+
+    html.dark body {
+      background-color: #0B0F17;
+      color: #E8EAED;
+    }
+
+    html.dark .hero-bg::before {
+      background: linear-gradient(to bottom, rgba(0, 10, 25, 0.55) 0%, rgba(0, 0, 0, 0) 35%, rgba(11, 15, 23, 0) 80%, rgba(11, 15, 23, 1) 100%);
+    }
+
+    html.dark #planPreviewBorder { border-color: #FFFFFF !important; }
 
     
 
@@ -185,44 +197,41 @@
 <header class="relative z-50 px-6 lg:px-12 flex justify-between items-center w-full max-w-7xl mx-auto pt-6 pb-4">
   
   <!-- Logo -->
-  <a href="index.html" class="flex items-center justify-center h-10 px-5 bg-white/90 backdrop-blur-md rounded-full font-heading font-bold text-[1.25rem] tracking-tight text-[#005da7] hover:bg-white transition-colors shadow-sm border border-white/20">
+  <a href="index.html" class="logo-kibi flex items-center justify-center h-10 px-5 bg-white/90 backdrop-blur-md rounded-full font-heading font-bold text-[1.25rem] tracking-tight text-[#005da7] hover:bg-white transition-colors shadow-sm border border-white/20">
     Kibi
   </a>
 
   <!-- Center Nav Pill -->
-  <nav class="hidden md:flex items-center bg-white/85 backdrop-blur-md rounded-full px-2 py-1.5 border border-white/40 shadow-sm">
-    <ul class="flex items-center gap-1 lg:gap-2 text-[14px]">
-      <li><a href="index.html" class="bg-white shadow-sm border border-slate-50 text-slate-900 px-5 py-2 rounded-full block transition-colors font-medium">Home</a></li>
-      <li><a href="discover.html" class="hover:bg-slate-100/50 px-5 py-2 rounded-full transition-colors block text-slate-700 font-medium">Discover</a></li>
-      <li><a href="plan-trip.html" class="hover:bg-slate-100/50 px-5 py-2 rounded-full transition-colors block text-slate-700 font-medium">Plan Trip</a></li>
-      <li><a href="my-trips.html" class="hover:bg-slate-100/50 px-5 py-2 rounded-full transition-colors block text-slate-700 font-medium">My Trips</a></li>
-      <li><a href="about.html" class="hover:bg-slate-100/50 px-5 py-2 rounded-full transition-colors block text-slate-700 font-medium">About Us</a></li>
+  <nav class="hidden md:flex items-center bg-white/85 backdrop-blur-md rounded-full px-2 py-1.5 border border-white/40 shadow-sm relative">
+    <div id="navActivePill" class="absolute top-1/2 -translate-y-1/2 h-[calc(100%-12px)] rounded-full bg-white shadow-sm border border-slate-50 transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] pointer-events-none z-0" style="left:0;width:0;opacity:0"></div>
+    <ul class="flex items-center gap-1 lg:gap-2 text-[14px] relative z-10">
+      <li><a href="index.html" data-nav-pill-target="home" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 text-slate-700 hover:text-slate-900">Home</a></li>
+      <li><a href="discover.html" data-nav-pill-target="discover" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 text-slate-700 hover:text-slate-900">Discover</a></li>
+      <li><a href="plan-trip.html" data-nav-pill-target="plan-trip" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 text-slate-700 hover:text-slate-900">Plan Trip</a></li>
+      <li><a href="my-trips.html" data-nav-pill-target="my-trips" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 text-slate-700 hover:text-slate-900">My Trips</a></li>
+      <li><a href="about.html" data-nav-pill-target="about" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 text-slate-700 hover:text-slate-900">About Us</a></li>
     </ul>
   </nav>
 
   <!-- Right Action -->
   <div class="flex items-center gap-3">
     <div id="auth-action-container"></div>
-    <button id="mobile-menu-btn" class="md:hidden w-10 h-10 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-slate-800 hover:bg-white transition-colors shadow-sm border border-white/20">
-      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+    <button id="mobile-menu-btn" class="md:hidden w-10 h-10 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-slate-800 hover:bg-white transition-colors shadow-sm border border-white/20 relative">
+      <span class="hamburger-box"><span class="hamburger-line"></span><span class="hamburger-line"></span><span class="hamburger-line"></span></span>
     </button>
   </div>
 </header>
+<!-- Mobile Menu -->
+<div id="mobileMenu" class="fixed inset-0 z-40 bg-white/95 backdrop-blur-lg opacity-0 pointer-events-none transition-opacity duration-300 md:hidden flex flex-col items-center justify-center gap-6">
+  <a href="index.html" class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">Home</a>
+  <a href="discover.html" class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">Discover</a>
+  <a href="plan-trip.html" class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">Plan Trip</a>
+  <a href="my-trips.html" class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">My Trips</a>
+  <a href="about.html" class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">About Us</a>
+  <div id="mobile-auth-action-container"></div>
+</div>
 
 
-
-    <!-- Mobile menu -->
-    <div id="mobile-menu"
-      class="hidden md:hidden absolute top-24 left-4 right-4 bg-white/95 backdrop-blur-xl rounded-2xl p-5 shadow-2xl border border-slate-100 z-50 transition-all origin-top">
-      <div class="flex flex-col gap-2 font-medium text-sm text-slate-700">
-        <a href="index.html" class="px-4 py-2.5 rounded-xl bg-brand-50 text-brand-blue font-semibold">Home</a>
-        <a href="discover.html" class="px-4 py-2.5 rounded-xl hover:bg-slate-50 transition-colors">Discover</a>
-        <a href="plan-trip.html" class="px-4 py-2.5 rounded-xl hover:bg-slate-50 transition-colors">Plan Trip</a>
-        <a href="my-trips.html" class="px-4 py-2.5 rounded-xl hover:bg-slate-50 transition-colors">My Trips</a>
-        <a href="#reviews" class="px-4 py-2.5 rounded-xl hover:bg-slate-50 transition-colors">Reviews</a>
-        <a href="about.html" class="px-4 py-2.5 rounded-xl hover:bg-slate-50 transition-colors">About Us</a>
-      </div>
-    </div>
 
     <!-- Hero Content -->
     <div
@@ -234,28 +243,28 @@
         <svg class="absolute -top-1 -right-4 w-3 h-3 text-white/90" fill="currentColor" viewBox="0 0 16 16">
           <path d="M8 0l1.5 5.5L15 7l-5.5 1.5L8 14l-1.5-5.5L1 7l5.5-1.5z" />
         </svg>
-        <p class="text-white text-4xl md:text-5xl font-script tracking-wide drop-shadow-lg">Let AI create your</p>
+        <p class="text-white text-4xl md:text-5xl font-script tracking-wide">Let AI create your</p>
       </div>
       <h1
-        class="text-6xl md:text-8xl lg:text-[8.5rem] font-bold text-white mb-2 drop-shadow-2xl tracking-tighter leading-none">
+        class="text-6xl md:text-8xl lg:text-[8.5rem] font-bold text-white mb-2 tracking-tighter leading-none">
         Journey</h1>
-      <p class="text-white text-base md:text-lg max-w-2xl mb-6 drop-shadow-xl leading-relaxed font-semibold">
+      <p class="text-white text-base md:text-lg max-w-2xl mb-6 leading-relaxed font-semibold">
         From cozy stays and iconic restaurants to hidden local spots, our AI curates a complete travel package based on
         your needs.
       </p>
 
-      <div class="flex flex-col sm:flex-row gap-5 items-center">
+      <div class="flex flex-col sm:flex-row gap-4 items-center">
         <a href="plan-trip.html"
-          class="bg-white text-brand-blue font-bold py-3.5 px-9 rounded-full shadow-2xl hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+          class="bg-white text-brand-blue font-bold py-2.5 px-6 rounded-full shadow-2xl hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-2 text-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
             <path
               d="M4 11H2v3h2v-3zm5-4H7v7h2V7zm5-5v12h-2V2h2zm-2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-2zM6 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm-5 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3z" />
           </svg>
           Start the trip
         </a>
         <a href="discover.html"
-          class="bg-white/10 border-[1.5px] border-white text-white font-bold py-3.5 px-9 rounded-full hover:bg-white/20 shadow-xl transition-colors flex items-center gap-2 backdrop-blur-lg">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+          class="bg-white/10 border-[1.5px] border-white text-white font-bold py-2.5 px-6 rounded-full hover:bg-white/20 shadow-xl transition-colors flex items-center gap-2 backdrop-blur-lg text-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
             <path
               d="M6.428 1.151C6.708.591 7.213 0 8 0s1.292.592 1.572 1.151C9.861 1.73 10 2.431 10 3v3.691l5.17 2.585a1.5 1.5 0 0 1 .83 1.342V12a.5.5 0 0 1-.582.493l-5.507-.918-.375 2.253 1.318 1.318A.5.5 0 0 1 10.5 16h-5a.5.5 0 0 1-.354-.854l1.319-1.318-.376-2.253-5.507.918A.5.5 0 0 1 0 12v-1.382a1.5 1.5 0 0 1 .83-1.342L6 6.691V3c0-.568.14-1.271.428-1.849Z" />
           </svg>
@@ -370,7 +379,9 @@
       </div>
 
       <!-- Glassmorphic Dark Dashboard Mockup -->
-      <div class="itinerary-preview-bg rounded-3xl p-6 md:p-10 text-white shadow-2xl relative overflow-hidden">
+      <div class="relative p-3">
+        <div id="planPreviewBorder" class="absolute inset-0 rounded-[1.9rem] border-[3px] border-dashed border-[#000000] pointer-events-none"></div>
+        <div class="itinerary-preview-bg rounded-3xl p-6 md:p-10 text-white shadow-2xl relative overflow-hidden">
 
         <!-- Dashboard Top Nav Bar -->
         <div
@@ -395,7 +406,7 @@
             <span class="bg-white/15 text-white px-3 py-1 rounded-full border border-white/20">Scenic Views</span>
             <span class="bg-white/15 text-white px-3 py-1 rounded-full border border-white/20">Relaxing</span>
             <span class="bg-white/15 text-white px-3 py-1 rounded-full border border-white/20">Photography</span>
-            <span class="bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-3 py-1 rounded-full">₹500
+            <span class="bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-3 py-1 rounded-full">$500
               budget</span>
           </div>
         </div>
@@ -418,7 +429,7 @@
               <h4 class="font-semibold text-sm text-white mb-1">Depart from Phoenix</h4>
               <div class="flex justify-between items-center text-xs text-white/70">
                 <span><i class="fa-regular fa-clock mr-1"></i> 8:00 AM</span>
-                <span class="font-medium text-white">₹25</span>
+                <span class="font-medium text-white">$25</span>
               </div>
             </div>
 
@@ -427,7 +438,7 @@
               <h4 class="font-semibold text-sm text-white mb-1">Stop for breakfast in Flagstaff</h4>
               <div class="flex justify-between items-center text-xs text-white/70">
                 <span><i class="fa-regular fa-clock mr-1"></i> 10:30 AM</span>
-                <span class="font-medium text-white">₹15</span>
+                <span class="font-medium text-white">$15</span>
               </div>
             </div>
 
@@ -466,7 +477,7 @@
               <h4 class="font-semibold text-sm text-white mb-1">Check-in at Yavapai Lodge</h4>
               <div class="flex justify-between items-center text-xs text-white/70">
                 <span><i class="fa-regular fa-clock mr-1"></i> 1:00 PM</span>
-                <span class="font-medium text-white">₹120</span>
+                <span class="font-medium text-white">$120</span>
               </div>
             </div>
 
@@ -475,7 +486,7 @@
               <h4 class="font-semibold text-sm text-white mb-1">Light lunch at El Tovar Restaurant</h4>
               <div class="flex justify-between items-center text-xs text-white/70">
                 <span><i class="fa-regular fa-clock mr-1"></i> 1:30 PM</span>
-                <span class="font-medium text-white">₹20</span>
+                <span class="font-medium text-white">$20</span>
               </div>
             </div>
 
@@ -523,7 +534,7 @@
               <h4 class="font-semibold text-sm text-white mb-1">Dinner near Grand Canyon Village</h4>
               <div class="flex justify-between items-center text-xs text-white/70">
                 <span><i class="fa-regular fa-clock mr-1"></i> 7:30 PM</span>
-                <span class="font-medium text-white">₹20</span>
+                <span class="font-medium text-white">$20</span>
               </div>
             </div>
 
@@ -546,9 +557,9 @@
           <div class="flex items-center gap-3 text-sm text-white">
             <div
               class="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-400">
-              <i class="fa-solid fa-indian-rupee-sign"></i>
+              <i class="fa-solid fa-dollar-sign"></i>
             </div>
-            <span>Total day budget: <strong class="text-white text-base font-bold">₹200</strong></span>
+            <span>Total day budget: <strong class="text-white text-base font-bold">$200</strong></span>
           </div>
 
           <!-- Day Buttons -->
@@ -561,7 +572,6 @@
               2</button>
           </div>
         </div>
-
       </div>
 
     </div>
@@ -598,85 +608,19 @@
       </div>
     </div>
 
-    <!-- Destination Cards Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-
-      <!-- Card 1 (Large) -->
-      <div class="lg:col-span-2 group relative rounded-[2rem] overflow-hidden shadow-lg h-80">
-        <img
-          src="https://images.unsplash.com/photo-1516483638261-f4dbaf036963?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-          alt="Tuscany, Italy"
-          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-
-        <div
-          class="absolute top-4 left-4 bg-white/20 backdrop-blur-md rounded-full px-3 py-1 text-xs text-white font-medium border border-white/30">
-          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="inline mr-1"
-            viewBox="0 0 16 16">
-            <path
-              d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />
-          </svg>
-          4.9
-        </div>
-
-        <div class="absolute bottom-6 left-6 right-6 flex justify-between items-end">
-          <div>
-            <h3 class="text-white text-2xl font-bold mb-1">Tuscany, Italy</h3>
-            <p class="text-white/80 text-sm">Experience the rolling hills of Chianti.</p>
-          </div>
-          <button
-            class="bg-white text-gray-900 text-sm font-semibold py-2 px-5 rounded-full hover:bg-gray-100 transition-colors">
-            View details
-          </button>
-        </div>
-      </div>
-
-      <!-- Card 2 -->
-      <div class="group relative rounded-[2rem] overflow-hidden shadow-lg h-80">
-        <img
-          src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-          alt="Kyoto, Japan" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-
-        <div class="absolute bottom-6 left-6 right-6">
-          <h3 class="text-white text-xl font-bold mb-1">Kyoto, Japan</h3>
-          <p class="text-white/80 text-xs line-clamp-2">Immerse yourself in traditional Japanese culture and beautiful
-            gardens.</p>
-        </div>
-      </div>
-
-      <!-- Card 3 -->
-      <div class="group relative rounded-[2rem] overflow-hidden shadow-lg h-80">
-        <img
-          src="https://images.unsplash.com/photo-1555400038-63f5ba517a47?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
-          alt="Bali, Indonesia"
-          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
-        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-
-        <div class="absolute bottom-6 left-6 right-6">
-          <h3 class="text-white text-xl font-bold mb-1">Bali, Indonesia</h3>
-          <p class="text-white/80 text-xs line-clamp-2">Relax on pristine beaches and explore lush landscapes.</p>
-        </div>
-      </div>
-
+    <!-- Search Bar -->
+    <div class="max-w-2xl mx-auto mb-8 relative">
+      <input id="homeDestSearch" type="text" placeholder="Where do you want to go? e.g. Manali, Paris, Tokyo"
+        class="w-full bg-white border border-gray-200 rounded-full py-3 pl-5 pr-24 text-sm text-gray-800 focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 shadow-sm">
+      <button id="homeDestSearchBtn"
+        class="absolute right-1.5 top-1/2 -translate-y-1/2 bg-brand-blue text-white text-sm font-semibold px-5 py-2 rounded-full hover:bg-blue-600 transition-colors">
+        Search
+      </button>
     </div>
 
-    <!-- Carousel Controls (Static) -->
-    <div class="flex justify-center gap-4 mt-8">
-      <button
-        class="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-400 hover:text-brand-blue hover:border-brand-blue transition-colors">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24"
-          stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-        </svg>
-      </button>
-      <button
-        class="w-10 h-10 rounded-full border border-brand-blue bg-white flex items-center justify-center text-brand-blue shadow-sm hover:bg-brand-blue hover:text-white transition-colors">
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24"
-          stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-        </svg>
-      </button>
+    <!-- Destination Cards Grid -->
+    <div id="destinationsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 min-h-[320px]">
+      <!-- Cards injected by JS -->
     </div>
   </section>
   <!-- END: Destinations Section -->
@@ -711,7 +655,7 @@
           </p>
 
           <div class="mb-8">
-            <span class="text-4xl font-extrabold text-slate-900">₹0</span>
+            <span class="text-4xl font-extrabold text-slate-900">$0</span>
             <span class="text-slate-500 text-sm">/ per month</span>
           </div>
 
@@ -753,7 +697,7 @@
           </p>
 
           <div class="mb-8">
-            <span class="text-4xl font-extrabold text-white">₹9.99</span>
+            <span class="text-4xl font-extrabold text-white">$9.99</span>
             <span class="text-white/80 text-sm">/ per month</span>
           </div>
 
@@ -790,7 +734,7 @@
           </p>
 
           <div class="mb-8">
-            <span class="text-4xl font-extrabold text-slate-900">₹19.99</span>
+            <span class="text-4xl font-extrabold text-slate-900">$19.99</span>
             <span class="text-slate-500 text-sm">/ per month</span>
           </div>
 
@@ -991,84 +935,7 @@
   </section>
   <!-- END: FAQ Section -->
 
-  <!-- BEGIN: Footer Section -->
-  <footer class="bg-brand-dark text-white pt-16 pb-8 px-6 lg:px-12 rounded-t-[3rem] mt-10">
-    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-4 mb-12">
-
-      <!-- Brand Column -->
-      <div class="md:col-span-1">
-        <div class="flex items-center gap-2 font-heading font-bold text-2xl tracking-tight text-white mb-4">
-          Kibi
-        </div>
-        <p class="text-white/60 text-xs mb-6 max-w-[200px] leading-relaxed">
-          Making travel planning effortless and personal for the modern explorer.
-        </p>
-        <!-- Socials -->
-        <div class="flex gap-4">
-          <a href="#" class="text-white/60 hover:text-white transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
-              <path
-                d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z" />
-            </svg>
-          </a>
-          <a href="#" class="text-white/60 hover:text-white transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
-              <path
-                d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z" />
-            </svg>
-          </a>
-          <a href="#" class="text-white/60 hover:text-white transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
-              <path
-                d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334z" />
-            </svg>
-          </a>
-        </div>
-      </div>
-
-      <!-- Links Column 1 -->
-      <div class="md:col-span-1 md:justify-self-center">
-        <ul class="space-y-3 text-sm">
-          <li><a href="index.html" class="text-white hover:text-brand-blue transition-colors">Home</a></li>
-          <li><a href="discover.html" class="text-white/60 hover:text-white transition-colors">Destinations</a></li>
-          <li><a href="plan-trip.html" class="text-white/60 hover:text-white transition-colors">Plan Trip</a></li>
-          <li><a href="#pricing" class="text-white/60 hover:text-white transition-colors">Pricing</a></li>
-          <li><a href="#faq" class="text-white/60 hover:text-white transition-colors">FAQ</a></li>
-        </ul>
-      </div>
-
-      <!-- Links Column 2 -->
-      <div class="md:col-span-1 md:justify-self-center">
-        <ul class="space-y-3 text-sm">
-          <li><a href="#" class="text-white/60 hover:text-white transition-colors">Support</a></li>
-          <li><a href="#" class="text-white/60 hover:text-white transition-colors">User Guide</a></li>
-          <li><a href="#" class="text-white/60 hover:text-white transition-colors">Terms of Service</a></li>
-          <li><a href="#" class="text-white/60 hover:text-white transition-colors">API Access</a></li>
-        </ul>
-      </div>
-
-      <!-- Contact Column -->
-      <div class="md:col-span-1 md:justify-self-end text-sm">
-        <ul class="space-y-3">
-          <li class="text-white/60">Contact Us</li>
-          <li class="text-white/80">info@kibi.io</li>
-          <li class="text-white/80">+1 (555) 123-4567</li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- Bottom Bar -->
-    <div
-      class="max-w-7xl mx-auto pt-6 border-t border-white/10 flex flex-col md:flex-row justify-between items-center text-xs text-white/40 gap-4">
-      <p>&copy; 2024 Kibi. All rights reserved.</p>
-      <div class="flex gap-6">
-        <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
-        <a href="#" class="hover:text-white transition-colors">Cookie Policy</a>
-        <a href="#" class="hover:text-white transition-colors">Manage Cookies</a>
-      </div>
-    </div>
-  </footer>
-  <!-- END: Footer Section -->
+  <div id="footerContainer"></div>
 
   <!-- Landing page inline interactions -->
   <script>
@@ -1129,12 +996,19 @@
     }
   </script>
 
-  <script src="js/storage.js"></script>
-  <script src="js/matching.js"></script>
-  <script src="js/planner.js"></script>
-  <script src="js/app.js"></script>
-  <script src="js/animations.js"></script>
-  <script src="js/home.js"></script>
+  <script src="js/api/api-config.js?v=10"></script>
+  <script src="js/api/api-cache.js?v=10"></script>
+  <script src="js/api/geocoding-api.js?v=10"></script>
+  <script src="js/api/weather-api.js?v=10"></script>
+  <script src="js/api/places-api.js?v=10"></script>
+  <script src="js/api/routing-api.js?v=10"></script>
+  <script src="js/api/tripmate-api.js?v=10"></script>
+  <script src="js/storage.js?v=10"></script>
+  <script src="js/matching.js?v=10"></script>
+  <script src="js/planner.js?v=10"></script>
+  <script src="js/app.js?v=10"></script>
+  <script src="js/animations.js?v=10"></script>
+  <script src="js/home.js?v=10"></script>
 </body>
 
 </html>

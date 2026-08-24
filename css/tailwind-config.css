@@ -1,0 +1,55 @@
+/* ============================================
+   Kibi — Design Tokens (plain CSS)
+   Used alongside Tailwind CDN utility classes
+   ============================================ */
+
+:root {
+  --color-charcoal: #0F1419;
+  --color-charcoal-light: #1C2128;
+  --color-cream: #F7F5F0;
+  --color-cream-dark: #EDEAE3;
+  --color-sage: #6B8E6E;
+  --color-sage-light: #8DAA8F;
+  --color-sage-dark: #557057;
+  --color-sand: #C4B8A5;
+  --color-sand-light: #D9CFC0;
+  --color-white: #FFFFFF;
+  --color-text: #2D2D2D;
+  --color-text-secondary: #6B6B6B;
+  --color-text-muted: #9A9A9A;
+  --color-border: #E5E2DA;
+  --color-border-light: #F0EEE8;
+  --color-error: #C75B5B;
+  --color-success: #6B8E6E;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: var(--color-cream);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+/* Custom utility helpers */
+.font-serif {
+  font-family: 'Outfit', sans-serif;
+}
+
+.font-sans {
+  font-family: 'Inter', sans-serif;
+}
+
+.text-balance {
+  text-wrap: balance;
+}

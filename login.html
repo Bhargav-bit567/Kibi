@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="light">
+<html lang="en">
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
@@ -132,9 +132,29 @@
   .toast.active { opacity: 1; transform: translateY(0); }
   .toast.success { background: #1b5e20; }
   .toast.error { background: #c62828; }
+
+  /* Dark mode overrides */
+  html.dark body { background-color: #0B0F17; color: #E8EAED; }
+  html.dark .bg-surface-container-lowest { background-color: #121821 !important; }
+  html.dark .bg-surface-container-low { background-color: #151d26 !important; }
+  html.dark .bg-surface { background-color: #0B0F17 !important; }
+  html.dark .bg-surface-container-high { background-color: #1b2430 !important; }
+  html.dark .text-on-surface { color: #E8EAED !important; }
+  html.dark .text-on-surface-variant { color: #A8B0BC !important; }
+  html.dark .text-outline { color: #6B7685 !important; }
+  html.dark .border-outline-variant { border-color: #2A3441 !important; }
+  html.dark .border-surface-variant { border-color: #2A3441 !important; }
+  html.dark input::placeholder { color: #6B7685 !important; }
+  html.dark .bg-secondary-fixed\/30 { background-color: rgba(1,101,140,0.25) !important; }
+  html.dark .bg-primary-fixed\/20 { background-color: rgba(41,118,199,0.18) !important; }
+  html.dark #themeToggleBtn { background-color: rgba(27,36,48,0.85); border-color: rgba(42,52,65,0.6); color: #E8EAED; }
 </style>
 </head>
-<body class="bg-surface-container-lowest text-on-surface font-body-md antialiased selection:bg-primary-container selection:text-on-primary-container">
+<body class="bg-surface-container-lowest text-on-surface font-body-md antialiased selection:bg-primary-container selection:text-on-primary-container transition-colors duration-300">
+  <button id="themeToggleBtn" type="button" aria-label="Toggle dark mode" class="fixed top-4 right-4 z-50 p-2.5 rounded-full bg-surface-container-high/80 backdrop-blur-md border border-outline-variant/40 text-on-surface shadow-sm hover:bg-surface-container-high transition-colors">
+    <span id="themeIconMoon" class="material-symbols-outlined text-xl">dark_mode</span>
+    <span id="themeIconSun" class="material-symbols-outlined text-xl hidden">light_mode</span>
+  </button>
 <main class="min-h-screen flex w-full">
 <!-- Left Side: Image Canvas (Hidden on mobile) -->
 <div class="hidden lg:flex lg:w-1/2 relative bg-cover bg-center bg-no-repeat" data-alt="A serene, high-quality photograph of a vintage camper van parked on a pristine white sand beach at sunrise. The sky is a gorgeous gradient of soft blues, pastel pinks, and warm golden hues. The ocean is perfectly calm and clear, reflecting the morning light. The overall mood is peaceful, ethereal, adventurous, and magical, perfectly embodying a premium, stress-free travel experience. Shot with soft, natural lighting in a bright, optimistic style." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuD326ZIwavYXS8gFonpiONC4nIenOMPVHtSKSXKj0kH2oxgbJCGLVA3D30Hqf2sZAoBh7M5KOMQVbavCuLC-VlQKgVAnD865HqE0iuvoSJIXATS0oGnOVuVUBPGbRIDaE-Rb4lXnBJKb47uX1_O7fhhjNxBNL6zpOcVOf6qewkv18o2rUhoJicgfykzIT5TGsJwvSdnN-0Xnk8N4ZoZlSBtGM2nIBTK1OzmfgXkuFZlSJSLsvaxpq4u')">
@@ -183,7 +203,7 @@
 </div>
 <div class="relative group">
 <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">lock</span>
-<input class="form-input w-full pl-12 pr-12 py-3.5 rounded-xl border border-outline-variant bg-surface-container-lowest focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none font-body-md text-body-md placeholder:text-outline/70" id="password" minlength="8" placeholder="••••••••" required="" type="password"/>
+<input class="form-input w-full pl-12 pr-12 py-3.5 rounded-xl border border-outline-variant bg-surface-container-lowest focus:border-primary focus:ring-4 focus:ring-primary/10 transition-all outline-none font-body-md text-body-md placeholder:text-outline/70" id="password" placeholder="••••••••" required="" type="password"/>
 <button class="password-toggle absolute right-4 top-1/2 -translate-y-1/2 text-outline hover:text-on-surface transition-colors focus:outline-none" type="button" aria-label="Toggle password visibility">
 <span class="material-symbols-outlined text-[20px]">visibility_off</span>
 </button>
@@ -212,11 +232,11 @@
                         Google
                     </button>
 <button class="social-btn flex items-center justify-center gap-3 py-3.5 px-4 rounded-xl border border-outline-variant bg-surface-container-lowest hover:bg-surface-container-low transition-colors font-label-md text-label-md text-on-surface shadow-sm shadow-black/5" type="button" data-provider="apple">
-<svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-  <path d="M17.05 20.28c-.98 1.44-2.04 2.46-3.55 2.46-1.5 0-2.1-.94-3.92-.94-1.82 0-2.42.96-3.93.96-1.5 0-2.7-1.42-3.72-2.88C1.24 16.98-.18 13.32.02 9.74c.18-2.84 1.9-4.88 4.18-5.82 1.72-.72 3.62-.7 5.04-.04 1.04.48 1.76.48 2.84.04 1.64-.7 3.3-.72 4.9.04 1.34.62 2.44 1.68 3.12 3.06-.08.04-2.56 1.52-2.54 4.52.02 3.56 3.1 4.74 3.48 4.84zM12.04 7.24c-.12-2.06 1.6-3.84 3.58-4.04.22 2.18-1.78 4.22-3.58 4.04z"/>
-</svg>
-                        Apple
-                    </button>
+  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+    <path d="M18.71 19.268c-.953 1.402-2.514 2.52-4.206 2.52-1.306 0-2.058-.69-3.43-.69-1.418 0-2.17.69-3.43.69-2.142 0-4.39-2.11-5.456-4.53C.98 13.99-.22 10.43.02 7.03.34 2.56 3.33.16 6.41.16c1.52 0 2.84.99 3.91.99 1.14 0 2.65-1.09 4.3-1.09 1.72 0 3.52.95 4.67 2.42-3.64 1.85-2.96 6.66.72 7.96-.86 2.23-2.02 4.46-2.9 5.83zM12.2 2.93c.72-1.03 1.72-1.92 2.96-1.92.14 1.55-.45 3.06-1.39 4.12-.78.87-1.87 1.54-3.01 1.34.17-1.48.78-2.93 1.44-3.54z"/>
+  </svg>
+  Apple
+</button>
 </div>
 <!-- Sign Up Link -->
 <div class="text-center mt-10">
@@ -236,6 +256,12 @@
 <script src="js/storage.js"></script>
 <script src="js/app.js"></script>
 <script src="js/auth.js"></script>
+<script>
+  (function(){
+    const btn = document.getElementById('themeToggleBtn');
+    if (btn) btn.addEventListener('click', toggleTheme);
+  })();
+</script>
 <script>
 (function () {
   // Password visibility toggles

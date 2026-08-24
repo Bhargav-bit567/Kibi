@@ -56,6 +56,15 @@ function isLoggedIn() {
   return !!getAuthSession();
 }
 
+function getPasswordValidationError(password) {
+  if (!password) return 'Password is required';
+  if (password.length < 8) return 'Password must be at least 8 characters';
+  if (!/[A-Z]/.test(password)) return 'Password must include an uppercase letter';
+  if (!/[a-z]/.test(password)) return 'Password must include a lowercase letter';
+  if (!/[0-9]/.test(password)) return 'Password must include a number';
+  return '';
+}
+
 function clearAuthSession() {
   localStorage.removeItem(AUTH_KEY);
   logoutUser();
@@ -66,15 +75,6 @@ function restoreSession() {
   if (session && session.id) {
     setCurrentUser(session.id);
   }
-}
-
-function getPasswordValidationError(password) {
-  if (!password) return 'Password is required';
-  if (password.length < 8) return 'Password must be at least 8 characters';
-  if (!/[A-Z]/.test(password)) return 'Password must include an uppercase letter';
-  if (!/[a-z]/.test(password)) return 'Password must include a lowercase letter';
-  if (!/[0-9]/.test(password)) return 'Password must include a number';
-  return '';
 }
 
 /* --- Login Form --- */
@@ -88,8 +88,7 @@ function initLoginForm(form) {
 
     if (!email) return showFieldError('email', 'Email is required');
     if (!isValidEmail(email)) return showFieldError('email', 'Please enter a valid email');
-    const passwordError = getPasswordValidationError(password);
-    if (passwordError) return showFieldError('password', passwordError);
+    if (!password) return showFieldError('password', 'Password is required');
 
     const user = getUserByEmail(email);
     if (!user) return showFieldError('email', 'No account found with this email');

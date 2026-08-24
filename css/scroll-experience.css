@@ -1,0 +1,577 @@
+/* ============================================
+   Kibi — Cinematic Scroll Experience
+   ============================================ */
+
+.scroll-experience {
+  overflow-x: hidden;
+}
+
+.scroll-experience .nav {
+  mix-blend-mode: difference;
+}
+
+.scroll-experience .nav.scrolled {
+  mix-blend-mode: normal;
+  background: rgba(250, 247, 242, 0.9);
+}
+
+/* Loading Screen */
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--color-cream);
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+.loading-screen.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.loading-content {
+  text-align: center;
+  max-width: 400px;
+  width: 100%;
+  padding: var(--space-6);
+}
+
+.loading-logo {
+  justify-content: center;
+  font-size: var(--text-2xl);
+}
+
+.loading-bar {
+  width: 100%;
+  height: 4px;
+  background: var(--color-border);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: var(--space-4);
+}
+
+.loading-bar-fill {
+  height: 100%;
+  width: 0;
+  background: var(--color-sage);
+  transition: width 0.3s ease;
+}
+
+/* Scroll Container */
+.scroll-container {
+  position: relative;
+}
+
+/* Scene Base */
+.scene {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.scene-canvas,
+.hero-frame-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.hero-frame-canvas {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+}
+
+.scene-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.scene-overlay-dark {
+  background: linear-gradient(
+    to bottom,
+    rgba(26, 26, 26, 0.3) 0%,
+    rgba(26, 26, 26, 0.5) 50%,
+    rgba(26, 26, 26, 0.7) 100%
+  );
+}
+
+.scene-overlay-light {
+  background: linear-gradient(
+    to bottom,
+    rgba(250, 247, 242, 0.3) 0%,
+    rgba(250, 247, 242, 0.5) 50%,
+    rgba(250, 247, 242, 0.8) 100%
+  );
+}
+
+.scene-content {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: var(--max-width);
+  padding: 0 var(--space-6);
+  pointer-events: none;
+}
+
+.scene-content > * {
+  pointer-events: auto;
+}
+
+.scene-content-left {
+  margin-right: auto;
+  max-width: 600px;
+}
+
+.scene-content-right {
+  margin-left: auto;
+  max-width: 600px;
+  text-align: right;
+}
+
+.scene-content-center {
+  text-align: center;
+  margin: 0 auto;
+}
+
+.scene-content-wide {
+  max-width: var(--max-width);
+}
+
+/* Hero Scene */
+.scene-hero {
+  min-height: 100vh;
+}
+
+.scene-hero .hero-text-wrapper {
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+  color: var(--color-white);
+}
+
+.hero-line {
+  font-family: var(--font-serif);
+  font-size: var(--text-hero);
+  font-weight: 400;
+  line-height: 1.1;
+  margin-bottom: var(--space-4);
+}
+
+.scene-hero .hero-subtext {
+  font-size: var(--text-lg);
+  opacity: 0.9;
+  max-width: 600px;
+  margin: 0 auto var(--space-8);
+}
+
+.scene-hero .hero-buttons {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+/* Feature List */
+.feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin-top: var(--space-8);
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  font-size: var(--text-xl);
+  color: var(--color-white);
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+.scene-dark .heading-1,
+.scene-dark .text-large {
+  color: var(--color-white);
+}
+
+/* Itinerary Scene */
+.scene-itinerary {
+  background: var(--color-white);
+  min-height: auto;
+  padding: var(--space-32) 0;
+}
+
+.scene-bg-itinerary {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--color-cream) 0%, var(--color-white) 100%);
+  z-index: 0;
+}
+
+.itinerary-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--space-12);
+  align-items: start;
+}
+
+.itinerary-preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.itinerary-day-card {
+  background: var(--color-white);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-card);
+  transition: transform var(--transition-base);
+}
+
+.itinerary-day-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.itinerary-day-card .day-label {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-sage);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-2);
+}
+
+.itinerary-sidebar {
+  position: sticky;
+  top: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.weather-card {
+  background: var(--color-cream-dark);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  text-align: center;
+}
+
+.weather-location {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-2);
+}
+
+.weather-temp {
+  font-family: var(--font-serif);
+  font-size: var(--text-4xl);
+  color: var(--color-charcoal);
+  margin-bottom: var(--space-2);
+}
+
+.weather-condition {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+.budget-card {
+  background: var(--color-white);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  box-shadow: var(--shadow-card);
+}
+
+.budget-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-3) 0;
+  border-bottom: 1px solid var(--color-border-light);
+  font-size: var(--text-sm);
+}
+
+.budget-row:last-child {
+  border-bottom: none;
+}
+
+.budget-row.budget-total {
+  font-weight: 600;
+  color: var(--color-charcoal);
+  font-size: var(--text-base);
+  margin-top: var(--space-2);
+  padding-top: var(--space-4);
+  border-top: 2px solid var(--color-border);
+}
+
+/* Social Scene */
+.scene-social {
+  min-height: 100vh;
+}
+
+.scene-social .heading-1 {
+  color: var(--color-white);
+}
+
+.traveler-cards {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-6);
+  flex-wrap: wrap;
+  margin-top: var(--space-8);
+}
+
+.traveler-card-large {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  text-align: center;
+  min-width: 220px;
+  box-shadow: var(--shadow-lg);
+}
+
+.traveler-card-large .traveler-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--color-sage);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--text-xl);
+  font-weight: 600;
+  margin: 0 auto var(--space-4);
+}
+
+.traveler-card-large .traveler-name {
+  font-weight: 600;
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-2);
+}
+
+.match-score-large {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  background: rgba(91, 123, 106, 0.1);
+  color: var(--color-sage);
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  margin-top: var(--space-4);
+}
+
+/* Introvert Scene */
+.scene-introvert {
+  min-height: 80vh;
+}
+
+.introvert-bg {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(26,26,26,0.4), rgba(26,26,26,0.7)),
+              url('../assets/images/dest-kasol.jpg') center/cover no-repeat;
+  z-index: 0;
+}
+
+.scene-introvert .heading-1,
+.scene-introvert .text-large {
+  color: var(--color-white);
+}
+
+.comfort-options {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-top: var(--space-8);
+}
+
+.comfort-chip {
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: var(--color-white);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  transition: all var(--transition-fast);
+}
+
+.comfort-chip.active,
+.comfort-chip:hover {
+  background: var(--color-white);
+  color: var(--color-charcoal);
+}
+
+/* Destinations Parallax */
+.scene-destinations {
+  min-height: auto;
+  padding: var(--space-32) 0;
+  background: var(--color-white);
+}
+
+.destinations-parallax {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-6);
+}
+
+.dest-parallax-card {
+  position: relative;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  height: 400px;
+  cursor: pointer;
+}
+
+.dest-parallax-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s ease;
+}
+
+.dest-parallax-card:hover img {
+  transform: scale(1.05);
+}
+
+.dest-parallax-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: var(--space-8) var(--space-6) var(--space-6);
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+  color: var(--color-white);
+}
+
+.dest-parallax-title {
+  font-family: var(--font-serif);
+  font-size: var(--text-3xl);
+  margin-bottom: var(--space-2);
+}
+
+/* Final Scene */
+.scene-final {
+  min-height: 100vh;
+}
+
+.scene-final .heading-1,
+.scene-final .hero-subtext {
+  color: var(--color-white);
+}
+
+/* Map Route Labels */
+.route-labels {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  margin-top: var(--space-8);
+  font-size: var(--text-lg);
+  font-weight: 500;
+  color: var(--color-charcoal);
+}
+
+.route-labels span:first-child,
+.route-labels span:nth-child(3),
+.route-labels span:nth-child(5),
+.route-labels span:nth-child(7) {
+  background: var(--color-sage);
+  color: var(--color-white);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+  .itinerary-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .itinerary-sidebar {
+    position: static;
+  }
+
+  .destinations-parallax {
+    grid-template-columns: 1fr;
+  }
+
+  .traveler-cards {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hero-line {
+    font-size: var(--text-4xl);
+  }
+}
+
+@media (max-width: 767px) {
+  .scene-content {
+    padding: 0 var(--space-4);
+  }
+
+  .scene-content-left,
+  .scene-content-right {
+    text-align: center;
+    margin: 0 auto;
+  }
+
+  .feature-item {
+    justify-content: center;
+  }
+
+  .comfort-options {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .route-labels {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .dest-parallax-card {
+    height: 300px;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .scene-canvas {
+    display: none;
+  }
+
+  .scene {
+    background: var(--color-cream);
+  }
+
+  .feature-item {
+    opacity: 1;
+    transform: none;
+  }
+}

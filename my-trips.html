@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
+<title>My Trips - Kibi</title>
+<!-- Material Symbols -->
+
+<!-- Google Fonts -->
+
+
+
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-container": "#fcfcff",
+                        "on-secondary-container": "#005a7e",
+                        "surface-tint": "#0060ac",
+                        "on-tertiary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "surface": "#f9f9fc",
+                        "surface-dim": "#dadadc",
+                        "tertiary-fixed": "#dce3eb",
+                        "on-secondary-fixed-variant": "#004c6b",
+                        "inverse-surface": "#2f3133",
+                        "on-primary-fixed-variant": "#004883",
+                        "outline-variant": "#c1c7d3",
+                        "secondary-fixed": "#c6e7ff",
+                        "on-surface-variant": "#414751",
+                        "on-tertiary-fixed": "#151c22",
+                        "tertiary": "#555d63",
+                        "on-error": "#ffffff",
+                        "tertiary-container": "#6e757c",
+                        "inverse-on-surface": "#f0f0f3",
+                        "primary-container": "#2976c7",
+                        "surface-container": "#eeeef0",
+                        "on-background": "#1a1c1e",
+                        "on-primary-container": "#fdfcff",
+                        "surface-bright": "#f9f9fc",
+                        "on-error-container": "#93000a",
+                        "secondary-fixed-dim": "#88cffb",
+                        "surface-container-lowest": "#ffffff",
+                        "primary-fixed": "#d4e3ff",
+                        "outline": "#717783",
+                        "inverse-primary": "#a4c9ff",
+                        "secondary-container": "#8bd2fe",
+                        "primary-fixed-dim": "#a4c9ff",
+                        "background": "#f9f9fc",
+                        "surface-container-highest": "#e2e2e5",
+                        "on-tertiary-fixed-variant": "#40484e",
+                        "tertiary-fixed-dim": "#c0c7cf",
+                        "on-primary-fixed": "#001c39",
+                        "on-secondary": "#ffffff",
+                        "on-surface": "#1a1c1e",
+                        "surface-container-high": "#e8e8ea",
+                        "primary": "#005da7",
+                        "surface-variant": "#e2e2e5",
+                        "secondary": "#01658c",
+                        "on-secondary-fixed": "#001e2d",
+                        "surface-container-low": "#f3f3f6",
+                        "error": "#ba1a1a",
+                        "on-primary": "#ffffff",
+                        "brand": { "blue": "#5C9CE6", "dark": "#0A1B29", "light": "#F8F9FA" }
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 20px 40px rgba(0, 93, 167, 0.06);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #005da7, #8bd2fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <style>
+    html.dark body.my-trips-page { background-color: #0B0F17 !important; color: #E8EAED !important; }
+    html.dark body.my-trips-page .text-slate-800 { color: #E8EAED !important; }
+    html.dark body.my-trips-page .text-slate-600 { color: #A8B0BC !important; }
+    html.dark body.my-trips-page .text-slate-500 { color: #8B95A3 !important; }
+    html.dark body.my-trips-page .glass-card { background: rgba(18,24,33,0.78) !important; border-color: rgba(255,255,255,0.08) !important; }
+    html.dark body.my-trips-page .bg-slate-50 { background-color: #121821 !important; }
+    html.dark body.my-trips-page .bg-surface-container-low\/50 { background-color: rgba(18,24,33,0.5) !important; }
+    html.dark body.my-trips-page .bg-primary-fixed { background-color: #1b3a5f !important; }
+    html.dark body.my-trips-page .bg-secondary-fixed\/90 { background-color: rgba(27,58,95,0.9) !important; }
+    html.dark body.my-trips-page .bg-surface-container\/90 { background-color: rgba(18,24,33,0.9) !important; }
+    html.dark body.my-trips-page .text-on-secondary-fixed { color: #a4c9ff !important; }
+    html.dark body.my-trips-page .text-primary { color: #a4c9ff !important; }
+    html.dark body.my-trips-page .border-outline-variant { border-color: #2A3441 !important; }
+    html.dark body.my-trips-page .text-on-primary-fixed { color: #a4c9ff !important; }
+    html.dark body.my-trips-page .bg-error\/10 { background-color: rgba(186,26,26,0.15) !important; }
+    html.dark body.my-trips-page .text-tertiary-container { color: #A8B0BC !important; }
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+</head>
+<body class="my-trips-page bg-surface text-on-surface min-h-screen antialiased selection:bg-primary-container selection:text-on-primary-container" data-page="my-trips">
+<!-- Header -->
+<header class="relative z-50 px-6 lg:px-12 flex justify-between items-center w-full max-w-7xl mx-auto pt-6 pb-4">
+  
+  <!-- Logo -->
+  <a href="index.html" class="flex items-center justify-center h-10 px-5 bg-white/90 backdrop-blur-md rounded-full font-heading font-bold text-[1.25rem] tracking-tight text-[#005da7] hover:bg-white transition-colors shadow-sm border border-white/20">
+    Kibi
+  </a>
+
+  <!-- Center Nav Pill -->
+  <nav class="hidden md:flex items-center bg-white/85 backdrop-blur-md rounded-full px-2 py-1.5 border border-white/40 shadow-sm relative">
+    <div id="navActivePill" class="absolute top-1/2 -translate-y-1/2 h-[calc(100%-12px)] rounded-full bg-white shadow-sm border border-slate-50 transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] pointer-events-none z-0" style="left:0;width:0;opacity:0"></div>
+    <ul class="flex items-center gap-1 lg:gap-2 text-[14px] relative z-10">
+      <li><a href="index.html" data-nav-pill-target="home" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 text-slate-700 hover:text-slate-900">Home</a></li>
+      <li><a href="discover.html" data-nav-pill-target="discover" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 text-slate-700 hover:text-slate-900">Discover</a></li>
+      <li><a href="plan-trip.html" data-nav-pill-target="plan-trip" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 text-slate-700 hover:text-slate-900">Plan Trip</a></li>
+      <li><a href="my-trips.html" data-nav-pill-target="my-trips" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 text-slate-900">My Trips</a></li>
+      <li><a href="about.html" data-nav-pill-target="about" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 text-slate-700 hover:text-slate-900">About Us</a></li>
+    </ul>
+  </nav>
+
+  <!-- Right Action -->
+  <div class="flex items-center gap-3">
+    <div id="auth-action-container"></div>
+    <button id="mobile-menu-btn" class="md:hidden w-10 h-10 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-slate-800 hover:bg-white transition-colors shadow-sm border border-white/20 relative">
+      <span class="hamburger-box"><span class="hamburger-line"></span><span class="hamburger-line"></span><span class="hamburger-line"></span></span>
+    </button>
+  </div>
+</header>
+<!-- Mobile Menu -->
+<div id="mobileMenu" class="fixed inset-0 z-40 bg-white/95 backdrop-blur-lg opacity-0 pointer-events-none transition-opacity duration-300 md:hidden flex flex-col items-center justify-center gap-6">
+  <a href="index.html" class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">Home</a>
+  <a href="discover.html" class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">Discover</a>
+  <a href="plan-trip.html" class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">Plan Trip</a>
+  <a href="my-trips.html" class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">My Trips</a>
+  <a href="about.html" class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">About Us</a>
+  <div id="mobile-auth-action-container"></div>
+</div>
+
+<!-- Main Content Canvas -->
+<main class="pt-[100px] pb-16 px-6 max-w-[1280px] mx-auto">
+<!-- Page Header -->
+<div class="mb-12 mt-8 md:mt-12 text-center md:text-left">
+<h1 class="text-4xl md:text-5xl font-bold text-gradient mb-4">Your Journeys</h1>
+<p class="text-lg text-slate-600 max-w-2xl">Revisit past memories and prepare for upcoming adventures. Every trip is a new story.</p>
+</div>
+<!-- Saved Trips Section -->
+<section class="mb-16" id="savedTripsSection">
+<div class="flex items-center justify-between mb-8">
+<h2 class="text-2xl font-bold text-slate-800 flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+                    Saved Trips
+                </h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="savedTripsGrid">
+<!-- Saved trips rendered dynamically -->
+</div>
+<div class="hidden text-center py-12" id="savedTripsEmpty">
+<div class="w-16 h-16 rounded-full bg-primary-fixed flex items-center justify-center mx-auto mb-4">
+<span class="material-symbols-outlined text-[28px] text-primary">bookmark_border</span>
+</div>
+<h3 class="text-xl font-bold text-slate-800 mb-2">No saved trips</h3>
+<p class="text-slate-500 text-sm mb-6">Save trips you're interested in and they'll appear here.</p>
+<a href="discover.html" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-white font-bold text-sm hover:bg-primary/90 transition-colors shadow-sm">Discover Trips</a>
+</div>
+</section>
+
+<!-- Upcoming Trips Section -->
+<section class="mb-16">
+<div class="flex items-center justify-between mb-8">
+<h2 class="text-2xl font-bold text-slate-800 flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">calendar_month</span>
+                    Upcoming Trips
+                </h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="myTripsGrid">
+<!-- Plan New Trip CTA Card -->
+<div class="glass-card rounded-[16px] overflow-hidden flex flex-col items-center justify-center p-[24px] min-h-[400px] border-dashed border-2 border-outline-variant hover:border-primary/50 transition-colors bg-surface-container-low/50 cursor-pointer group" onclick="window.location.href='plan-trip.html'">
+<div class="w-16 h-16 rounded-full bg-primary-fixed flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+<span class="material-symbols-outlined text-[32px] text-primary">add</span>
+</div>
+<h3 class="text-[20px] leading-[28px] font-bold text-slate-800 mb-2 text-center">Plan a New Journey</h3>
+<p class="text-slate-500 text-sm text-center mb-6 max-w-[200px]">Where will the wind take you next?</p>
+<button class="px-6 py-3 rounded-full bg-surface text-primary border border-outline-variant font-bold text-sm group-hover:bg-primary group-hover:text-white group-hover:border-primary transition-all shadow-sm">
+                        Start Exploring
+                    </button>
+</div>
+</div>
+<div class="hidden text-center py-12" id="myTripsEmpty">
+<div class="w-16 h-16 rounded-full bg-primary-fixed flex items-center justify-center mx-auto mb-4">
+<span class="material-symbols-outlined text-[28px] text-primary">map</span>
+</div>
+<h3 class="text-xl font-bold text-slate-800 mb-2">No trips yet</h3>
+<p class="text-slate-500 text-sm mb-6">Plan your first adventure and it will appear here.</p>
+<a href="plan-trip.html" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-white font-bold text-sm hover:bg-primary/90 transition-colors shadow-sm">Plan a Trip</a>
+</div>
+</section>
+<!-- Past Memories Section -->
+<section id="pastMemoriesSection" class="hidden">
+<div class="flex items-center justify-between mb-8">
+<h2 class="text-2xl font-bold text-slate-800 flex items-center gap-3">
+<span class="material-symbols-outlined text-tertiary-container" style="font-variation-settings: 'FILL' 1;">photo_library</span>
+                    Past Memories
+                </h2>
+</div>
+<!-- Horizontal Scroll / Grid for Past Trips -->
+<div class="flex overflow-x-auto pb-8 -mx-6 px-6 gap-6 md:grid md:grid-cols-3 lg:grid-cols-4 md:overflow-visible md:pb-0 md:px-0 md:mx-0 snap-x" id="pastTripsGrid">
+<!-- Past trips rendered dynamically -->
+</div>
+</section>
+</main>
+<div id="footerContainer"></div>
+<script src="js/storage.js?v=10"></script>
+<script src="js/app.js?v=10"></script>
+<script src="js/trips.js?v=10"></script>
+<script>
+(function() {
+  function initMyTripsPage() {
+    const user = getCurrentUser();
+    if (!user) return;
+
+    const savedGrid = document.getElementById('savedTripsGrid');
+    const savedEmpty = document.getElementById('savedTripsEmpty');
+    const savedSection = document.getElementById('savedTripsSection');
+    const grid = document.getElementById('myTripsGrid');
+    const empty = document.getElementById('myTripsEmpty');
+    const pastSection = document.getElementById('pastMemoriesSection');
+    const pastGrid = document.getElementById('pastTripsGrid');
+    if (!grid || !empty) return;
+
+    // Render saved trips
+    const savedTrips = getSavedTrips(user.id);
+    if (savedGrid && savedEmpty) {
+      if (savedTrips.length === 0) {
+        savedGrid.classList.add('hidden');
+        savedEmpty.classList.remove('hidden');
+      } else {
+        savedEmpty.classList.add('hidden');
+        savedGrid.innerHTML = savedTrips.map((trip, idx) => {
+          // Embed full trip data into the URL so the page never needs storage lookup.
+          // Use encodeURIComponent -> btoa -> encodeURIComponent to support Unicode/emojis.
+          const encoded = encodeURIComponent(btoa(encodeURIComponent(JSON.stringify(trip))));
+          return `
+          <div class="glass-card rounded-[16px] overflow-hidden group hover:-translate-y-1 transition-transform duration-300 cursor-pointer" data-saved-id="${trip.id}" data-encoded-trip="${encoded}">
+            <div class="relative h-48 w-full" onclick="window.location.href='saved-itinerary.html?data=' + encodeURIComponent(this.closest('[data-encoded-trip]').dataset.encodedTrip)">
+              <img alt="${trip.destination || 'Trip'}" class="w-full h-full object-cover" src="${trip.image || 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80'}"/>
+              <div class="absolute top-4 right-4 bg-secondary-fixed/90 backdrop-blur-md text-on-secondary-fixed text-xs px-3 py-1.5 rounded-full font-semibold">Saved</div>
+            </div>
+            <div class="p-[24px]">
+              <h3 class="text-[20px] leading-[28px] font-bold text-slate-800 mb-2">${trip.title || trip.destination || 'Trip'}</h3>
+              <p class="text-slate-500 text-sm mb-1 flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px] text-primary">schedule</span> ${formatDateRange(trip.startDate, trip.endDate)}
+              </p>
+              <div class="text-xs text-slate-600 bg-slate-50 p-2 rounded mb-3">
+                <strong>Day 1 preview:</strong><br>
+                ${((trip.itinerary || [])[0]?.activities || []).slice(0,2).map(a => `• ${a.name} (${a.time || 'no time'})`).join('<br>') || 'No activities'}
+              </div>
+              <div class="flex gap-2">
+                <button class="view-saved-btn flex-1 py-3 rounded-full border border-primary text-primary font-bold text-sm hover:bg-primary/5 transition-colors" onclick="event.stopPropagation(); window.location.href='saved-itinerary.html?data=' + encodeURIComponent(this.closest('[data-encoded-trip]').dataset.encodedTrip)">View Itinerary</button>
+                <button class="delete-saved-btn px-4 py-3 rounded-full bg-error/10 border border-error text-error font-bold text-sm hover:bg-error/20 transition-colors" onclick="event.stopPropagation();">Delete</button>
+              </div>
+            </div>
+          </div>
+        `}).join('');
+
+        savedGrid.querySelectorAll('.delete-saved-btn').forEach((btn, idx) => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const trip = savedTrips[idx];
+            confirmModal(`Delete saved trip "${trip.title || trip.destination || 'this trip'}"? This cannot be undone.`, () => {
+              removeSavedItinerary(trip.id);
+              btn.closest('[data-saved-id]').remove();
+              showToast('Saved trip removed', 'default');
+              if (savedGrid.children.length === 0) {
+                savedGrid.classList.add('hidden');
+                savedEmpty.classList.remove('hidden');
+              }
+            });
+          });
+        });
+      }
+    }
+
+    const trips = getUserTrips(user.id);
+    const now = new Date();
+    const upcoming = trips.filter(t => new Date(t.startDate) >= now).sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
+    const past = trips.filter(t => new Date(t.startDate) < now).sort((a, b) => new Date(b.startDate) - new Date(a.startDate));
+
+    // Remove CTA card before injecting trips
+    const cta = grid.querySelector('[onclick*="plan-trip.html"]');
+
+    if (upcoming.length === 0 && past.length === 0) {
+      grid.classList.add('hidden');
+      empty.classList.remove('hidden');
+      if (pastSection) pastSection.classList.add('hidden');
+      return;
+    }
+
+    empty.classList.add('hidden');
+
+    function cardHTML(trip, status) {
+      const statusBadge = status === 'upcoming'
+        ? `<span class="bg-secondary-fixed/90 backdrop-blur-md text-on-secondary-fixed text-xs px-3 py-1.5 rounded-full flex items-center gap-1 shadow-sm font-semibold"><span class="material-symbols-outlined text-[14px]">flight</span> Upcoming</span>`
+        : `<span class="bg-surface-container/90 backdrop-blur-md text-slate-600 font-semibold text-xs px-2.5 py-1 rounded-full flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">check_circle</span> Completed</span>`;
+      const tags = [trip.travelStyle || 'Travel', ...(trip.interests || [])].slice(0, 2);
+      return `
+        <div class="glass-card rounded-[16px] overflow-hidden group hover:-translate-y-1 transition-transform duration-300 cursor-pointer" data-trip-id="${trip.id}" onclick="if(event.target.closest('.delete-trip-btn')) return; window.location.href='itinerary.html?id=${trip.id}'">
+          <div class="relative h-48 w-full">
+            <img alt="${trip.destination || 'Trip'}" class="w-full h-full object-cover" src="${trip.image || 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80'}"/>
+            <div class="absolute top-4 right-4">${statusBadge}</div>
+          </div>
+          <div class="p-[24px]">
+            <h3 class="text-[20px] leading-[28px] font-bold text-slate-800 mb-2 group-hover:text-primary transition-colors">${trip.title || trip.destination || 'Trip'}</h3>
+            <p class="text-slate-500 text-sm mb-4 flex items-center gap-2">
+              <span class="material-symbols-outlined text-[18px] text-primary">schedule</span> ${formatDateRange(trip.startDate, trip.endDate)}
+            </p>
+            <div class="flex flex-wrap gap-2 mb-6">
+              ${tags.map(tag => `<span class="bg-primary-fixed text-on-primary-fixed text-xs px-3 py-1 rounded-full font-medium">${tag}</span>`).join('')}
+            </div>
+            <div class="flex gap-2">
+              <button class="flex-1 py-3 rounded-full border border-primary text-primary font-bold text-sm hover:bg-primary/5 transition-colors">View Itinerary</button>
+              <button class="delete-trip-btn px-4 py-3 rounded-full bg-error/10 border border-error text-error font-bold text-sm hover:bg-error/20 transition-colors" title="Delete trip">Delete</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Render upcoming trips before the CTA
+    upcoming.forEach(trip => {
+      const div = document.createElement('div');
+      div.innerHTML = cardHTML(trip, 'upcoming');
+      const card = div.firstElementChild;
+      grid.insertBefore(card, cta);
+
+      const deleteBtn = card.querySelector('.delete-trip-btn');
+      if (deleteBtn) {
+        deleteBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          confirmModal(`Delete "${trip.title || trip.destination || 'this trip'}"? This cannot be undone.`, () => {
+            deleteTrip(trip.id);
+            card.remove();
+            showToast('Trip deleted', 'default');
+            if (grid.children.length === 1 && grid.querySelector('[onclick*="plan-trip.html"]')) {
+              grid.classList.add('hidden');
+              empty.classList.remove('hidden');
+            }
+          });
+        });
+      }
+    });
+
+    // Render past memories
+    if (pastSection && pastGrid) {
+      if (past.length > 0) {
+        pastSection.classList.remove('hidden');
+        pastGrid.innerHTML = past.map(trip => `
+          <div class="min-w-[280px] md:min-w-0 glass-card rounded-[16px] overflow-hidden opacity-90 hover:opacity-100 transition-opacity snap-start cursor-pointer" onclick="window.location.href='itinerary.html?id=${trip.id}'">
+            <div class="relative h-40 w-full">
+              <img alt="${trip.destination || 'Trip'}" class="w-full h-full object-cover grayscale-[30%]" src="${trip.image || 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80'}"/>
+            </div>
+            <div class="p-4">
+              <h3 class="text-md font-bold text-slate-800 mb-1">${trip.title || trip.destination || 'Trip'}</h3>
+              <p class="text-sm text-slate-500">${formatDateRange(trip.startDate, trip.endDate)}</p>
+            </div>
+          </div>
+        `).join('');
+      } else {
+        pastSection.classList.add('hidden');
+      }
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMyTripsPage);
+  } else {
+    initMyTripsPage();
+  }
+})();
+</script>
+</body></html>

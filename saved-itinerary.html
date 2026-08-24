@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+  <meta http-equiv="Pragma" content="no-cache"/>
+  <meta http-equiv="Expires" content="0"/>
+  <title>Saved Trip - Kibi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            brand: { blue: '#5C9CE6', dark: '#0A1B29', light: '#F8F9FA' },
+            charcoal: '#0F1419', cream: '#F7F5F0', sage: '#6B8E6E', sand: '#C4B8A5',
+            'text-main': '#2D2D2D', 'text-secondary': '#6B6B6B', 'text-muted': '#9A9A9A',
+            primary: '#006874', 'primary-container': '#9eeffd', 'on-primary': '#ffffff',
+            secondary: '#4a6267', 'secondary-container': '#cde7ec', 'on-secondary': '#ffffff',
+            tertiary: '#525e7d', 'tertiary-container': '#dae2ff', 'on-tertiary': '#ffffff',
+            error: '#ba1a1a', 'error-container': '#ffdad6', 'on-error': '#ffffff',
+            background: '#f8fdff', 'on-background': '#191c1d', surface: '#f8fdff', 'on-surface': '#191c1d'
+          },
+          fontFamily: { sans: ['Inter', 'sans-serif'], script: ['Caveat', 'cursive'], heading: ['Outfit', 'sans-serif'] },
+          boxShadow: { soft: '0 4px 24px rgba(0, 0, 0, 0.05)', card: '0 8px 30px rgba(0, 0, 0, 0.08)' }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <style>
+    .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .glass-panel { background: rgba(255,255,255,0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.4); }
+  </style>
+</head>
+<body class="bg-surface text-on-surface antialiased min-h-screen flex flex-col overflow-x-hidden" data-page="saved-itinerary">
+
+<header class="relative z-50 px-6 lg:px-12 flex justify-between items-center w-full max-w-7xl mx-auto pt-6 pb-4">
+  <a href="index.html" class="flex items-center justify-center h-10 px-5 bg-white/90 backdrop-blur-md rounded-full font-heading font-bold text-[1.25rem] tracking-tight text-[#005da7] hover:bg-white transition-colors shadow-sm border border-white/20">Kibi</a>
+  <nav class="hidden md:flex items-center bg-white/85 backdrop-blur-md rounded-full px-2 py-1.5 border border-white/40 shadow-sm">
+    <ul class="flex items-center gap-1 lg:gap-2 text-[14px]">
+      <li><a href="index.html" class="hover:bg-slate-100/50 px-5 py-2 rounded-full transition-colors block text-slate-700 font-medium">Home</a></li>
+      <li><a href="discover.html" class="hover:bg-slate-100/50 px-5 py-2 rounded-full transition-colors block text-slate-700 font-medium">Discover</a></li>
+      <li><a href="plan-trip.html" class="hover:bg-slate-100/50 px-5 py-2 rounded-full transition-colors block text-slate-700 font-medium">Plan Trip</a></li>
+      <li><a href="my-trips.html" class="bg-white shadow-sm border border-slate-50 text-slate-900 px-5 py-2 rounded-full block transition-colors font-medium">My Trips</a></li>
+      <li><a href="about.html" class="hover:bg-slate-100/50 px-5 py-2 rounded-full transition-colors block text-slate-700 font-medium">About Us</a></li>
+    </ul>
+  </nav>
+  <div class="flex items-center gap-3">
+    <div id="auth-action-container"></div>
+  </div>
+</header>
+
+<main class="flex-1 flex flex-col w-full pt-[100px] px-6 pb-32 max-w-[1280px] mx-auto">
+  <section id="savedItinHero" class="relative rounded-3xl overflow-hidden min-h-[400px] flex items-end p-8 shadow-sm mb-8">
+    <!-- Injected via JS -->
+  </section>
+
+  <div id="savedItinContent" class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+    <div class="lg:col-span-8 flex flex-col gap-10">
+      <section>
+        <h2 class="text-2xl font-bold text-gray-900 mb-6">Day-by-Day Plan</h2>
+        <div class="flex flex-col gap-6" id="savedItinTimeline"><!-- Injected via JS --></div>
+      </section>
+    </div>
+    <div class="lg:col-span-4 flex flex-col gap-8">
+      <section id="savedItinSummary" class="glass-panel rounded-3xl p-6"><!-- Injected via JS --></section>
+    </div>
+  </div>
+</main>
+
+<script src="js/storage.js?v=10"></script>
+<script src="js/app.js?v=10"></script>
+<script src="js/trips.js?v=10"></script>
+<script>
+(function() {
+  const params = new URLSearchParams(window.location.search);
+  const dataParam = params.get('data');
+  const tripId = params.get('id');
+  let trip = null;
+  let source = 'url';
+
+  // 1. Try full trip data encoded in URL (most reliable)
+  if (dataParam) {
+    try {
+      trip = JSON.parse(decodeURIComponent(atob(decodeURIComponent(dataParam))));
+    } catch (e) {
+      console.error('[SavedItinerary] URL data parse error:', e);
+      trip = null;
+    }
+  }
+
+  // 2. Fallback to saved itineraries array
+  if (!trip && tripId) {
+    source = 'array';
+    const saved = getSavedItineraries ? getSavedItineraries() : [];
+    trip = saved.find(t => t.id === tripId) || null;
+  }
+
+  // 3. Legacy fallback (isolated key / wm_trips)
+  if (!trip && tripId) {
+    source = 'legacy';
+    try {
+      const isolated = localStorage.getItem('wm_saved_itinerary_' + tripId);
+      if (isolated) trip = JSON.parse(isolated);
+    } catch (e) {}
+    if (!trip) trip = getTripById(tripId);
+  }
+
+  if (!trip || !trip.destination || !Array.isArray(trip.itinerary) || trip.itinerary.length === 0) {
+    document.getElementById('savedItinHero').innerHTML = `
+      <div class="text-white text-center w-full p-8">
+        <h2 class="text-2xl font-bold mb-4">Trip not available</h2>
+        <p class="mb-6">We couldn't load this saved trip.</p>
+        <a href="my-trips.html" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-white font-semibold">Go to My Trips</a>
+      </div>`;
+    return;
+  }
+
+
+  // Normalize
+  trip.itinerary = trip.itinerary || [];
+  trip.accommodations = trip.accommodations || [];
+  trip.budgetBreakdown = trip.budgetBreakdown || { stay: 0, food: 0, transport: 0, activities: 0, total: 0 };
+
+  // Render hero
+  const hero = document.getElementById('savedItinHero');
+  hero.style.backgroundSize = 'cover';
+  hero.style.backgroundPosition = 'center';
+
+  // Use trip image if present, otherwise fetch a place-specific image.
+  if (trip.image) {
+    hero.style.backgroundImage = 'url(' + trip.image + ')';
+  } else if (typeof getDestinationImage === 'function') {
+    getDestinationImage(trip.destination).then(url => {
+      if (url) hero.style.backgroundImage = 'url(' + url + ')';
+    });
+  } else {
+    hero.style.backgroundImage = 'url(https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1600&q=80)';
+  }
+  hero.innerHTML = `
+    <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent"></div>
+    <div class="relative z-10 w-full text-white">
+      <div class="flex flex-wrap items-center gap-3 mb-4">
+        <span class="px-3 py-1.5 rounded-full bg-blue-500/20 backdrop-blur-md text-blue-100 text-xs font-semibold border border-blue-400/30">Saved Trip</span>
+        <span class="text-sm text-gray-200 flex items-center gap-1 font-medium"><i class="fa-regular fa-calendar text-xs"></i> ${formatDateRange(trip.startDate, trip.endDate)}</span>
+      </div>
+      <h1 class="text-4xl md:text-5xl font-bold mb-3 tracking-tight">${trip.destination} Escape</h1>
+      <p class="text-base md:text-lg text-gray-200 opacity-90 font-light line-clamp-2">${(trip.placeDescription || '').slice(0, 120)}</p>
+    </div>
+  `;
+
+  // Render timeline
+  const timeline = document.getElementById('savedItinTimeline');
+  const colors = ['blue-500', 'green-500', 'orange-400', 'purple-500', 'pink-500'];
+  timeline.innerHTML = trip.itinerary.map((day, idx) => {
+    const color = colors[idx % colors.length];
+    return `
+      <div class="bg-white rounded-2xl p-6 shadow-soft border border-slate-100">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-10 h-10 rounded-full bg-${color}/10 text-${color} flex items-center justify-center font-bold text-sm">${day.day}</div>
+          <div>
+            <h3 class="font-bold text-slate-900">${day.title || 'Day ' + day.day}</h3>
+            <p class="text-xs text-slate-500">${(day.activities || []).length} activities</p>
+          </div>
+        </div>
+        <div class="flex flex-col gap-4">
+          ${(day.activities || []).map(act => `
+            <div class="flex items-start gap-3 p-3 rounded-xl bg-slate-50">
+              <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center text-lg shadow-sm shrink-0">${act.icon || '📍'}</div>
+              <div class="flex-1">
+                <div class="flex justify-between items-start">
+                  <h4 class="font-semibold text-slate-900 text-sm">${act.name}</h4>
+                  <span class="text-xs text-slate-500 whitespace-nowrap ml-2">${act.time || ''}</span>
+                </div>
+                <p class="text-xs text-slate-600 mt-1">${act.description || ''}</p>
+                ${act.cost ? `<span class="inline-block mt-2 text-xs font-medium text-slate-700 bg-slate-200 px-2 py-0.5 rounded">₹${act.cost}</span>` : ''}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Render summary
+  const summary = document.getElementById('savedItinSummary');
+  summary.innerHTML = `
+    <h3 class="font-bold text-lg text-slate-900 mb-4">Trip Summary</h3>
+    <div class="space-y-3 text-sm">
+      <div class="flex justify-between"><span class="text-slate-500">Destination</span><span class="font-medium text-slate-900">${trip.destination}</span></div>
+      <div class="flex justify-between"><span class="text-slate-500">Dates</span><span class="font-medium text-slate-900">${formatDateRange(trip.startDate, trip.endDate)}</span></div>
+      <div class="flex justify-between"><span class="text-slate-500">Days</span><span class="font-medium text-slate-900">${trip.itinerary.length}</span></div>
+      <div class="flex justify-between"><span class="text-slate-500">Budget</span><span class="font-medium text-slate-900">${formatBudget(trip.totalBudget || trip.budgetBreakdown?.total || 0)}</span></div>
+      ${trip.stay ? `<div class="flex justify-between"><span class="text-slate-500">Stay</span><span class="font-medium text-slate-900">${trip.stay.name}</span></div>` : ''}
+    </div>
+    <div class="mt-6 pt-4 border-t border-slate-200">
+      <a href="my-trips.html" class="inline-flex items-center gap-2 text-sm text-primary font-semibold hover:underline">← Back to My Trips</a>
+    </div>
+  `;
+})();
+</script>
+<div id="footerContainer"></div>
+
+<script src="js/storage.js?v=10"></script>
+<script src="js/app.js?v=10"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    if (typeof initNav === 'function') initNav('my-trips');
+  });
+</script>
+</body>
+</html>

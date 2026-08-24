@@ -8,7 +8,7 @@ const GeocodingAPI = {
    * @param {string} query - Destination name (e.g. "Manali")
    * @returns {Promise<Array>} Array of destination objects
    */
-  async searchDestination(query) {
+  async searchDestination(query, externalSignal) {
     if (!API_CONFIG.features.useGeocoding) return [];
     if (!query || query.length < API_CONFIG.geocoding.minChars) return [];
 
@@ -28,12 +28,18 @@ const GeocodingAPI = {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), API_CONFIG.geocoding.timeout);
 
+      // Combine external abort signal (typing) with internal timeout signal.
+      let signal = controller.signal;
+      if (externalSignal) {
+        externalSignal.addEventListener('abort', () => controller.abort(), { once: true });
+      }
+
       const response = await fetch(url, {
         headers: {
           'User-Agent': API_CONFIG.geocoding.userAgent,
           'Accept-Language': 'en-US,en;q=0.9'
         },
-        signal: controller.signal
+        signal: signal
       });
 
       clearTimeout(timeoutId);
@@ -62,6 +68,7 @@ const GeocodingAPI = {
       return results;
 
     } catch (error) {
+      if (error.name === 'AbortError') throw error;
       console.warn('Geocoding search failed:', error);
       // Fallback handled by the caller
       return null;

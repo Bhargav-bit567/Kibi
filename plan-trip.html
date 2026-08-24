@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Kibi - Plan Your Trip</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  
+  
+  
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "brand": {
+              "blue": "#5C9CE6",
+              "dark": "#0A1B29",
+              "light": "#F8F9FA",
+            },
+            "charcoal": "#0F1419",
+            "cream": "#F7F5F0",
+            "sage": "#6B8E6E",
+            "sand": "#C4B8A5",
+            "text-main": "#2D2D2D",
+            "text-secondary": "#6B6B6B",
+            "text-muted": "#9A9A9A",
+            "surface-container-lowest": "#ffffff",
+            "secondary": "#01658c",
+            "on-primary-fixed-variant": "#004883",
+            "secondary-fixed-dim": "#88cffb",
+            "outline": "#717783",
+            "background": "#f9f9fc",
+            "on-tertiary-fixed-variant": "#40484e",
+            "surface-container": "#eeeef0",
+            "on-secondary-container": "#005a7e",
+            "on-surface": "#1a1c1e",
+            "on-surface-variant": "#414751",
+            "inverse-primary": "#a4c9ff",
+            "on-secondary-fixed-variant": "#004c6b",
+            "outline-variant": "#c1c7d3",
+            "surface": "#f9f9fc",
+            "inverse-surface": "#2f3133",
+            "primary": "#4a90e2",
+            "surface-tint": "#0060ac",
+            "on-tertiary-fixed": "#151c22",
+            "on-error": "#ffffff",
+            "on-primary-container": "#fdfcff",
+            "tertiary-container": "#6e757c",
+            "on-tertiary": "#ffffff",
+            "surface-container-high": "#e8e8ea",
+            "surface-bright": "#f9f9fc",
+            "surface-variant": "#e2e2e5",
+            "primary-fixed": "#d4e3ff",
+            "primary-fixed-dim": "#a4c9ff",
+            "secondary-fixed": "#c6e7ff",
+            "on-secondary": "#ffffff",
+            "on-secondary-fixed": "#001e2d",
+            "primary-container": "#2976c7",
+            "on-tertiary-container": "#fcfcff",
+            "on-primary": "#ffffff",
+            "error": "#ba1a1a",
+            "tertiary": "#555d63",
+            "inverse-on-surface": "#f0f0f3",
+            "surface-container-highest": "#e2e2e5",
+            "surface-dim": "#dadadc",
+            "on-primary-fixed": "#001c39",
+            "on-error-container": "#93000a",
+            "secondary-container": "#8bd2fe",
+            "tertiary-fixed-dim": "#c0c7cf",
+            "on-background": "#1a1c1e",
+            "error-container": "#ffdad6",
+            "tertiary-fixed": "#dce3eb",
+            "surface-container-low": "#f3f3f6"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.5rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "section-gap-mobile": "64px",
+            "container-padding": "24px",
+            "base": "8px",
+            "gutter": "24px",
+            "section-gap-desktop": "120px"
+          },
+          "fontFamily": {
+            "sans": ["Inter", "sans-serif"],
+            "heading": ["Outfit", "sans-serif"]
+          },
+          "fontSize": {
+            "label-sm": [
+              "12px",
+              {
+                "lineHeight": "16px",
+                "fontWeight": "500"
+              }
+            ],
+            "display-lg": [
+              "72px",
+              {
+                "lineHeight": "84px",
+                "letterSpacing": "-0.02em",
+                "fontWeight": "700"
+              }
+            ],
+            "body-md": [
+              "16px",
+              {
+                "lineHeight": "24px",
+                "fontWeight": "400"
+              }
+            ],
+            "label-md": [
+              "14px",
+              {
+                "lineHeight": "20px",
+                "letterSpacing": "0.02em",
+                "fontWeight": "600"
+              }
+            ],
+            "body-lg": [
+              "18px",
+              {
+                "lineHeight": "28px",
+                "fontWeight": "400"
+              }
+            ],
+            "headline-md": [
+              "32px",
+              {
+                "lineHeight": "40px",
+                "fontWeight": "600"
+              }
+            ],
+            "headline-lg-mobile": [
+              "32px",
+              {
+                "lineHeight": "40px",
+                "fontWeight": "700"
+              }
+            ],
+            "headline-lg": [
+              "48px",
+              {
+                "lineHeight": "56px",
+                "letterSpacing": "-0.01em",
+                "fontWeight": "700"
+              }
+            ]
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      box-shadow: 0 12px 48px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+</head>
+
+<body
+  class="bg-background text-on-surface antialiased min-h-screen flex flex-col relative overflow-x-hidden font-body-md" data-page="plan-trip">
+  <!-- Background Image Layer -->
+  <div class="fixed inset-0 z-[-1]">
+    <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('plan.png')"></div>
+
+  </div>
+
+  <!-- Header -->
+<header class="relative z-50 px-6 lg:px-12 flex justify-between items-center w-full max-w-7xl mx-auto pt-6 pb-4">
+  
+  <!-- Logo -->
+  <a href="index.html" class="flex items-center justify-center h-10 px-5 bg-white/90 backdrop-blur-md rounded-full font-heading font-bold text-[1.25rem] tracking-tight text-[#005da7] hover:bg-white transition-colors shadow-sm border border-white/20">
+    Kibi
+  </a>
+
+  <!-- Center Nav Pill -->
+  <nav class="hidden md:flex items-center bg-white/85 backdrop-blur-md rounded-full px-2 py-1.5 border border-white/40 shadow-sm relative">
+    <div id="navActivePill" class="absolute top-1/2 -translate-y-1/2 h-[calc(100%-12px)] rounded-full bg-white shadow-sm border border-slate-50 transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] pointer-events-none z-0" style="left:0;width:0;opacity:0"></div>
+    <ul class="flex items-center gap-1 lg:gap-2 text-[14px] relative z-10">
+      <li><a href="index.html" data-nav-pill-target="home" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 text-slate-700 hover:text-slate-900">Home</a></li>
+      <li><a href="discover.html" data-nav-pill-target="discover" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 text-slate-700 hover:text-slate-900">Discover</a></li>
+      <li><a href="plan-trip.html" data-nav-pill-target="plan-trip" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 text-slate-900">Plan Trip</a></li>
+      <li><a href="my-trips.html" data-nav-pill-target="my-trips" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 text-slate-700 hover:text-slate-900">My Trips</a></li>
+      <li><a href="about.html" data-nav-pill-target="about" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 text-slate-700 hover:text-slate-900">About Us</a></li>
+    </ul>
+  </nav>
+
+  <!-- Right Action -->
+  <div class="flex items-center gap-3">
+    <div id="auth-action-container"></div>
+    <button id="mobile-menu-btn" class="md:hidden w-10 h-10 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-slate-800 hover:bg-white transition-colors shadow-sm border border-white/20 relative">
+      <span class="hamburger-box"><span class="hamburger-line"></span><span class="hamburger-line"></span><span class="hamburger-line"></span></span>
+    </button>
+  </div>
+</header>
+<!-- Mobile Menu -->
+<div id="mobileMenu" class="fixed inset-0 z-40 bg-white/95 backdrop-blur-lg opacity-0 pointer-events-none transition-opacity duration-300 md:hidden flex flex-col items-center justify-center gap-6">
+  <a href="index.html" class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">Home</a>
+  <a href="discover.html" class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">Discover</a>
+  <a href="plan-trip.html" class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">Plan Trip</a>
+  <a href="my-trips.html" class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">My Trips</a>
+  <a href="about.html" class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">About Us</a>
+  <div id="mobile-auth-action-container"></div>
+</div>
+
+
+
+
+  </div>
+
+  <!-- Main Content -->
+  <main
+    class="flex-grow flex items-center justify-center px-container-padding py-section-gap-mobile md:py-section-gap-desktop relative z-10">
+    <div class="w-full max-w-5xl glass-panel rounded-lg p-8 md:p-12">
+      <div class="text-center mb-10">
+        <h1
+          class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg text-primary mb-4 font-bold">
+          Where to next?</h1>
+        <p class="font-body-lg text-body-lg text-on-surface-variant">Let's craft your perfect journey. Tell us a bit
+          about what you're looking for.</p>
+      </div>
+      <form class="space-y-6" id="planForm"><!-- Form Grid Layout -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+          <!-- Left Column: Trip Details -->
+          <div class="space-y-6">
+            <h3 class="font-headline-md text-headline-md text-primary mb-4">Trip Details</h3>
+            <!-- Destination -->
+            <div>
+              <label class="block font-label-md text-label-md text-primary mb-2" for="destSearch">Destination</label>
+              <div class="relative">
+                <span
+                  class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">location_on</span>
+                <input
+                  class="w-full bg-surface-container-lowest/70 border border-outline-variant rounded-lg pl-12 pr-4 py-4 focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all font-body-md text-body-md text-on-surface placeholder:text-outline-variant"
+                  id="destSearch" placeholder="e.g. Kyoto, Japan or 'Somewhere warm'" type="text" autocomplete="off" />
+                <input type="hidden" id="destId">
+                <input type="hidden" id="destLat">
+                <input type="hidden" id="destLon">
+                <div id="destSuggestions"
+                  class="suggestions-dropdown absolute top-full left-0 right-0 z-20 max-h-52 overflow-y-auto mt-2 hidden">
+                </div>
+              </div>
+            </div>
+            <!-- Dates -->
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block font-label-md text-label-md text-primary mb-2" for="startDate">Start Date</label>
+                <input
+                  class="w-full bg-surface-container-lowest/70 border border-outline-variant rounded-lg px-4 py-4 focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all font-body-md text-body-md text-on-surface"
+                  id="startDate" type="date" />
+              </div>
+              <div>
+                <label class="block font-label-md text-label-md text-primary mb-2" for="endDate">End Date</label>
+                <input
+                  class="w-full bg-surface-container-lowest/70 border border-outline-variant rounded-lg px-4 py-4 focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all font-body-md text-body-md text-on-surface"
+                  id="endDate" type="date" />
+              </div>
+            </div>
+            <!-- Budget -->
+            <div>
+              <label class="block font-label-md text-label-md text-primary mb-2" for="budgetInput">Budget ($)</label>
+              <div class="relative">
+                <span
+                  class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">payments</span>
+                <input
+                  class="w-full bg-surface-container-lowest/70 border border-outline-variant rounded-lg pl-12 pr-4 py-4 focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all font-body-md text-body-md text-on-surface"
+                  id="budgetInput" placeholder="Enter amount" type="number" />
+              </div>
+            </div>
+            <!-- Social Preference -->
+            <div>
+              <label class="block font-label-md text-label-md text-primary mb-2" for="socialSelect">Social
+                Preference</label>
+              <div class="relative">
+                <span
+                  class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">group</span>
+                <select
+                  class="w-full bg-surface-container-lowest/70 border border-outline-variant rounded-lg pl-12 pr-10 py-4 focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all font-body-md text-body-md text-on-surface appearance-none"
+                  id="socialSelect">
+                  <option value="solo">Solo Traveler</option>
+                  <option value="couple">Couple</option>
+                  <option selected="" value="group">Small Group</option>
+                  <option value="family">Family</option>
+                </select>
+                <span
+                  class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none">expand_more</span>
+              </div>
+            </div>
+            <!-- Travel Pace -->
+            <div>
+              <label class="block font-label-md text-label-md text-primary mb-2" for="paceSelect">Travel Pace</label>
+              <div class="relative">
+                <span
+                  class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">speed</span>
+                <select
+                  class="w-full bg-surface-container-lowest/70 border border-outline-variant rounded-lg pl-12 pr-10 py-4 focus:ring-2 focus:ring-primary/40 focus:border-primary transition-all font-body-md text-body-md text-on-surface appearance-none"
+                  id="paceSelect">
+                  <option value="slow">Slow - Relaxed</option>
+                  <option selected="" value="balanced">Moderate - Balanced</option>
+                  <option value="fast">Fast - Packed</option>
+                </select>
+                <span
+                  class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-outline pointer-events-none">expand_more</span>
+              </div>
+            </div>
+          </div>
+          <!-- Right Column: Style & Interests -->
+          <div class="space-y-8">
+            <!-- Travel Style -->
+            <div class="p-6 bg-white/40 rounded-lg border border-outline-variant/30">
+              <h3 class="font-headline-md text-headline-md text-primary mb-4">Travel Style</h3>
+              <div class="flex flex-wrap gap-2" id="planStyles">
+                <button
+                  class="chip active px-4 py-2 rounded-lg font-label-sm text-label-sm transition-colors flex items-center gap-2"
+                  type="button" data-value="Adventure"><span class="material-symbols-outlined text-sm">landscape</span>
+                  Adventure</button>
+                <button
+                  class="chip px-4 py-2 rounded-lg font-label-sm text-label-sm transition-colors flex items-center gap-2"
+                  type="button" data-value="Nature"><span class="material-symbols-outlined text-sm">eco</span>
+                  Nature</button>
+                <button
+                  class="chip px-4 py-2 rounded-lg font-label-sm text-label-sm transition-colors flex items-center gap-2"
+                  type="button" data-value="Relaxed"><span class="material-symbols-outlined text-sm">wb_sunny</span>
+                  Relaxed</button>
+                <button
+                  class="chip px-4 py-2 rounded-lg font-label-sm text-label-sm transition-colors flex items-center gap-2"
+                  type="button" data-value="Culture"><span class="material-symbols-outlined text-sm">museum</span>
+                  Culture</button>
+                <button
+                  class="chip px-4 py-2 rounded-lg font-label-sm text-label-sm transition-colors flex items-center gap-2"
+                  type="button" data-value="Food"><span class="material-symbols-outlined text-sm">restaurant</span>
+                  Food</button>
+              </div>
+            </div>
+            <!-- Interests -->
+            <div class="p-6 bg-white/40 rounded-lg border border-outline-variant/30">
+              <h3 class="font-headline-md text-headline-md text-primary mb-4">Interests</h3>
+              <div class="flex flex-wrap gap-2" id="planInterests">
+                <button
+                  class="chip active px-4 py-2 rounded-lg font-label-sm text-label-sm transition-colors flex items-center gap-2"
+                  type="button" data-value="Nature"><span class="material-symbols-outlined text-sm">forest</span>
+                  Nature</button>
+                <button
+                  class="chip px-4 py-2 rounded-lg font-label-sm text-label-sm transition-colors flex items-center gap-2"
+                  type="button" data-value="Photography"><span
+                    class="material-symbols-outlined text-sm">photo_camera</span> Photography</button>
+                <button
+                  class="chip px-4 py-2 rounded-lg font-label-sm text-label-sm transition-colors flex items-center gap-2"
+                  type="button" data-value="Cafés"><span class="material-symbols-outlined text-sm">coffee</span>
+                  Cafés</button>
+                <button
+                  class="chip px-4 py-2 rounded-lg font-label-sm text-label-sm transition-colors flex items-center gap-2"
+                  type="button" data-value="Trekking"><span class="material-symbols-outlined text-sm">hiking</span>
+                  Trekking</button>
+                <button
+                  class="chip px-4 py-2 rounded-lg font-label-sm text-label-sm transition-colors flex items-center gap-2"
+                  type="button" data-value="History"><span class="material-symbols-outlined text-sm">history</span>
+                  History</button>
+                <button
+                  class="chip px-4 py-2 rounded-lg font-label-sm text-label-sm transition-colors flex items-center gap-2"
+                  type="button" data-value="Yoga"><span
+                    class="material-symbols-outlined text-sm">self_improvement</span> Yoga</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Submit Button -->
+        <div class="pt-8 text-center">
+          <button
+            class="w-full md:w-auto inline-flex items-center justify-center space-x-2 px-12 py-4 bg-primary text-white rounded-lg font-label-md text-label-md hover:bg-primary/90 transition-colors shadow-[0_8px_30px_rgba(74,144,226,0.2)] hover:shadow-[0_12px_40px_rgba(74,144,226,0.3)] transform hover:-translate-y-1 duration-300"
+            type="submit">
+            <span>Generate My Itinerary</span>
+            <span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">magic_button</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <!-- INJECT FOOTER -->
+  <div id="footerContainer"></div>
+
+  <!-- Landing page inline interactions -->
+  <script>
+    // FAQ Toggle Handler
+    function toggleFaq(btn) {
+      const item = btn.parentElement;
+      const answer = item.querySelector('.faq-answer');
+      const icon = btn.querySelector('i');
+
+      if (answer.classList.contains('hidden')) {
+        answer.classList.remove('hidden');
+        btn.classList.add('text-brand-blue');
+        btn.classList.remove('text-slate-800');
+        icon.classList.remove('fa-chevron-down', 'text-slate-400');
+        icon.classList.add('fa-chevron-up', 'text-brand-blue');
+      } else {
+        answer.classList.add('hidden');
+        btn.classList.remove('text-brand-blue');
+        btn.classList.add('text-slate-800');
+        icon.classList.remove('fa-chevron-up', 'text-brand-blue');
+        icon.classList.add('fa-chevron-down', 'text-slate-400');
+      }
+    }
+
+    // Destination Filter Handler
+    function filterDestinations(category, btn) {
+      const buttons = document.querySelectorAll('#destination-filters .filter-btn');
+      buttons.forEach(b => {
+        b.classList.remove('bg-brand-blue', 'text-white', 'shadow-sm');
+        b.classList.add('bg-white', 'text-gray-500');
+      });
+
+      btn.classList.remove('bg-white', 'text-gray-500');
+      btn.classList.add('bg-brand-blue', 'text-white', 'shadow-sm');
+
+      const cards = document.querySelectorAll('#destinations-grid .dest-card');
+      cards.forEach(card => {
+        if (category === 'all' || card.dataset.category === category) {
+          card.style.display = '';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // Day Switcher Logic
+    function switchDay(dayNum) {
+      const btn1 = document.getElementById('btn-day1');
+      const btn2 = document.getElementById('btn-day2');
+
+      if (dayNum === 1) {
+        btn1.className = "bg-white text-brand-blue font-semibold text-xs px-5 py-2 rounded-full shadow transition";
+        btn2.className = "bg-white/15 text-white hover:bg-white/25 font-semibold text-xs px-5 py-2 rounded-full border border-white/20 transition";
+      } else {
+        btn2.className = "bg-white text-brand-blue font-semibold text-xs px-5 py-2 rounded-full shadow transition";
+        btn1.className = "bg-white/15 text-white hover:bg-white/25 font-semibold text-xs px-5 py-2 rounded-full border border-white/20 transition";
+      }
+    }
+  </script>
+
+    <!-- API Layer -->
+  <script src="js/api/api-config.js"></script>
+  <script src="js/api/api-cache.js"></script>
+  <script src="js/api/geocoding-api.js"></script>
+  <script src="js/api/weather-api.js"></script>
+  <script src="js/api/places-api.js"></script>
+  <script src="js/api/routing-api.js"></script>
+  <script src="js/api/tripmate-api.js"></script>
+  <script src="js/api/gemini-api.js"></script>
+  <script src="js/storage.js?v=10"></script>
+  <script src="js/matching.js?v=10"></script>
+  <script src="js/planner.js?v=10"></script>
+  <script src="js/app.js?v=10"></script>
+  <script src="js/animations.js?v=10"></script>
+  <script src="js/trips.js?v=10"></script>
+  <script src="js/home.js?v=10"></script>
+  <script>
+    // Pre-select destination from URL param
+    const urlParams = new URLSearchParams(window.location.search);
+    const destParam = urlParams.get('dest');
+    const destNameParam = urlParams.get('name');
+    const latParam = urlParams.get('lat');
+    const lonParam = urlParams.get('lon');
+
+    if (destParam) {
+      const destSearch = document.getElementById('destSearch');
+      const destId = document.getElementById('destId');
+      const destLat = document.getElementById('destLat');
+      const destLon = document.getElementById('destLon');
+
+      if (destSearch) {
+        // If it's a known local destination, show friendly name; otherwise use URL name or ID
+        const knownNames = {
+          'dest_manali': 'Manali',
+          'dest_kasol': 'Kasol',
+          'dest_goa': 'Goa',
+          'dest_rishikesh': 'Rishikesh'
+        };
+        destSearch.value = knownNames[destParam] || destNameParam || destParam;
+      }
+      if (destId) destId.value = destParam;
+      if (destLat && latParam) destLat.value = latParam;
+      if (destLon && lonParam) destLon.value = lonParam;
+    }
+  </script>
+</body>
+
+</html>
