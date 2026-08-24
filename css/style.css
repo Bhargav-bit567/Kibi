@@ -44,45 +44,19 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
-/* Smooth page transitions */
+/* Smooth page transitions (opacity only, no transform so fixed children work) */
 body {
   opacity: 0;
-  transform: translateY(8px);
-  transition: opacity 320ms cubic-bezier(0.25, 1, 0.5, 1), transform 320ms cubic-bezier(0.25, 1, 0.5, 1);
+  transition: opacity 320ms cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 body.page-loaded,
 body.page-transition-ready {
   opacity: 1;
-  transform: translateY(0);
 }
 
 noscript body {
   opacity: 1 !important;
-  transform: none !important;
-}
-
-/* Modal root must escape any body transform containing block.
-   Use a dedicated open class toggled by JS. */
-#mapModal {
-  position: fixed !important;
-  inset: 0 !important;
-  transform: none !important;
-  display: none;
-  padding: 1rem !important;
-  z-index: 9999 !important;
-}
-#mapModal.map-modal-open {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-#mapModalCard {
-  position: relative !important;
-  width: 100% !important;
-  max-width: 64rem !important;
-  height: 80vh !important;
-  max-height: calc(100vh - 2rem) !important;
 }
 
 body {

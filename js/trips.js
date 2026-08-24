@@ -1035,12 +1035,8 @@ function initMapModal(itinerary) {
   let initialized = false;
 
   function openModal() {
-    // Move modal to body root so it escapes any transformed/scrolled ancestors.
-    if (modal.parentElement !== document.body) {
-      document.body.appendChild(modal);
-    }
     modal.classList.remove('hidden');
-    modal.classList.add('map-modal-open');
+    modal.classList.add('flex');
     document.body.style.overflow = 'hidden';
     document.documentElement.style.overflow = 'hidden';
 
@@ -1063,7 +1059,7 @@ function initMapModal(itinerary) {
 
   function closeModal() {
     modal.classList.add('hidden');
-    modal.classList.remove('map-modal-open');
+    modal.classList.remove('flex');
     document.body.style.overflow = '';
     document.documentElement.style.overflow = '';
   }
