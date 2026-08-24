@@ -94,9 +94,13 @@
     /* Dashboard cards dark mode */
     html.dark body.dashboard-page .stat-card,
     html.dark body.dashboard-page .trip-card,
-    html.dark body.dashboard-page .traveler-card {
-      background-color: #0F172A !important;
+    html.dark body.dashboard-page .traveler-card,
+    html.dark body.dashboard-page .glass-panel {
+      background-color: rgba(15, 23, 42, 0.9) !important;
       border-color: rgba(255, 255, 255, 0.08) !important;
+    }
+    html.dark body.dashboard-page .card-hover-effect:hover {
+      box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.35) !important;
     }
     html.dark body.dashboard-page .stat-value,
     html.dark body.dashboard-page .card-title,
@@ -129,6 +133,22 @@
     }
     html.dark body.dashboard-page .empty-state svg {
       color: #64748B !important;
+    }
+    html.dark body.dashboard-page #profileTripsGrid .glass-panel,
+    html.dark body.dashboard-page #profileTripsGrid .glass-panel * {
+      color: inherit;
+    }
+    html.dark body.dashboard-page #profileTripsGrid .text-on-surface,
+    html.dark body.dashboard-page #profileTripsGrid h3,
+    html.dark body.dashboard-page #profileTripsGrid p {
+      color: #F8FAFC !important;
+    }
+    html.dark body.dashboard-page #profileTripsGrid .text-on-surface-variant {
+      color: #94A3B8 !important;
+    }
+    html.dark body.dashboard-page #profileTripsGrid .bg-slate-100,
+    html.dark body.dashboard-page #profileTripsGrid .bg-slate-100.dark\:bg-slate-800 {
+      background-color: #1E293B !important;
     }
 
     html.dark body.dashboard-page footer {
@@ -255,12 +275,12 @@
     </div>
   </section>
 
-  <!-- MAIN DASHBOARD CONTENT GRID (Left: Trips & Saved, Right: Sidebar) -->
-  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start pt-2">
-    
-    <!-- LEFT COLUMN: MY TRIPS & SAVED TRIPS -->
-    <div class="lg:col-span-2 space-y-10">
-      
+  <!-- MAIN DASHBOARD CONTENT GRID -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start pt-2">
+
+    <!-- LEFT COLUMN: MY TRIPS -->
+    <div class="lg:col-span-8 space-y-10">
+
       <!-- MY TRIPS GALLERY -->
       <section class="space-y-5">
         <div class="flex items-center justify-between">
@@ -271,7 +291,7 @@
             <h2 class="font-heading font-bold text-xl md:text-2xl text-on-surface">My Trips</h2>
           </div>
           <a href="my-trips.html" class="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:text-primary-container transition-colors group">
-            View All Trips 
+            View All Trips
             <span class="material-symbols-outlined text-sm transition-transform group-hover:translate-x-1">arrow_forward</span>
           </a>
         </div>
@@ -284,7 +304,7 @@
     </div>
 
     <!-- RIGHT COLUMN: SIDEBAR WIDGETS -->
-    <aside class="space-y-6">
+    <aside class="lg:col-span-4 space-y-6">
       
       <!-- QUICK ACTION HUB -->
       <div class="glass-panel p-6 rounded-3xl space-y-4 border border-slate-200/80 dark:border-slate-800">
