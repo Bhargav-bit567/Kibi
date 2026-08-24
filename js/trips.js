@@ -1028,7 +1028,7 @@ function initMapModal(itinerary) {
   if (!modal || !closeBtn) return;
 
   if (titleEl && itinerary.destination) {
-    titleEl.innerHTML = `<span class="material-symbols-outlined text-primary">map</span> ${itinerary.destination} Map`;
+    titleEl.innerHTML = `<i class="fa-solid fa-map text-primary"></i> ${itinerary.destination} Map`;
   }
 
   let map = null;
@@ -1038,18 +1038,24 @@ function initMapModal(itinerary) {
     modal.classList.remove('hidden');
     modal.classList.add('flex');
     document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden';
 
     if (!initialized) {
       // Leaflet requires the container to be visible and measured.
       // Wait for the modal to fully render before initializing.
-      setTimeout(() => {
-        ensureCoords().then(() => {
-          initMap();
-          initialized = true;
-        });
-      }, 300);
+      requestAnimationFrame(() => {
+        setTimeout(() => {
+          ensureCoords().then(() => {
+            initMap();
+            initialized = true;
+          });
+        }, 250);
+      });
     } else if (map) {
-      setTimeout(() => map.invalidateSize(), 300);
+      requestAnimationFrame(() => {
+        setTimeout(() => map.invalidateSize(), 100);
+        setTimeout(() => map.invalidateSize(), 400);
+      });
     }
   }
 
@@ -1057,6 +1063,7 @@ function initMapModal(itinerary) {
     modal.classList.add('hidden');
     modal.classList.remove('flex');
     document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
   }
 
   if (openBtn) openBtn.addEventListener('click', openModal);
@@ -1130,9 +1137,12 @@ function initMapModal(itinerary) {
     }).addTo(map);
 
     // Re-measure map once tiles start loading and after container settles.
-    setTimeout(() => { if (map) map.invalidateSize(); }, 100);
-    setTimeout(() => { if (map) map.invalidateSize(); }, 400);
-    setTimeout(() => { if (map) map.invalidateSize(); }, 800);
+    requestAnimationFrame(() => {
+      setTimeout(() => { if (map) map.invalidateSize(); }, 100);
+      setTimeout(() => { if (map) map.invalidateSize(); }, 400);
+      setTimeout(() => { if (map) map.invalidateSize(); }, 800);
+      setTimeout(() => { if (map) map.invalidateSize(); }, 1200);
+    });
 
     // If tiles fail to paint, force a reload by invalidating size again.
     tileLayer.on('load', () => console.log('[Kibi Map] tiles loaded'));
