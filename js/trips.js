@@ -1048,11 +1048,11 @@ function initMapModal(itinerary) {
           initMap();
           initialized = true;
         });
-      }, 400);
+      }, 600);
     } else if (map) {
       requestAnimationFrame(() => {
-        setTimeout(() => map.invalidateSize(), 100);
-        setTimeout(() => map.invalidateSize(), 400);
+        setTimeout(() => map.invalidateSize(), 200);
+        setTimeout(() => map.invalidateSize(), 600);
       });
     }
   }
@@ -1143,10 +1143,10 @@ function initMapModal(itinerary) {
 
     // Re-measure map once tiles start loading and after container settles.
     requestAnimationFrame(() => {
-      setTimeout(() => { if (map) map.invalidateSize(); }, 100);
-      setTimeout(() => { if (map) map.invalidateSize(); }, 400);
-      setTimeout(() => { if (map) map.invalidateSize(); }, 800);
-      setTimeout(() => { if (map) map.invalidateSize(); }, 1200);
+      setTimeout(() => { if (map) map.invalidateSize(); }, 200);
+      setTimeout(() => { if (map) map.invalidateSize(); }, 600);
+      setTimeout(() => { if (map) map.invalidateSize(); }, 1000);
+      setTimeout(() => { if (map) map.invalidateSize(); }, 1600);
     });
 
     // If tiles fail to paint, force a reload by invalidating size again.
