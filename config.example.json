@@ -1,0 +1,5 @@
+{
+  "GOOGLE_CLIENT_ID": "your-google-client-id.apps.googleusercontent.com",
+  "APPLE_CLIENT_ID": "com.yourcompany.kibi.web",
+  "APPLE_REDIRECT_URI": "https://your-ngrok-or-https-domain/callback/apple"
+}

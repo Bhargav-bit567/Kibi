@@ -1,9 +1,4 @@
-/* ============================================
-   Wandermatch — Admin Dashboard Logic
-   Users, Trips, Join Requests, Activity Log,
-   stats, search/filter/pagination, CSV export,
-   modals, toasts, and an access gate.
-   ============================================ */
+
 
 const PAGE_SIZE = 10;
 
@@ -34,8 +29,6 @@ function init() {
 
   if (!isUserAdmin(user)) {
     if (!anyAdminExists()) {
-      // No admin exists yet anywhere in the system — allow the first
-      // logged-in user to bootstrap themselves as admin.
       showGate({
         title: 'Claim admin access',
         message: `No admin account exists yet. As ${escapeHtml(user.name || user.email || 'the first user')}, you can claim the admin role to set up this dashboard.`,
@@ -84,9 +77,7 @@ function showGate(opts) {
   document.getElementById('gateActions').innerHTML = opts.actionsHtml || '';
 }
 
-/* ==========================================
-   SHELL: sidebar, header, modals, toasts
-   ========================================== */
+
 function bindShell() {
   document.querySelectorAll('#sidebarNav .sidebar-link').forEach(btn => {
     btn.addEventListener('click', () => switchTab(btn.dataset.tab));
@@ -113,8 +104,6 @@ function bindShell() {
     if (typeof state.pendingConfirm === 'function') state.pendingConfirm();
     closeModal('confirmModal');
   });
-
-  // Users tab controls
   document.getElementById('userSearch').addEventListener('input', debounce((e) => {
     state.users.search = e.target.value.trim().toLowerCase();
     state.users.page = 1;
@@ -131,8 +120,6 @@ function bindShell() {
     renderUsers();
   });
   document.getElementById('exportUsersBtn').addEventListener('click', exportUsersCSV);
-
-  // Trips tab controls
   document.getElementById('tripSearch').addEventListener('input', debounce((e) => {
     state.trips.search = e.target.value.trim().toLowerCase();
     state.trips.page = 1;
@@ -144,14 +131,10 @@ function bindShell() {
     renderTrips();
   });
   document.getElementById('exportTripsBtn').addEventListener('click', exportTripsCSV);
-
-  // Requests tab
   document.getElementById('requestStatusFilter').addEventListener('change', (e) => {
     state.requests.status = e.target.value;
     renderRequests();
   });
-
-  // Activity log
   document.getElementById('clearLogBtn').addEventListener('click', () => {
     openConfirm('Clear activity log?', 'This will permanently remove all recorded admin actions.', () => {
       clearActivityLog();
@@ -211,9 +194,7 @@ function renderNavCounts() {
   reqCountEl.classList.toggle('hidden', pending === 0);
 }
 
-/* ==========================================
-   DASHBOARD TAB
-   ========================================== */
+
 function renderDashboard() {
   const stats = getAdminStats();
   const cards = [
@@ -262,9 +243,7 @@ function renderDashboard() {
   `).join('') : `<p class="text-sm text-gray-400">No activity recorded yet.</p>`;
 }
 
-/* ==========================================
-   USERS TAB
-   ========================================== */
+
 function getFilteredUsers() {
   let users = getUsers();
   const { search, role, status } = state.users;
@@ -446,9 +425,7 @@ function exportUsersCSV() {
   downloadCSV('users.csv', rows);
 }
 
-/* ==========================================
-   TRIPS TAB
-   ========================================== */
+
 function getFilteredTrips() {
   let trips = getTrips();
   const { search, status } = state.trips;
@@ -590,9 +567,7 @@ function exportTripsCSV() {
   downloadCSV('trips.csv', rows);
 }
 
-/* ==========================================
-   JOIN REQUESTS TAB
-   ========================================== */
+
 function renderRequests() {
   const container = document.getElementById('requestsContainer');
   let requests = getJoinRequests().sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
@@ -668,9 +643,7 @@ function requestRow(r) {
   `;
 }
 
-/* ==========================================
-   ACTIVITY LOG TAB
-   ========================================== */
+
 function renderActivity() {
   const container = document.getElementById('activityContainer');
   const log = getActivityLog();
@@ -721,9 +694,7 @@ function actionLabel(action) {
   return labels[action] || action;
 }
 
-/* ==========================================
-   SHARED UI HELPERS
-   ========================================== */
+
 function renderPagination(containerId, page, totalPages, totalItems, onChange) {
   const el = document.getElementById(containerId);
   if (totalPages <= 1) { el.innerHTML = `<span>${totalItems} total</span>`; return; }
