@@ -1,331 +1,295 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Kibi - Sign Up</title>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
-<script id="tailwind-config">
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    "colors": {
-                        "on-surface": "#1a1c1e",
-                        "on-secondary": "#ffffff",
-                        "on-tertiary-container": "#fcfcff",
-                        "on-primary-fixed": "#001c39",
-                        "on-tertiary-fixed": "#151c22",
-                        "primary-fixed": "#d4e3ff",
-                        "surface-container": "#eeeef0",
-                        "on-error": "#ffffff",
-                        "error": "#ba1a1a",
-                        "on-primary": "#ffffff",
-                        "on-tertiary-fixed-variant": "#40484e",
-                        "surface-container-high": "#e8e8ea",
-                        "surface-container-low": "#f3f3f6",
-                        "on-primary-fixed-variant": "#004883",
-                        "secondary-container": "#8bd2fe",
-                        "primary": "#005da7",
-                        "secondary-fixed": "#c6e7ff",
-                        "inverse-primary": "#a4c9ff",
-                        "on-secondary-fixed": "#001e2d",
-                        "background": "#f9f9fc",
-                        "surface-container-lowest": "#ffffff",
-                        "secondary-fixed-dim": "#88cffb",
-                        "inverse-surface": "#2f3133",
-                        "primary-container": "#2976c7",
-                        "surface-variant": "#e2e2e5",
-                        "surface": "#f9f9fc",
-                        "on-secondary-fixed-variant": "#004c6b",
-                        "tertiary-container": "#6e757c",
-                        "on-secondary-container": "#005a7e",
-                        "error-container": "#ffdad6",
-                        "inverse-on-surface": "#f0f0f3",
-                        "on-primary-container": "#fdfcff",
-                        "surface-tint": "#0060ac",
-                        "surface-container-highest": "#e2e2e5",
-                        "outline-variant": "#c1c7d3",
-                        "on-error-container": "#93000a",
-                        "on-surface-variant": "#414751",
-                        "tertiary-fixed": "#dce3eb",
-                        "on-tertiary": "#ffffff",
-                        "primary-fixed-dim": "#a4c9ff",
-                        "tertiary-fixed-dim": "#c0c7cf",
-                        "on-background": "#1a1c1e",
-                        "secondary": "#01658c",
-                        "surface-bright": "#f9f9fc",
-                        "surface-dim": "#dadadc",
-                        "tertiary": "#555d63",
-                        "outline": "#717783"
-                    },
-                    "borderRadius": {
-                        "DEFAULT": "0.25rem",
-                        "lg": "0.5rem",
-                        "xl": "0.75rem",
-                        "full": "9999px"
-                    },
-                    "spacing": {
-                        "section-gap-mobile": "64px",
-                        "section-gap-desktop": "120px",
-                        "container-padding": "24px",
-                        "base": "8px",
-                        "gutter": "24px"
-                    },
-                    "fontFamily": {
-                        "display-lg": ["Outfit", "sans-serif"],
-                        "body-lg": ["Inter", "sans-serif"],
-                        "label-md": ["Inter", "sans-serif"],
-                        "label-sm": ["Inter", "sans-serif"],
-                        "body-md": ["Inter", "sans-serif"],
-                        "headline-lg": ["Outfit", "sans-serif"],
-                        "headline-md": ["Outfit", "sans-serif"],
-                        "headline-lg-mobile": ["Outfit", "sans-serif"]
-                    },
-                    "fontSize": {
-                        "display-lg": ["72px", { "lineHeight": "84px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
-                        "body-lg": ["18px", { "lineHeight": "28px", "fontWeight": "400" }],
-                        "label-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600" }],
-                        "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
-                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
-                        "headline-lg": ["48px", { "lineHeight": "56px", "letterSpacing": "-0.01em", "fontWeight": "700" }],
-                        "headline-md": ["32px", { "lineHeight": "40px", "fontWeight": "600" }],
-                        "headline-lg-mobile": ["32px", { "lineHeight": "40px", "fontWeight": "700" }]
-                    }
-                },
-            },
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Kibi - Sign Up</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@600;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined&display=swap" rel="stylesheet"/>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: "#005da7",
+            "primary-container": "#2976c7",
+            "on-primary": "#ffffff",
+            surface: "#f9f9fc",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f3f3f6",
+            "on-surface": "#1a1c1e",
+            "on-surface-variant": "#414751",
+            "outline-variant": "#c1c7d3",
+            outline: "#717783"
+          }
         }
-    </script>
-<style>
-    /* Glassmorphism utilities */
-    .glass {
-        background: rgba(255, 255, 255, 0.8);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
+      }
     }
-    .shadow-glow {
-        box-shadow: 0 4px 40px rgba(0, 93, 167, 0.08);
-    }
-    .form-error {
-        display: block;
-        color: #ba1a1a;
-        font-size: 0.75rem;
-        margin-top: 0.375rem;
-    }
-    .input-error {
-        border-color: #ba1a1a !important;
-    }
+  </script>
+
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+
+    /* Error styles */
+    .form-error { display: block; color: #ba1a1a; font-size: 0.75rem; margin-top: 0.375rem; }
+    .input-error { border-color: #ba1a1a !important; }
+
+    /* Toast notification */
     .toast {
-        position: fixed;
-        bottom: 1.5rem;
-        right: 1.5rem;
-        padding: 0.875rem 1.25rem;
-        border-radius: 0.75rem;
-        background: #1a1c1e;
-        color: #fff;
-        font-size: 0.875rem;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-        opacity: 0;
-        transform: translateY(1rem);
-        transition: all 0.3s ease;
-        pointer-events: none;
-        z-index: 9999;
+      position: fixed; bottom: 1.5rem; right: 1.5rem;
+      padding: 0.875rem 1.25rem; border-radius: 0.75rem;
+      background: #1a1c1e; color: #fff; font-size: 0.875rem;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      opacity: 0; transform: translateY(1rem);
+      transition: all 0.3s ease; pointer-events: none; z-index: 9999;
     }
     .toast.active { opacity: 1; transform: translateY(0); }
     .toast.success { background: #1b5e20; }
-    .toast.error { background: #c62828; }
+    .toast.error   { background: #c62828; }
 
-    /* Dark mode overrides */
-    html.dark body { background-color: #0B0F17; color: #E8EAED; }
-    html.dark .bg-surface-container-lowest { background-color: #121821 !important; }
-    html.dark .bg-surface-container-low { background-color: #151d26 !important; }
-    html.dark .bg-surface { background-color: #0B0F17 !important; }
-    html.dark .bg-surface-container-high { background-color: #1b2430 !important; }
-    html.dark .text-on-surface { color: #E8EAED !important; }
-    html.dark .text-on-surface-variant { color: #A8B0BC !important; }
-    html.dark .text-outline-variant { color: #6B7685 !important; }
-    html.dark .border-outline-variant { border-color: #2A3441 !important; }
-    html.dark input::placeholder { color: #6B7685 !important; }
-    html.dark .glass { background: rgba(18,24,33,0.78); border-color: rgba(255,255,255,0.08); }
-    html.dark .shadow-glow { box-shadow: 0 4px 40px rgba(0,0,0,0.25); }
-    html.dark #themeToggleBtn { background-color: rgba(27,36,48,0.85); border-color: rgba(42,52,65,0.6); color: #E8EAED; }
-</style>
+    /* Password requirement pill turns green when met */
+    .req-pill.met {
+      border-color: #1b5e20 !important;
+      background: rgba(27, 94, 32, 0.08);
+      color: #1b5e20;
+    }
+    .req-pill.met .req-dot { background: #1b5e20; border-color: #1b5e20; }
+  </style>
 </head>
-<body class="bg-background text-on-surface font-body-md antialiased min-h-screen flex flex-col selection:bg-primary-fixed selection:text-on-primary-fixed transition-colors duration-300">
-  <button id="themeToggleBtn" type="button" aria-label="Toggle dark mode" class="fixed top-4 right-4 z-50 p-2.5 rounded-full bg-surface-container-high/80 backdrop-blur-md border border-outline-variant/40 text-on-surface shadow-sm hover:bg-surface-container-high transition-colors">
-    <span id="themeIconMoon" class="material-symbols-outlined text-xl">dark_mode</span>
-    <span id="themeIconSun" class="material-symbols-outlined text-xl hidden">light_mode</span>
-  </button>
-<!-- Suppress TopNavBar and Footer for Linear/Transactional Signup flow as per instructions -->
-<main class="flex-grow flex w-full min-h-screen">
-<!-- Left Side: Inspiring Imagery -->
-<section class="hidden lg:flex w-1/2 relative bg-surface-container-low overflow-hidden items-center justify-center">
-<div class="absolute inset-0 z-0">
-<img class="w-full h-full object-cover" data-alt="A breathtaking, majestic mountain vista bathed in soft, golden morning light. The scene is expansive and ethereal, featuring rolling peaks piercing through delicate mist. The sky is a serene gradient of soft blues and gentle warm tones. The overall aesthetic is clean, modern, and inspiring, aligning with a premium travel brand. The image should evoke a sense of boundless adventure and tranquility." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAO9q5DK6Ko6MlYLxLlACju5yLZGDueXvvKqUYLwC-CfDynBbjIs80vYzrfQkZ_tTNmUhJDc0JoIo30oB95QDqFi4whqrCNpYVEc636dZjifM0T3gS5Yvnfhyc4_QMPzgmPHhTqbbQqBomDEYS6OriJgEMElfEafcCnpa-KDbZzSBNmDW2VJd9GNmIj1OTfGbo7JXPf_7aSzBBqrbFRyTRv2nOMnc1RNO8AWfVfTCFmCGHUJy81qDcI"/>
-<!-- Gradient overlay to ensure text readability if needed, though glassmorphism handles it -->
-<div class="absolute inset-0 bg-gradient-to-t from-primary/20 to-transparent mix-blend-multiply"></div>
-</div>
-<div class="relative z-10 p-12 flex flex-col h-full justify-between w-full max-w-2xl mx-auto">
-<div>
-<!-- Logo mark in white for dark background -->
-<a class="font-display-lg text-[1.5rem] text-white font-bold tracking-tight" href="index.html">
-                         Kibi
-                    </a>
-</div>
-<div class="glass p-8 rounded-xl shadow-glow text-on-surface">
-<h1 class="font-headline-lg text-headline-lg text-primary mb-4">Your next great adventure begins here.</h1>
-<p class="font-body-lg text-body-lg text-on-surface-variant">
-                        Join Kibi to let AI curate the perfect travel packages based on your unique style, budget, and dreams.
-                    </p>
-</div>
-</div>
-</section>
-<!-- Right Side: Signup Form -->
-<section class="w-full lg:w-1/2 flex items-center justify-center p-8 sm:p-12 lg:p-24 bg-surface">
-<div class="w-full max-w-md space-y-8">
-<!-- Mobile Logo Header -->
-<div class="lg:hidden flex justify-center mb-8">
-<a class="font-display-lg text-[1.5rem] font-bold text-primary tracking-tight" href="index.html">
-                        Kibi
-                    </a>
-</div>
-<div class="text-center lg:text-left space-y-2">
-<h2 class="font-headline-md text-headline-md text-on-surface">Create an account</h2>
-<p class="font-body-md text-body-md text-on-surface-variant">Start planning your effortless journeys.</p>
-</div>
-<form class="space-y-6 mt-8" id="signupForm" action="index.html">
-<div class="space-y-4">
-<!-- Full Name -->
-<div>
-<label class="block font-label-sm text-label-sm text-on-surface mb-2" for="name">Full Name</label>
-<div class="relative">
-<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-<span class="material-symbols-outlined text-outline-variant" data-icon="person">person</span>
-</div>
-<input class="form-input block w-full pl-11 pr-4 py-3 bg-surface-container-lowest border border-outline-variant rounded-lg text-on-surface placeholder-on-surface-variant/50 focus:ring-2 focus:ring-primary focus:border-primary transition-all shadow-sm" id="name" name="name" placeholder="Alex Traveler" type="text"/>
-</div>
-</div>
-<!-- Email -->
-<div>
-<label class="block font-label-sm text-label-sm text-on-surface mb-2" for="email">Email address</label>
-<div class="relative">
-<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-<span class="material-symbols-outlined text-outline-variant" data-icon="mail">mail</span>
-</div>
-<input class="form-input block w-full pl-11 pr-4 py-3 bg-surface-container-lowest border border-outline-variant rounded-lg text-on-surface placeholder-on-surface-variant/50 focus:ring-2 focus:ring-primary focus:border-primary transition-all shadow-sm" id="email" name="email" placeholder="alex@example.com" type="email"/>
-</div>
-</div>
-<!-- Password -->
-<div>
-<label class="block font-label-sm text-label-sm text-on-surface mb-2" for="password">Password</label>
-<div class="relative">
-<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-<span class="material-symbols-outlined text-outline-variant" data-icon="lock">lock</span>
-</div>
-<input class="form-input block w-full pl-11 pr-12 py-3 bg-surface-container-lowest border border-outline-variant rounded-lg text-on-surface placeholder-on-surface-variant/50 focus:ring-2 focus:ring-primary focus:border-primary transition-all shadow-sm" id="password" name="password" placeholder="••••••••" type="password" minlength="8" required/>
-<button class="password-toggle absolute right-3 top-1/2 -translate-y-1/2 text-outline-variant hover:text-on-surface transition-colors focus:outline-none" type="button" aria-label="Toggle password visibility">
-<span class="material-symbols-outlined text-[20px]">visibility_off</span>
-</button>
-</div>
-</div>
-<!-- Confirm Password -->
-<div>
-<label class="block font-label-sm text-label-sm text-on-surface mb-2" for="confirmPassword">Confirm Password</label>
-<div class="relative">
-<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-<span class="material-symbols-outlined text-outline-variant" data-icon="lock_reset">lock_reset</span>
-</div>
-<input class="form-input block w-full pl-11 pr-12 py-3 bg-surface-container-lowest border border-outline-variant rounded-lg text-on-surface placeholder-on-surface-variant/50 focus:ring-2 focus:ring-primary focus:border-primary transition-all shadow-sm" id="confirmPassword" name="confirmPassword" placeholder="••••••••" type="password" minlength="8" required/>
-<button class="password-toggle absolute right-3 top-1/2 -translate-y-1/2 text-outline-variant hover:text-on-surface transition-colors focus:outline-none" type="button" aria-label="Toggle confirm password visibility">
-<span class="material-symbols-outlined text-[20px]">visibility_off</span>
-</button>
-</div>
-</div>
-</div>
-<!-- Terms -->
-<div class="flex items-start">
-<div class="flex items-center h-5">
-<input class="focus:ring-primary h-4 w-4 text-primary border-outline-variant rounded bg-surface-container-lowest" id="terms" name="terms" type="checkbox"/>
-</div>
-<div class="ml-3 text-sm">
-<label class="font-body-md text-body-md text-on-surface-variant text-sm" for="terms">
-                                I agree to the <a class="text-primary hover:underline font-medium" href="#">Terms of Service</a> and <a class="text-primary hover:underline font-medium" href="#">Privacy Policy</a>.
-                            </label>
-</div>
-</div>
-<!-- Submit Button -->
-<div>
-<button class="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-full shadow-glow font-label-md text-label-md text-white bg-primary hover:bg-primary-container focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary transition-all duration-300" type="submit">
-                            Create Account
-                        </button>
-</div>
-</form>
-<div class="mt-8">
-<div class="relative">
-<div class="absolute inset-0 flex items-center">
-<div class="w-full border-t border-outline-variant/30"></div>
-</div>
-<div class="relative flex justify-center text-sm">
-<span class="px-2 bg-surface text-on-surface-variant font-label-sm text-label-sm">Or sign up with</span>
-</div>
-</div>
-<div class="mt-6 grid grid-cols-2 gap-4">
-<button class="social-btn w-full inline-flex justify-center items-center py-2.5 px-4 border border-outline-variant rounded-lg bg-surface-container-lowest font-label-md text-label-md text-on-surface hover:bg-surface-container-low transition-colors duration-200 shadow-sm" type="button" data-provider="google">
-<svg class="w-5 h-5 mr-2" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-</svg>
-                            Google
-                        </button>
-<button class="social-btn w-full inline-flex justify-center items-center py-2.5 px-4 border border-outline-variant rounded-lg bg-surface-container-lowest font-label-md text-label-md text-on-surface hover:bg-surface-container-low transition-colors duration-200 shadow-sm gap-2" type="button" data-provider="apple">
-  <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-    <path d="M18.71 19.268c-.953 1.402-2.514 2.52-4.206 2.52-1.306 0-2.058-.69-3.43-.69-1.418 0-2.17.69-3.43.69-2.142 0-4.39-2.11-5.456-4.53C.98 13.99-.22 10.43.02 7.03.34 2.56 3.33.16 6.41.16c1.52 0 2.84.99 3.91.99 1.14 0 2.65-1.09 4.3-1.09 1.72 0 3.52.95 4.67 2.42-3.64 1.85-2.96 6.66.72 7.96-.86 2.23-2.02 4.46-2.9 5.83zM12.2 2.93c.72-1.03 1.72-1.92 2.96-1.92.14 1.55-.45 3.06-1.39 4.12-.78.87-1.87 1.54-3.01 1.34.17-1.48.78-2.93 1.44-3.54z"/>
-  </svg>
-  Apple
-</button>
-</div>
-</div>
-<p class="mt-8 text-center font-body-md text-body-md text-on-surface-variant text-sm">
-                    Already have an account? <a class="font-label-md text-label-md text-primary hover:text-primary-container hover:underline transition-colors" href="login.html">Log in</a>
-</p>
-</div>
-</section>
-</main>
 
-<!-- Google Identity Services SDK -->
-<script src="https://accounts.google.com/gsi/client" async defer></script>
-<!-- Sign in with Apple JS SDK -->
-<script type="text/javascript" src="https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js"></script>
-<script src="js/config.js"></script>
-<script src="js/storage.js"></script>
-<script src="js/app.js"></script>
-<script src="js/auth.js"></script>
-<script>
-  (function(){
-    const btn = document.getElementById('themeToggleBtn');
-    if (btn) btn.addEventListener('click', toggleTheme);
-  })();
-</script>
-<script>
-(function () {
-  // Password visibility toggles
-  document.querySelectorAll('.password-toggle').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const input = btn.parentElement.querySelector('input[type="password"], input[type="text"]');
-      const icon = btn.querySelector('.material-symbols-outlined');
-      if (!input) return;
-      const isHidden = input.type === 'password';
-      input.type = isHidden ? 'text' : 'password';
-      icon.textContent = isHidden ? 'visibility' : 'visibility_off';
-      btn.setAttribute('aria-label', isHidden ? 'Hide password' : 'Show password');
+<body class="bg-white text-[#1a1c1e] min-h-screen flex">
+
+  <main class="flex w-full min-h-screen">
+
+    <!-- Left: Hero Image (desktop only) -->
+    <section class="hidden lg:flex w-1/2 relative overflow-hidden" id="heroPanel">
+      <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1600&auto=format&fit=crop"
+           alt="Snow-capped alpine mountains"
+           class="w-full h-full object-cover"/>
+      <div class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+
+      <!-- Logo -->
+      <a href="index.html" class="absolute top-8 left-10 text-2xl font-bold text-white z-10"
+         style="font-family: 'Outfit', sans-serif;">Kibi</a>
+
+      <!-- Info card -->
+      <div class="absolute bottom-12 left-10 right-10 bg-white/80 backdrop-blur rounded-2xl p-8 z-10">
+        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#005da7]/10 text-[#005da7] text-xs font-semibold mb-4">
+          <span class="material-symbols-outlined text-base">auto_awesome</span>
+          WELCOME TO KIBI
+        </span>
+        <h2 class="text-3xl font-bold mb-2" style="font-family: 'Outfit', sans-serif;">
+          Your next great adventure begins <span class="text-[#005da7]">here.</span>
+        </h2>
+        <p class="text-[#414751] mb-5">AI-curated travel packages designed around your style, budget, and dreams.</p>
+        <!-- Feature pills -->
+        <div class="flex gap-6 pt-4 border-t border-[#c1c7d3]/40">
+          <div class="flex flex-col items-center gap-1">
+            <div class="w-9 h-9 rounded-full bg-[#005da7]/10 flex items-center justify-center text-[#005da7]">
+              <span class="material-symbols-outlined text-lg">auto_awesome</span>
+            </div>
+            <span class="text-xs text-[#414751]">Personalized</span>
+          </div>
+          <div class="flex flex-col items-center gap-1">
+            <div class="w-9 h-9 rounded-full bg-[#005da7]/10 flex items-center justify-center text-[#005da7]">
+              <span class="material-symbols-outlined text-lg">public</span>
+            </div>
+            <span class="text-xs text-[#414751]">Intelligent</span>
+          </div>
+          <div class="flex flex-col items-center gap-1">
+            <div class="w-9 h-9 rounded-full bg-[#005da7]/10 flex items-center justify-center text-[#005da7]">
+              <span class="material-symbols-outlined text-lg">schedule</span>
+            </div>
+            <span class="text-xs text-[#414751]">Effortless</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right: Signup Form -->
+    <section class="w-full lg:w-1/2 flex items-center justify-center p-6 sm:p-10 bg-white lg:overflow-y-auto">
+      <div class="w-full max-w-md space-y-5">
+
+        <!-- Mobile logo -->
+        <div class="lg:hidden flex justify-center mb-2">
+          <a href="index.html" class="text-2xl font-bold text-[#005da7]" style="font-family: 'Outfit', sans-serif;">Kibi</a>
+        </div>
+
+        <!-- Heading -->
+        <div>
+          <h1 class="text-3xl font-bold mb-1" style="font-family: 'Outfit', sans-serif;">Create your account</h1>
+          <p class="text-[#414751]">Start planning your effortless journeys.</p>
+        </div>
+
+        <!-- Form -->
+        <form id="signupForm" action="index.html" class="space-y-4">
+
+          <!-- Full Name -->
+          <div>
+            <label for="name" class="block text-sm font-semibold mb-1">Full Name</label>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#717783]">person</span>
+              <input id="name" name="name" type="text" placeholder="Alex Traveler"
+                class="form-input block w-full pl-11 pr-4 py-2.5 border border-[#c1c7d3] rounded-lg bg-white focus:ring-2 focus:ring-[#005da7] focus:border-[#005da7] outline-none transition"/>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label for="email" class="block text-sm font-semibold mb-1">Email Address</label>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#717783]">mail</span>
+              <input id="email" name="email" type="email" placeholder="alex@example.com"
+                class="form-input block w-full pl-11 pr-4 py-2.5 border border-[#c1c7d3] rounded-lg bg-white focus:ring-2 focus:ring-[#005da7] focus:border-[#005da7] outline-none transition"/>
+            </div>
+          </div>
+
+          <!-- Password -->
+          <div>
+            <label for="password" class="block text-sm font-semibold mb-1">Password</label>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#717783]">lock</span>
+              <input id="password" name="password" type="password" placeholder="Enter your password"
+                minlength="8" required aria-describedby="passwordRequirements"
+                class="form-input block w-full pl-11 pr-12 py-2.5 border border-[#c1c7d3] rounded-lg bg-white focus:ring-2 focus:ring-[#005da7] focus:border-[#005da7] outline-none transition"/>
+              <button type="button" class="password-toggle absolute right-3 top-1/2 -translate-y-1/2 text-[#717783] hover:text-[#1a1c1e] focus:outline-none" aria-label="Toggle password visibility">
+                <span class="material-symbols-outlined text-[20px]">visibility_off</span>
+              </button>
+            </div>
+            <!-- Password requirement pills -->
+            <div id="pwRequirements" class="flex flex-wrap gap-1.5 mt-2" aria-hidden="true">
+              <span class="req-pill inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-[#c1c7d3] text-xs text-[#414751] transition-colors" data-rule="length">
+                <span class="req-dot w-1.5 h-1.5 rounded-full border border-[#c1c7d3]"></span>8+ chars
+              </span>
+              <span class="req-pill inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-[#c1c7d3] text-xs text-[#414751] transition-colors" data-rule="upper">
+                <span class="req-dot w-1.5 h-1.5 rounded-full border border-[#c1c7d3]"></span>Uppercase
+              </span>
+              <span class="req-pill inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-[#c1c7d3] text-xs text-[#414751] transition-colors" data-rule="lower">
+                <span class="req-dot w-1.5 h-1.5 rounded-full border border-[#c1c7d3]"></span>Lowercase
+              </span>
+              <span class="req-pill inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border border-[#c1c7d3] text-xs text-[#414751] transition-colors" data-rule="number">
+                <span class="req-dot w-1.5 h-1.5 rounded-full border border-[#c1c7d3]"></span>Number
+              </span>
+            </div>
+            <span id="passwordRequirements" class="sr-only">Use 8+ characters with uppercase, lowercase, and a number.</span>
+          </div>
+
+          <!-- Confirm Password -->
+          <div>
+            <label for="confirmPassword" class="block text-sm font-semibold mb-1">Confirm Password</label>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#717783]">lock_reset</span>
+              <input id="confirmPassword" name="confirmPassword" type="password" placeholder="Confirm your password"
+                class="form-input block w-full pl-11 pr-12 py-2.5 border border-[#c1c7d3] rounded-lg bg-white focus:ring-2 focus:ring-[#005da7] focus:border-[#005da7] outline-none transition"/>
+              <button type="button" class="password-toggle absolute right-3 top-1/2 -translate-y-1/2 text-[#717783] hover:text-[#1a1c1e] focus:outline-none" aria-label="Toggle confirm password visibility">
+                <span class="material-symbols-outlined text-[20px]">visibility_off</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Terms checkbox -->
+          <div class="flex items-start gap-3">
+            <input id="terms" name="terms" type="checkbox"
+              class="mt-1 h-4 w-4 text-[#005da7] border-[#c1c7d3] rounded focus:ring-[#005da7]"/>
+            <label for="terms" class="text-sm text-[#414751]">
+              I agree to the
+              <a href="#" class="text-[#005da7] hover:underline font-medium">Terms of Service</a>
+              and
+              <a href="#" class="text-[#005da7] hover:underline font-medium">Privacy Policy</a>.
+            </label>
+          </div>
+
+          <!-- Submit -->
+          <button type="submit"
+            class="w-full flex justify-center items-center gap-2 py-3 rounded-xl bg-[#005da7] text-white font-semibold hover:bg-[#2976c7] focus:ring-2 focus:ring-[#005da7] transition-all duration-200 active:scale-[0.98]">
+            Create Account
+            <span class="material-symbols-outlined text-lg">arrow_forward</span>
+          </button>
+        </form>
+
+        <!-- Divider -->
+        <div class="relative flex items-center">
+          <div class="flex-grow border-t border-[#c1c7d3]/40"></div>
+          <span class="mx-4 text-xs text-[#414751]">Or sign up with</span>
+          <div class="flex-grow border-t border-[#c1c7d3]/40"></div>
+        </div>
+
+        <!-- Social Buttons -->
+        <div class="grid grid-cols-2 gap-4">
+          <button type="button" data-provider="google"
+            class="social-btn inline-flex justify-center items-center gap-2 py-2.5 px-4 border border-[#c1c7d3] rounded-lg bg-white hover:bg-[#f3f3f6] text-sm font-semibold transition">
+            <svg class="w-5 h-5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            </svg>
+            Google
+          </button>
+          <button type="button" data-provider="apple"
+            class="social-btn inline-flex justify-center items-center gap-2 py-2.5 px-4 border border-[#c1c7d3] rounded-lg bg-white hover:bg-[#f3f3f6] text-sm font-semibold transition">
+            <svg class="w-5 h-5" viewBox="0 0 384 512" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+              <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/>
+            </svg>
+            Apple
+          </button>
+        </div>
+
+        <!-- Login link -->
+        <p class="text-center text-sm text-[#414751]">
+          Already have an account?
+          <a href="login.html" class="text-[#005da7] font-semibold hover:underline ml-1">Log in</a>
+        </p>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- SDKs -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://appleid.cdn-apple.com/appleauth/static/jsapi/appleid/1/en_US/appleid.auth.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/auth.js"></script>
+
+  <script>
+    // Toggle show/hide password for all toggle buttons
+    document.querySelectorAll('.password-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const input = btn.parentElement.querySelector('input');
+        const icon  = btn.querySelector('.material-symbols-outlined');
+        const show  = input.type === 'password';
+        input.type       = show ? 'text' : 'password';
+        icon.textContent = show ? 'visibility' : 'visibility_off';
+        btn.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+      });
     });
-  });
-})();
-</script>
+
+    // Live password requirement pills
+    const pwInput = document.getElementById('password');
+    const pills   = document.querySelectorAll('#pwRequirements .req-pill');
+    if (pwInput) {
+      pwInput.addEventListener('input', () => {
+        const v = pwInput.value;
+        const rules = {
+          length: v.length >= 8,
+          upper:  /[A-Z]/.test(v),
+          lower:  /[a-z]/.test(v),
+          number: /[0-9]/.test(v)
+        };
+        pills.forEach(pill => pill.classList.toggle('met', !!rules[pill.dataset.rule]));
+      });
+    }
+  </script>
+
 </body>
 </html>

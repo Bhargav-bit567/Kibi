@@ -1,0 +1,15 @@
+# Backup archive
+backup.zip
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+
+# IDE
+.vscode/settings.json
+
+# Local runtime config with real OAuth credentials
+config.json
+.env

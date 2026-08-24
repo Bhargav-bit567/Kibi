@@ -1,42 +1,25 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description"
-    content="Kibi — AI-powered personalized travel planning. Discover destinations, create itineraries, find compatible travel companions.">
+  <meta name="description" content="Kibi — AI-powered personalized travel planning. Discover destinations, create itineraries, find compatible travel companions.">
   <title>Kibi — AI Travel Planner</title>
   <script src="js/tailwind-config.js"></script>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <script>
-    // Merge Kibi brand colors into the existing Tailwind config
     tailwind.config = {
       theme: {
         extend: {
           colors: {
-            brand: {
-              blue: '#5C9CE6',
-              dark: '#0A1B29',
-              light: '#F8F9FA',
-            },
-            charcoal: '#0F1419',
-            cream: '#F7F5F0',
-            sage: '#6B8E6E',
-            sand: '#C4B8A5',
-            'text-main': '#2D2D2D',
-            'text-secondary': '#6B6B6B',
-            'text-muted': '#9A9A9A',
+            brand: { blue: '#5C9CE6', dark: '#0A1B29', light: '#F8F9FA' },
+            charcoal: '#0F1419', cream: '#F7F5F0', sage: '#6B8E6E', sand: '#C4B8A5',
+            'text-main': '#2D2D2D', 'text-secondary': '#6B6B6B', 'text-muted': '#9A9A9A',
           },
           fontFamily: {
-            sans: ['Inter', 'sans-serif'],
-            script: ['Caveat', 'cursive'],
-            heading: ['Outfit', 'sans-serif'],
+            sans: ['Inter','sans-serif'], script: ['Caveat','cursive'], heading: ['Outfit','sans-serif'],
           },
-          boxShadow: {
-            soft: '0 4px 24px rgba(0, 0, 0, 0.05)',
-            card: '0 8px 30px rgba(0, 0, 0, 0.08)',
-          }
+          boxShadow: { soft: '0 4px 24px rgba(0,0,0,0.05)', card: '0 8px 30px rgba(0,0,0,0.08)' }
         }
       }
     };
@@ -46,1105 +29,612 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/animations.css">
   <link rel="stylesheet" href="css/responsive.css">
-  <style data-purpose="custom-styles">
-    body {
-
-      background-color: #F8FAFC;
-      color: #1E293B;
-      overflow-x: hidden;
-      transition: background-color 400ms ease, color 400ms ease;
-    }
-
-    html.dark body {
-      background-color: #0B0F17;
-      color: #E8EAED;
-    }
-
-    html.dark .hero-bg::before {
-      background: linear-gradient(to bottom, rgba(0, 10, 25, 0.55) 0%, rgba(0, 0, 0, 0) 35%, rgba(11, 15, 23, 0) 80%, rgba(11, 15, 23, 1) 100%);
-    }
-
-    html.dark #planPreviewBorder { border-color: #FFFFFF !important; }
-
-    
-
-    .hero-bg {
-      background-image: url('hero.png');
-      background-size: cover;
-      background-position: center bottom;
-      background-repeat: no-repeat;
-      position: relative;
-    }
-
-    .hero-bg::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(to bottom, rgba(0, 20, 40, 0.25) 0%, rgba(0, 0, 0, 0) 35%, rgba(248, 250, 252, 0) 80%, rgba(248, 250, 252, 1) 100%);
-      z-index: 1;
-    }
-
-    .dotted-path {
-      position: absolute;
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    .path-svg {
-      stroke-dasharray: 4, 8;
-      stroke: rgba(255, 255, 255, 0.6);
-      stroke-width: 2;
-      fill: none;
-    }
-
-    .glass-panel {
-      background: rgba(30, 41, 59, 0.4);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-    }
-
-    .glass-card {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-    }
-
-    .glass-nav {
-      background: rgba(255, 255, 255, 0.25);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.4);
-    }
-
-    .glass-badge {
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.35);
-    }
-
-    .itinerary-preview-bg {
-      background: linear-gradient(135deg, rgba(20, 30, 48, 0.82) 0%, rgba(36, 59, 85, 0.82) 100%),
-        url('https://images.unsplash.com/photo-1474044159687-1ee9f3a51722?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.15);
-    }
-
-    .glass-column {
-      background: rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-    }
-
-    .glass-item {
-      background: rgba(255, 255, 255, 0.12);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      transition: all 0.25s ease;
-    }
-
-    .glass-item:hover {
-      background: rgba(255, 255, 255, 0.2);
-      transform: translateY(-2px);
-    }
-
-    .pricing-card-highlight {
-      background: linear-gradient(180deg, #4A90E2 0%, #357ABD 100%);
-      box-shadow: 0 20px 40px -15px rgba(74, 144, 226, 0.5);
-    }
-
-    /* SVG Flight Line Animation */
-    .dash-line {
-      stroke-dasharray: 8 8;
-      animation: dash 30s linear infinite;
-    }
-
-    @keyframes dash {
-      to {
-        stroke-dashoffset: -1000;
-      }
-    }
-
-    .filter-btn.active {
-      background-color: #4A90E2;
-      color: white;
-    }
-
-    .filter-btn {
-      transition: all 0.2s ease;
-    }
-
-    .faq-content.hidden {
-      display: none;
-    }
-
-    .faq-content {
-      display: block;
-    }
+  <style>
+    body { background-color:#F8FAFC; color:#1E293B; overflow-x:hidden; transition:background-color 400ms ease,color 400ms ease; }
+    html.dark body { background-color:#0B0F17; color:#E8EAED; }
+    html.dark .hero-bg::before { background:linear-gradient(to bottom,rgba(0,10,25,.55) 0%,rgba(0,0,0,0) 35%,rgba(11,15,23,0) 80%,rgba(11,15,23,1) 100%); }
+    html.dark #planPreviewBorder { border-color:#FFFFFF !important; }
+    .hero-bg { background-image:url('hero.png'); background-size:cover; background-position:center bottom; background-repeat:no-repeat; position:relative; }
+    .hero-bg::before { content:''; position:absolute; inset:0; background:linear-gradient(to bottom,rgba(0,20,40,.25) 0%,rgba(0,0,0,0) 35%,rgba(248,250,252,0) 80%,rgba(248,250,252,1) 100%); z-index:1; }
+    .dotted-path { position:absolute; z-index:0; pointer-events:none; }
+    .path-svg { stroke-dasharray:4,8; stroke:rgba(255,255,255,.6); stroke-width:2; fill:none; }
+    .glass-panel { background:rgba(30,41,59,.4); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,.1); }
+    .glass-card { background:rgba(255,255,255,.1); backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,.2); }
+    .glass-nav { background:rgba(255,255,255,.25); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,.4); }
+    .glass-badge { background:rgba(255,255,255,.2); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,.35); }
+    .itinerary-preview-bg { background:linear-gradient(135deg,rgba(20,30,48,.82) 0%,rgba(36,59,85,.82) 100%),url('https://images.unsplash.com/photo-1474044159687-1ee9f3a51722?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat; backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,.15); }
+    .glass-column { background:rgba(255,255,255,.08); backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,.12); }
+    .glass-item { background:rgba(255,255,255,.12); backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,.18); transition:all .25s ease; }
+    .glass-item:hover { background:rgba(255,255,255,.2); transform:translateY(-2px); }
+    .pricing-card-highlight { background:linear-gradient(180deg,#4A90E2 0%,#357ABD 100%); box-shadow:0 20px 40px -15px rgba(74,144,226,.5); }
+    .dash-line { stroke-dasharray:8 8; animation:dash 30s linear infinite; }
+    @keyframes dash { to { stroke-dashoffset:-1000; } }
+    .filter-btn.active { background-color:#4A90E2; color:white; }
+    .filter-btn { transition:all .2s ease; }
+    .faq-content.hidden { display:none; }
+    .faq-content { display:block; }
   </style>
 </head>
-
 <body class="antialiased">
 
-  <!-- BEGIN: Hero Section -->
+  <!-- Hero -->
   <section class="relative min-h-[800px] lg:h-[900px] w-full flex flex-col overflow-hidden hero-bg">
+    <header class="relative z-50 px-6 lg:px-12 flex justify-between items-center w-full max-w-7xl mx-auto pt-6 pb-4">
+      <a href="index.html" class="logo-kibi flex items-center justify-center h-10 px-5 bg-white/90 backdrop-blur-md rounded-full font-heading font-bold text-[1.25rem] tracking-tight text-[#005da7] hover:bg-white transition-colors shadow-sm border border-white/20">Kibi</a>
+      <nav class="hidden md:flex items-center bg-white/85 backdrop-blur-md rounded-full px-2 py-1.5 border border-white/40 shadow-sm relative">
+        <div id="navActivePill" class="absolute top-1/2 -translate-y-1/2 h-[calc(100%-12px)] rounded-full bg-white shadow-sm border border-slate-50 transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] pointer-events-none z-0" style="left:0;width:0;opacity:0"></div>
+        <ul class="flex items-center gap-1 lg:gap-2 text-[14px] relative z-10">
+          <li><a href="index.html" data-nav-pill-target="home" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 text-slate-700 hover:text-slate-900">Home</a></li>
+          <li><a href="discover.html" data-nav-pill-target="discover" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 text-slate-700 hover:text-slate-900">Discover</a></li>
+          <li><a href="plan-trip.html" data-nav-pill-target="plan-trip" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 text-slate-700 hover:text-slate-900">Plan Trip</a></li>
+          <li><a href="my-trips.html" data-nav-pill-target="my-trips" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 text-slate-700 hover:text-slate-900">My Trips</a></li>
+          <li><a href="about.html" data-nav-pill-target="about" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 text-slate-700 hover:text-slate-900">About Us</a></li>
+        </ul>
+      </nav>
+      <div class="flex items-center gap-3">
+        <div id="auth-action-container"></div>
+        <button id="mobile-menu-btn" class="md:hidden w-10 h-10 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-slate-800 hover:bg-white transition-colors shadow-sm border border-white/20 relative">
+          <span class="hamburger-box"><span class="hamburger-line"></span><span class="hamburger-line"></span><span class="hamburger-line"></span></span>
+        </button>
+      </div>
+    </header>
 
-    <!-- Header -->
-<header class="relative z-50 px-6 lg:px-12 flex justify-between items-center w-full max-w-7xl mx-auto pt-6 pb-4">
-  
-  <!-- Logo -->
-  <a href="index.html" class="logo-kibi flex items-center justify-center h-10 px-5 bg-white/90 backdrop-blur-md rounded-full font-heading font-bold text-[1.25rem] tracking-tight text-[#005da7] hover:bg-white transition-colors shadow-sm border border-white/20">
-    Kibi
-  </a>
+    <div id="mobileMenu" class="fixed inset-0 z-40 bg-white/95 backdrop-blur-lg opacity-0 pointer-events-none transition-opacity duration-300 md:hidden flex flex-col items-center justify-center gap-6">
+      <a href="index.html" class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">Home</a>
+      <a href="discover.html" class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">Discover</a>
+      <a href="plan-trip.html" class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">Plan Trip</a>
+      <a href="my-trips.html" class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">My Trips</a>
+      <a href="about.html" class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">About Us</a>
+      <div id="mobile-auth-action-container"></div>
+    </div>
 
-  <!-- Center Nav Pill -->
-  <nav class="hidden md:flex items-center bg-white/85 backdrop-blur-md rounded-full px-2 py-1.5 border border-white/40 shadow-sm relative">
-    <div id="navActivePill" class="absolute top-1/2 -translate-y-1/2 h-[calc(100%-12px)] rounded-full bg-white shadow-sm border border-slate-50 transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] pointer-events-none z-0" style="left:0;width:0;opacity:0"></div>
-    <ul class="flex items-center gap-1 lg:gap-2 text-[14px] relative z-10">
-      <li><a href="index.html" data-nav-pill-target="home" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 text-slate-700 hover:text-slate-900">Home</a></li>
-      <li><a href="discover.html" data-nav-pill-target="discover" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 text-slate-700 hover:text-slate-900">Discover</a></li>
-      <li><a href="plan-trip.html" data-nav-pill-target="plan-trip" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 text-slate-700 hover:text-slate-900">Plan Trip</a></li>
-      <li><a href="my-trips.html" data-nav-pill-target="my-trips" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 text-slate-700 hover:text-slate-900">My Trips</a></li>
-      <li><a href="about.html" data-nav-pill-target="about" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 text-slate-700 hover:text-slate-900">About Us</a></li>
-    </ul>
-  </nav>
-
-  <!-- Right Action -->
-  <div class="flex items-center gap-3">
-    <div id="auth-action-container"></div>
-    <button id="mobile-menu-btn" class="md:hidden w-10 h-10 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-slate-800 hover:bg-white transition-colors shadow-sm border border-white/20 relative">
-      <span class="hamburger-box"><span class="hamburger-line"></span><span class="hamburger-line"></span><span class="hamburger-line"></span></span>
-    </button>
-  </div>
-</header>
-<!-- Mobile Menu -->
-<div id="mobileMenu" class="fixed inset-0 z-40 bg-white/95 backdrop-blur-lg opacity-0 pointer-events-none transition-opacity duration-300 md:hidden flex flex-col items-center justify-center gap-6">
-  <a href="index.html" class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">Home</a>
-  <a href="discover.html" class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">Discover</a>
-  <a href="plan-trip.html" class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">Plan Trip</a>
-  <a href="my-trips.html" class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">My Trips</a>
-  <a href="about.html" class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">About Us</a>
-  <div id="mobile-auth-action-container"></div>
-</div>
-
-
-
-    <!-- Hero Content -->
-    <div
-      class="relative z-20 flex flex-col items-center justify-start pt-16 lg:pt-20 text-center px-4 w-full max-w-4xl mx-auto flex-grow">
+    <div class="relative z-20 flex flex-col items-center justify-start pt-16 lg:pt-20 text-center px-4 w-full max-w-4xl mx-auto flex-grow">
       <div class="relative inline-block mb-1">
-        <svg class="absolute -top-3 -left-5 w-4 h-4 text-white/90" fill="currentColor" viewBox="0 0 16 16">
-          <path d="M8 0l1.5 5.5L15 7l-5.5 1.5L8 14l-1.5-5.5L1 7l5.5-1.5z" />
-        </svg>
-        <svg class="absolute -top-1 -right-4 w-3 h-3 text-white/90" fill="currentColor" viewBox="0 0 16 16">
-          <path d="M8 0l1.5 5.5L15 7l-5.5 1.5L8 14l-1.5-5.5L1 7l5.5-1.5z" />
-        </svg>
+        <svg class="absolute -top-3 -left-5 w-4 h-4 text-white/90" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0l1.5 5.5L15 7l-5.5 1.5L8 14l-1.5-5.5L1 7l5.5-1.5z"/></svg>
+        <svg class="absolute -top-1 -right-4 w-3 h-3 text-white/90" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0l1.5 5.5L15 7l-5.5 1.5L8 14l-1.5-5.5L1 7l5.5-1.5z"/></svg>
         <p class="text-white text-4xl md:text-5xl font-script tracking-wide">Let AI create your</p>
       </div>
-      <h1
-        class="text-6xl md:text-8xl lg:text-[8.5rem] font-bold text-white mb-2 tracking-tighter leading-none">
-        Journey</h1>
-      <p class="text-white text-base md:text-lg max-w-2xl mb-6 leading-relaxed font-semibold">
-        From cozy stays and iconic restaurants to hidden local spots, our AI curates a complete travel package based on
-        your needs.
-      </p>
-
+      <h1 class="text-6xl md:text-8xl lg:text-[8.5rem] font-bold text-white mb-2 tracking-tighter leading-none">Journey</h1>
+      <p class="text-white text-base md:text-lg max-w-2xl mb-6 leading-relaxed font-semibold">From cozy stays and iconic restaurants to hidden local spots, our AI curates a complete travel package based on your needs.</p>
       <div class="flex flex-col sm:flex-row gap-4 items-center">
-        <a href="plan-trip.html"
-          class="bg-white text-brand-blue font-bold py-2.5 px-6 rounded-full shadow-2xl hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-2 text-sm">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
-            <path
-              d="M4 11H2v3h2v-3zm5-4H7v7h2V7zm5-5v12h-2V2h2zm-2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-2zM6 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm-5 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3z" />
-          </svg>
+        <a href="plan-trip.html" class="bg-white text-brand-blue font-bold py-2.5 px-6 rounded-full shadow-2xl hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-2 text-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M4 11H2v3h2v-3zm5-4H7v7h2V7zm5-5v12h-2V2h2zm-2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-2zM6 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm-5 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3z"/></svg>
           Start the trip
         </a>
-        <a href="discover.html"
-          class="bg-white/10 border-[1.5px] border-white text-white font-bold py-2.5 px-6 rounded-full hover:bg-white/20 shadow-xl transition-colors flex items-center gap-2 backdrop-blur-lg text-sm">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
-            <path
-              d="M6.428 1.151C6.708.591 7.213 0 8 0s1.292.592 1.572 1.151C9.861 1.73 10 2.431 10 3v3.691l5.17 2.585a1.5 1.5 0 0 1 .83 1.342V12a.5.5 0 0 1-.582.493l-5.507-.918-.375 2.253 1.318 1.318A.5.5 0 0 1 10.5 16h-5a.5.5 0 0 1-.354-.854l1.319-1.318-.376-2.253-5.507.918A.5.5 0 0 1 0 12v-1.382a1.5 1.5 0 0 1 .83-1.342L6 6.691V3c0-.568.14-1.271.428-1.849Z" />
-          </svg>
+        <a href="discover.html" class="bg-white/10 border-[1.5px] border-white text-white font-bold py-2.5 px-6 rounded-full hover:bg-white/20 shadow-xl transition-colors flex items-center gap-2 backdrop-blur-lg text-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M6.428 1.151C6.708.591 7.213 0 8 0s1.292.592 1.572 1.151C9.861 1.73 10 2.431 10 3v3.691l5.17 2.585a1.5 1.5 0 0 1 .83 1.342V12a.5.5 0 0 1-.582.493l-5.507-.918-.375 2.253 1.318 1.318A.5.5 0 0 1 10.5 16h-5a.5.5 0 0 1-.354-.854l1.319-1.318-.376-2.253-5.507.918A.5.5 0 0 1 0 12v-1.382a1.5 1.5 0 0 1 .83-1.342L6 6.691V3c0-.568.14-1.271.428-1.849Z"/></svg>
           Destinations
         </a>
       </div>
     </div>
   </section>
-  <!-- END: Hero Section -->
 
-  <!-- BEGIN: How It Works Section -->
+  <!-- How It Works -->
   <section id="how-it-works" class="py-24 bg-white relative overflow-hidden">
-
-    <!-- Curved Dotted Flow Line SVG for Desktop -->
-    <svg class="hidden md:block absolute top-1/2 left-0 w-full h-32 pointer-events-none -translate-y-12 z-0"
-      viewBox="0 0 1200 120" fill="none">
-      <path d="M 100,60 Q 300,10 500,60 T 900,60 T 1100,60" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="6 6" />
+    <svg class="hidden md:block absolute top-1/2 left-0 w-full h-32 pointer-events-none -translate-y-12 z-0" viewBox="0 0 1200 120" fill="none">
+      <path d="M 100,60 Q 300,10 500,60 T 900,60 T 1100,60" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="6 6"/>
     </svg>
-
     <div class="max-w-6xl mx-auto px-6 relative z-10">
-
-      <!-- Section Header -->
       <div class="text-center mb-16">
         <p class="text-brand-blue font-semibold text-xs md:text-sm uppercase tracking-wider mb-2">How Kibi Plans</p>
-        <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
-          Your Perfect Journey
-        </h2>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">Your Perfect Journey</h2>
       </div>
-
-      <!-- 4 Steps Grid -->
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 relative">
-
-        <!-- Step 1 -->
-        <div
-          class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 flex flex-col items-center text-center group hover:-translate-y-2 transition duration-300">
-          <div
-            class="w-16 h-16 rounded-2xl bg-red-50 text-red-500 flex items-center justify-center text-2xl mb-6 shadow-inner group-hover:scale-110 transition">
-            <i class="fa-solid fa-list-check"></i>
-          </div>
+        <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 flex flex-col items-center text-center group hover:-translate-y-2 transition duration-300">
+          <div class="w-16 h-16 rounded-2xl bg-red-50 text-red-500 flex items-center justify-center text-2xl mb-6 shadow-inner group-hover:scale-110 transition"><i class="fa-solid fa-list-check"></i></div>
           <h3 class="text-xl font-bold text-slate-900 mb-3">Tell Us What You Like</h3>
-          <p class="text-slate-500 text-sm leading-relaxed">
-            Pick your travel style, mood, interests, and answer a few questions. We'll handle the rest.
-          </p>
+          <p class="text-slate-500 text-sm leading-relaxed">Pick your travel style, mood, interests, and answer a few questions. We'll handle the rest.</p>
         </div>
-
-        <!-- Step 2 -->
-        <div
-          class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 flex flex-col items-center text-center group hover:-translate-y-2 transition duration-300 md:translate-y-6">
-          <div
-            class="w-16 h-16 rounded-2xl bg-blue-50 text-brand-blue flex items-center justify-center text-2xl mb-6 shadow-inner group-hover:scale-110 transition">
-            <i class="fa-solid fa-microchip"></i>
-          </div>
+        <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 flex flex-col items-center text-center group hover:-translate-y-2 transition duration-300 md:translate-y-6">
+          <div class="w-16 h-16 rounded-2xl bg-blue-50 text-brand-blue flex items-center justify-center text-2xl mb-6 shadow-inner group-hover:scale-110 transition"><i class="fa-solid fa-microchip"></i></div>
           <h3 class="text-xl font-bold text-slate-900 mb-3">Let AI Curate</h3>
-          <p class="text-slate-500 text-sm leading-relaxed">
-            Our AI blends nostalgia with your taste to build a journey that feels just right.
-          </p>
+          <p class="text-slate-500 text-sm leading-relaxed">Our AI blends nostalgia with your taste to build a journey that feels just right.</p>
         </div>
-
-        <!-- Step 3 -->
-        <div
-          class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 flex flex-col items-center text-center group hover:-translate-y-2 transition duration-300">
-          <div
-            class="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-500 flex items-center justify-center text-2xl mb-6 shadow-inner group-hover:scale-110 transition">
-            <i class="fa-solid fa-users"></i>
-          </div>
+        <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 flex flex-col items-center text-center group hover:-translate-y-2 transition duration-300">
+          <div class="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-500 flex items-center justify-center text-2xl mb-6 shadow-inner group-hover:scale-110 transition"><i class="fa-solid fa-users"></i></div>
           <h3 class="text-xl font-bold text-slate-900 mb-3">Connect & Share</h3>
-          <p class="text-slate-500 text-sm leading-relaxed">
-            See who's going, join groups, or invite friends for a shared adventure.
-          </p>
+          <p class="text-slate-500 text-sm leading-relaxed">See who's going, join groups, or invite friends for a shared adventure.</p>
         </div>
-
-        <!-- Step 4 -->
-        <div
-          class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 flex flex-col items-center text-center group hover:-translate-y-2 transition duration-300 md:translate-y-6">
-          <div
-            class="w-16 h-16 rounded-2xl bg-purple-50 text-purple-500 flex items-center justify-center text-2xl mb-6 shadow-inner group-hover:scale-110 transition">
-            <i class="fa-solid fa-plane-departure"></i>
-          </div>
+        <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 flex flex-col items-center text-center group hover:-translate-y-2 transition duration-300 md:translate-y-6">
+          <div class="w-16 h-16 rounded-2xl bg-purple-50 text-purple-500 flex items-center justify-center text-2xl mb-6 shadow-inner group-hover:scale-110 transition"><i class="fa-solid fa-plane-departure"></i></div>
           <h3 class="text-xl font-bold text-slate-900 mb-3">Go & Feel It</h3>
-          <p class="text-slate-500 text-sm leading-relaxed">
-            Rediscover the magic of travel: personalized, emotional, and unforgettable.
-          </p>
+          <p class="text-slate-500 text-sm leading-relaxed">Rediscover the magic of travel: personalized, emotional, and unforgettable.</p>
         </div>
-
       </div>
-
-      <!-- Section CTA Button -->
       <div class="text-center mt-16 md:mt-20">
-        <a href="plan-trip.html"
-          class="inline-block bg-brand-blue hover:bg-blue-600 text-white font-semibold px-9 py-3.5 rounded-full shadow-lg shadow-blue-500/30 transition transform hover:-translate-y-0.5">
-          Try for free
-        </a>
+        <a href="plan-trip.html" class="inline-block bg-brand-blue hover:bg-blue-600 text-white font-semibold px-9 py-3.5 rounded-full shadow-lg shadow-blue-500/30 transition transform hover:-translate-y-0.5">Try for free</a>
       </div>
-
     </div>
   </section>
-  <!-- END: How It Works Section -->
 
-  <!-- BEGIN: Plan Preview Section -->
+  <!-- Plan Preview -->
   <section id="services" class="py-24 bg-slate-50">
     <div class="max-w-6xl mx-auto px-6">
-
-      <!-- Section Title -->
       <div class="text-center mb-16">
         <p class="text-brand-blue font-semibold text-xs md:text-sm uppercase tracking-wider mb-2">Plan Preview</p>
-        <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">
-          A Personalized Getaway
-        </h2>
-        <p class="text-slate-600 text-base md:text-lg max-w-2xl mx-auto">
-          A real example of an AI-generated itinerary — tailored to your taste, budget, and travel style.
-        </p>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">A Personalized Getaway</h2>
+        <p class="text-slate-600 text-base md:text-lg max-w-2xl mx-auto">A real example of an AI-generated itinerary — tailored to your taste, budget, and travel style.</p>
       </div>
-
-      <!-- Glassmorphic Dark Dashboard Mockup -->
       <div class="relative p-3">
         <div id="planPreviewBorder" class="absolute inset-0 rounded-[1.9rem] border-[3px] border-dashed border-[#000000] pointer-events-none"></div>
         <div class="itinerary-preview-bg rounded-3xl p-6 md:p-10 text-white shadow-2xl relative overflow-hidden">
 
-        <!-- Dashboard Top Nav Bar -->
-        <div
-          class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8 border-b border-white/10 pb-6">
-          <div>
-            <h3 class="text-2xl md:text-3xl font-bold mb-2 text-white">Manali Mountain Escape</h3>
-
-            <!-- Sub Tabs -->
-            <div class="flex flex-wrap items-center gap-2 text-xs font-medium text-white/80">
-              <button
-                class="bg-white/20 text-white px-3 py-1 rounded-full border border-white/30 backdrop-blur-md">Overview</button>
-              <button class="hover:bg-white/10 px-3 py-1 rounded-full transition">Saved Places</button>
-              <button class="hover:bg-white/10 px-3 py-1 rounded-full transition">Booking</button>
-              <button class="hover:bg-white/10 px-3 py-1 rounded-full transition">Transport</button>
-              <button class="hover:bg-white/10 px-3 py-1 rounded-full transition">Hotels</button>
+          <!-- Top Nav -->
+          <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8 border-b border-white/10 pb-6">
+            <div>
+              <h3 class="text-2xl md:text-3xl font-bold mb-2 text-white">Manali Mountain Escape</h3>
+              <div class="flex flex-wrap items-center gap-2 text-xs font-medium text-white/80">
+                <button class="bg-white/20 text-white px-3 py-1 rounded-full border border-white/30 backdrop-blur-md">Overview</button>
+                <button class="hover:bg-white/10 px-3 py-1 rounded-full transition">Saved Places</button>
+                <button class="hover:bg-white/10 px-3 py-1 rounded-full transition">Booking</button>
+                <button class="hover:bg-white/10 px-3 py-1 rounded-full transition">Transport</button>
+                <button class="hover:bg-white/10 px-3 py-1 rounded-full transition">Hotels</button>
+              </div>
+            </div>
+            <div class="flex flex-wrap items-center gap-2 text-xs font-medium">
+              <span class="text-white/70">Interests:</span>
+              <span class="bg-white/15 text-white px-3 py-1 rounded-full border border-white/20">Mountains</span>
+              <span class="bg-white/15 text-white px-3 py-1 rounded-full border border-white/20">Adventure</span>
+              <span class="bg-white/15 text-white px-3 py-1 rounded-full border border-white/20">Photography</span>
+              <span class="bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-3 py-1 rounded-full">₹15,000 budget</span>
             </div>
           </div>
 
-          <!-- Right Badges -->
-          <div class="flex flex-wrap items-center gap-2 text-xs font-medium">
-            <span class="text-white/70">Interests:</span>
-            <span class="bg-white/15 text-white px-3 py-1 rounded-full border border-white/20">Mountains</span>
-            <span class="bg-white/15 text-white px-3 py-1 rounded-full border border-white/20">Adventure</span>
-            <span class="bg-white/15 text-white px-3 py-1 rounded-full border border-white/20">Photography</span>
-            <span class="bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-3 py-1 rounded-full">₹15,000 budget</span>
-          </div>
-        </div>
-
-        <!-- Day 1 Itinerary -->
-        <div id="day1-content">
-        <!-- 3 Column Itinerary Day Schedule -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-
-          <!-- Morning Column -->
-          <div class="glass-column p-4 rounded-2xl flex flex-col gap-3">
-            <div class="flex items-center justify-between mb-2">
-              <span
-                class="bg-amber-500/20 text-amber-300 border border-amber-400/30 text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1.5">
-                <i class="fa-regular fa-sun"></i> Morning
-              </span>
-              <span class="text-xs text-white/60">3 activities</span>
-            </div>
-
-            <!-- Item 1 -->
-            <div class="glass-item p-3.5 rounded-xl">
-              <h4 class="font-semibold text-sm text-white mb-1">Depart from Delhi (Volvo Bus)</h4>
-              <div class="flex justify-between items-center text-xs text-white/70">
-                <span><i class="fa-regular fa-clock mr-1"></i> 6:00 AM</span>
-                <span class="font-medium text-white">₹800</span>
+          <!-- Day 1 -->
+          <div id="day1-content">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <!-- Morning -->
+              <div class="glass-column p-4 rounded-2xl flex flex-col gap-3">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="bg-amber-500/20 text-amber-300 border border-amber-400/30 text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1.5"><i class="fa-regular fa-sun"></i> Morning</span>
+                  <span class="text-xs text-white/60">3 activities</span>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl">
+                  <h4 class="font-semibold text-sm text-white mb-1">Depart from Delhi (Volvo Bus)</h4>
+                  <div class="flex justify-between items-center text-xs text-white/70">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 6:00 AM</span>
+                    <span class="font-medium text-white">₹800</span>
+                  </div>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl">
+                  <h4 class="font-semibold text-sm text-white mb-1">Breakfast at Murthal Dhaba</h4>
+                  <div class="flex justify-between items-center text-xs text-white/70">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 8:30 AM</span>
+                    <span class="font-medium text-white">₹250</span>
+                  </div>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl overflow-hidden">
+                  <div class="flex gap-3 items-center">
+                    <img src="assets/images/dest-manali.jpg" alt="Manali Scenic Drive" class="w-16 h-16 rounded-lg object-cover flex-shrink-0 border border-white/20">
+                    <div>
+                      <h4 class="font-semibold text-sm text-white mb-1">Scenic drive through Kullu Valley</h4>
+                      <div class="flex justify-between items-center text-xs text-white/70 mb-1">
+                        <span><i class="fa-regular fa-clock mr-1"></i> 11:00 AM</span>
+                        <span class="font-medium text-emerald-300">Free</span>
+                      </div>
+                      <p class="text-[11px] text-white/80 line-clamp-2 leading-tight">Drive through lush Kullu Valley with stunning Beas River views.</p>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
-
-            <!-- Item 2 -->
-            <div class="glass-item p-3.5 rounded-xl">
-              <h4 class="font-semibold text-sm text-white mb-1">Breakfast at Murthal Dhaba</h4>
-              <div class="flex justify-between items-center text-xs text-white/70">
-                <span><i class="fa-regular fa-clock mr-1"></i> 8:30 AM</span>
-                <span class="font-medium text-white">₹250</span>
-              </div>
-            </div>
-
-            <!-- Item 3 Card with Thumbnail Image -->
-            <div class="glass-item p-3.5 rounded-xl overflow-hidden relative group">
-              <div class="flex gap-3 items-center">
-                <img src="assets/images/dest-manali.jpg"
-                  alt="Manali Scenic Drive" class="w-16 h-16 rounded-lg object-cover flex-shrink-0 border border-white/20" />
-                <div>
-                  <h4 class="font-semibold text-sm text-white mb-1">Scenic drive through Kullu Valley</h4>
-                  <div class="flex justify-between items-center text-xs text-white/70 mb-1">
-                    <span><i class="fa-regular fa-clock mr-1"></i> 11:00 AM</span>
+              <!-- Afternoon -->
+              <div class="glass-column p-4 rounded-2xl flex flex-col gap-3">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="bg-blue-500/20 text-blue-300 border border-blue-400/30 text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1.5"><i class="fa-solid fa-cloud-sun"></i> Afternoon</span>
+                  <span class="text-xs text-white/60">4 activities</span>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl">
+                  <h4 class="font-semibold text-sm text-white mb-1">Arrive & Check-in at Snow Valley Resort</h4>
+                  <div class="flex justify-between items-center text-xs text-white/70">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 2:00 PM</span>
+                    <span class="font-medium text-white">₹2,500</span>
+                  </div>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl">
+                  <h4 class="font-semibold text-sm text-white mb-1">Lunch at Johnson's Cafe, Mall Road</h4>
+                  <div class="flex justify-between items-center text-xs text-white/70">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 3:00 PM</span>
+                    <span class="font-medium text-white">₹400</span>
+                  </div>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl">
+                  <h4 class="font-semibold text-sm text-white mb-1">Visit Hadimba Devi Temple</h4>
+                  <div class="flex justify-between items-center text-xs text-white/70">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 4:30 PM</span>
                     <span class="font-medium text-emerald-300">Free</span>
                   </div>
-                  <p class="text-[11px] text-white/80 line-clamp-2 leading-tight">
-                    Drive through lush Kullu Valley with stunning Beas River views.
-                  </p>
                 </div>
-              </div>
-            </div>
-
-          </div>
-
-          <!-- Afternoon Column -->
-          <div class="glass-column p-4 rounded-2xl flex flex-col gap-3">
-            <div class="flex items-center justify-between mb-2">
-              <span
-                class="bg-blue-500/20 text-blue-300 border border-blue-400/30 text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1.5">
-                <i class="fa-solid fa-cloud-sun"></i> Afternoon
-              </span>
-              <span class="text-xs text-white/60">4 activities</span>
-            </div>
-
-            <!-- Item 1 -->
-            <div class="glass-item p-3.5 rounded-xl">
-              <h4 class="font-semibold text-sm text-white mb-1">Arrive & Check-in at Snow Valley Resort</h4>
-              <div class="flex justify-between items-center text-xs text-white/70">
-                <span><i class="fa-regular fa-clock mr-1"></i> 2:00 PM</span>
-                <span class="font-medium text-white">₹2,500</span>
-              </div>
-            </div>
-
-            <!-- Item 2 -->
-            <div class="glass-item p-3.5 rounded-xl">
-              <h4 class="font-semibold text-sm text-white mb-1">Lunch at Johnson's Cafe, Mall Road</h4>
-              <div class="flex justify-between items-center text-xs text-white/70">
-                <span><i class="fa-regular fa-clock mr-1"></i> 3:00 PM</span>
-                <span class="font-medium text-white">₹400</span>
-              </div>
-            </div>
-
-            <!-- Item 3 -->
-            <div class="glass-item p-3.5 rounded-xl">
-              <h4 class="font-semibold text-sm text-white mb-1">Visit Hadimba Devi Temple</h4>
-              <div class="flex justify-between items-center text-xs text-white/70">
-                <span><i class="fa-regular fa-clock mr-1"></i> 4:30 PM</span>
-                <span class="font-medium text-emerald-300">Free</span>
-              </div>
-            </div>
-
-            <!-- Item 4 -->
-            <div class="glass-item p-3.5 rounded-xl">
-              <h4 class="font-semibold text-sm text-white mb-1">Stroll on Mall Road & Shopping</h4>
-              <div class="flex justify-between items-center text-xs text-white/70">
-                <span><i class="fa-regular fa-clock mr-1"></i> 5:30 PM</span>
-                <span class="font-medium text-emerald-300">Free</span>
-              </div>
-            </div>
-
-          </div>
-
-          <!-- Evening Column -->
-          <div class="glass-column p-4 rounded-2xl flex flex-col gap-3">
-            <div class="flex items-center justify-between mb-2">
-              <span
-                class="bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1.5">
-                <i class="fa-solid fa-moon"></i> Evening
-              </span>
-              <span class="text-xs text-white/60">3 activities</span>
-            </div>
-
-            <!-- Item 1 -->
-            <div class="glass-item p-3.5 rounded-xl">
-              <h4 class="font-semibold text-sm text-white mb-1">Sunset view at Solang Valley</h4>
-              <div class="flex justify-between items-center text-xs text-white/70">
-                <span><i class="fa-regular fa-clock mr-1"></i> 6:30 PM</span>
-                <span class="font-medium text-emerald-300">Free</span>
-              </div>
-            </div>
-
-            <!-- Item 2 -->
-            <div class="glass-item p-3.5 rounded-xl">
-              <h4 class="font-semibold text-sm text-white mb-1">Dinner at Drifter's Inn</h4>
-              <div class="flex justify-between items-center text-xs text-white/70">
-                <span><i class="fa-regular fa-clock mr-1"></i> 8:00 PM</span>
-                <span class="font-medium text-white">₹500</span>
-              </div>
-            </div>
-
-            <!-- Item 3 -->
-            <div class="glass-item p-3.5 rounded-xl">
-              <h4 class="font-semibold text-sm text-white mb-1">Rest at resort</h4>
-              <div class="flex justify-between items-center text-xs text-white/70">
-                <span><i class="fa-regular fa-clock mr-1"></i> 10:00 PM</span>
-                <span class="font-medium text-blue-200">Already included</span>
-              </div>
-            </div>
-
-          </div>
-
-        </div>
-        </div><!-- end day1-content -->
-
-        <!-- Day 2 Itinerary (hidden by default) -->
-        <div id="day2-content" class="hidden">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-
-          <!-- Morning Column -->
-          <div class="glass-column p-4 rounded-2xl flex flex-col gap-3">
-            <div class="flex items-center justify-between mb-2">
-              <span
-                class="bg-amber-500/20 text-amber-300 border border-amber-400/30 text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1.5">
-                <i class="fa-regular fa-sun"></i> Morning
-              </span>
-              <span class="text-xs text-white/60">3 activities</span>
-            </div>
-
-            <!-- Item 1 -->
-            <div class="glass-item p-3.5 rounded-xl">
-              <h4 class="font-semibold text-sm text-white mb-1">Early morning trek to Rohtang Pass</h4>
-              <div class="flex justify-between items-center text-xs text-white/70">
-                <span><i class="fa-regular fa-clock mr-1"></i> 6:00 AM</span>
-                <span class="font-medium text-white">₹600</span>
-              </div>
-            </div>
-
-            <!-- Item 2 -->
-            <div class="glass-item p-3.5 rounded-xl">
-              <h4 class="font-semibold text-sm text-white mb-1">Snow activities at Rohtang</h4>
-              <div class="flex justify-between items-center text-xs text-white/70">
-                <span><i class="fa-regular fa-clock mr-1"></i> 9:00 AM</span>
-                <span class="font-medium text-white">₹1,200</span>
-              </div>
-            </div>
-
-            <!-- Item 3 with image -->
-            <div class="glass-item p-3.5 rounded-xl overflow-hidden relative group">
-              <div class="flex gap-3 items-center">
-                <img src="assets/images/dest-kasol.jpg"
-                  alt="Kasol River" class="w-16 h-16 rounded-lg object-cover flex-shrink-0 border border-white/20" />
-                <div>
-                  <h4 class="font-semibold text-sm text-white mb-1">Breakfast with Himalayan views</h4>
-                  <div class="flex justify-between items-center text-xs text-white/70 mb-1">
-                    <span><i class="fa-regular fa-clock mr-1"></i> 11:00 AM</span>
-                    <span class="font-medium text-white">₹300</span>
+                <div class="glass-item p-3.5 rounded-xl">
+                  <h4 class="font-semibold text-sm text-white mb-1">Stroll on Mall Road & Shopping</h4>
+                  <div class="flex justify-between items-center text-xs text-white/70">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 5:30 PM</span>
+                    <span class="font-medium text-emerald-300">Free</span>
                   </div>
-                  <p class="text-[11px] text-white/80 line-clamp-2 leading-tight">
-                    Enjoy hot parathas and chai with panoramic snow-peak views.
-                  </p>
+                </div>
+              </div>
+              <!-- Evening -->
+              <div class="glass-column p-4 rounded-2xl flex flex-col gap-3">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1.5"><i class="fa-solid fa-moon"></i> Evening</span>
+                  <span class="text-xs text-white/60">3 activities</span>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl">
+                  <h4 class="font-semibold text-sm text-white mb-1">Sunset view at Solang Valley</h4>
+                  <div class="flex justify-between items-center text-xs text-white/70">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 6:30 PM</span>
+                    <span class="font-medium text-emerald-300">Free</span>
+                  </div>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl">
+                  <h4 class="font-semibold text-sm text-white mb-1">Dinner at Drifter's Inn</h4>
+                  <div class="flex justify-between items-center text-xs text-white/70">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 8:00 PM</span>
+                    <span class="font-medium text-white">₹500</span>
+                  </div>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl">
+                  <h4 class="font-semibold text-sm text-white mb-1">Rest at resort</h4>
+                  <div class="flex justify-between items-center text-xs text-white/70">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 10:00 PM</span>
+                    <span class="font-medium text-blue-200">Already included</span>
+                  </div>
                 </div>
               </div>
             </div>
-
           </div>
 
-          <!-- Afternoon Column -->
-          <div class="glass-column p-4 rounded-2xl flex flex-col gap-3">
-            <div class="flex items-center justify-between mb-2">
-              <span
-                class="bg-blue-500/20 text-blue-300 border border-blue-400/30 text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1.5">
-                <i class="fa-solid fa-cloud-sun"></i> Afternoon
-              </span>
-              <span class="text-xs text-white/60">4 activities</span>
-            </div>
-
-            <!-- Item 1 -->
-            <div class="glass-item p-3.5 rounded-xl">
-              <h4 class="font-semibold text-sm text-white mb-1">Visit Vashisht Hot Springs & Temple</h4>
-              <div class="flex justify-between items-center text-xs text-white/70">
-                <span><i class="fa-regular fa-clock mr-1"></i> 1:00 PM</span>
-                <span class="font-medium text-emerald-300">Free</span>
+          <!-- Day 2 -->
+          <div id="day2-content" class="hidden">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <!-- Morning -->
+              <div class="glass-column p-4 rounded-2xl flex flex-col gap-3">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="bg-amber-500/20 text-amber-300 border border-amber-400/30 text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1.5"><i class="fa-regular fa-sun"></i> Morning</span>
+                  <span class="text-xs text-white/60">3 activities</span>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl">
+                  <h4 class="font-semibold text-sm text-white mb-1">Early morning trek to Rohtang Pass</h4>
+                  <div class="flex justify-between items-center text-xs text-white/70">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 6:00 AM</span>
+                    <span class="font-medium text-white">₹600</span>
+                  </div>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl">
+                  <h4 class="font-semibold text-sm text-white mb-1">Snow activities at Rohtang</h4>
+                  <div class="flex justify-between items-center text-xs text-white/70">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 9:00 AM</span>
+                    <span class="font-medium text-white">₹1,200</span>
+                  </div>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl overflow-hidden">
+                  <div class="flex gap-3 items-center">
+                    <img src="assets/images/dest-kasol.jpg" alt="Kasol River" class="w-16 h-16 rounded-lg object-cover flex-shrink-0 border border-white/20">
+                    <div>
+                      <h4 class="font-semibold text-sm text-white mb-1">Breakfast with Himalayan views</h4>
+                      <div class="flex justify-between items-center text-xs text-white/70 mb-1">
+                        <span><i class="fa-regular fa-clock mr-1"></i> 11:00 AM</span>
+                        <span class="font-medium text-white">₹300</span>
+                      </div>
+                      <p class="text-[11px] text-white/80 line-clamp-2 leading-tight">Enjoy hot parathas and chai with panoramic snow-peak views.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Afternoon -->
+              <div class="glass-column p-4 rounded-2xl flex flex-col gap-3">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="bg-blue-500/20 text-blue-300 border border-blue-400/30 text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1.5"><i class="fa-solid fa-cloud-sun"></i> Afternoon</span>
+                  <span class="text-xs text-white/60">4 activities</span>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl">
+                  <h4 class="font-semibold text-sm text-white mb-1">Visit Vashisht Hot Springs & Temple</h4>
+                  <div class="flex justify-between items-center text-xs text-white/70">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 1:00 PM</span>
+                    <span class="font-medium text-emerald-300">Free</span>
+                  </div>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl">
+                  <h4 class="font-semibold text-sm text-white mb-1">Lunch at Lazy Dog Lounge</h4>
+                  <div class="flex justify-between items-center text-xs text-white/70">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 2:30 PM</span>
+                    <span class="font-medium text-white">₹450</span>
+                  </div>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl">
+                  <h4 class="font-semibold text-sm text-white mb-1">River rafting on Beas River</h4>
+                  <div class="flex justify-between items-center text-xs text-white/70">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 3:30 PM</span>
+                    <span class="font-medium text-white">₹900</span>
+                  </div>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl">
+                  <h4 class="font-semibold text-sm text-white mb-1">Explore Old Manali Cafes</h4>
+                  <div class="flex justify-between items-center text-xs text-white/70">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 5:00 PM</span>
+                    <span class="font-medium text-emerald-300">Free</span>
+                  </div>
+                </div>
+              </div>
+              <!-- Evening -->
+              <div class="glass-column p-4 rounded-2xl flex flex-col gap-3">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1.5"><i class="fa-solid fa-moon"></i> Evening</span>
+                  <span class="text-xs text-white/60">3 activities</span>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl">
+                  <h4 class="font-semibold text-sm text-white mb-1">Bonfire & Stargazing at campsite</h4>
+                  <div class="flex justify-between items-center text-xs text-white/70">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 6:30 PM</span>
+                    <span class="font-medium text-emerald-300">Free</span>
+                  </div>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl">
+                  <h4 class="font-semibold text-sm text-white mb-1">Dinner at Himalayan Cafe</h4>
+                  <div class="flex justify-between items-center text-xs text-white/70">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 8:00 PM</span>
+                    <span class="font-medium text-white">₹500</span>
+                  </div>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl">
+                  <h4 class="font-semibold text-sm text-white mb-1">Return overnight bus to Delhi</h4>
+                  <div class="flex justify-between items-center text-xs text-white/70">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 10:00 PM</span>
+                    <span class="font-medium text-white">₹800</span>
+                  </div>
+                </div>
               </div>
             </div>
-
-            <!-- Item 2 -->
-            <div class="glass-item p-3.5 rounded-xl">
-              <h4 class="font-semibold text-sm text-white mb-1">Lunch at Lazy Dog Lounge</h4>
-              <div class="flex justify-between items-center text-xs text-white/70">
-                <span><i class="fa-regular fa-clock mr-1"></i> 2:30 PM</span>
-                <span class="font-medium text-white">₹450</span>
-              </div>
-            </div>
-
-            <!-- Item 3 -->
-            <div class="glass-item p-3.5 rounded-xl">
-              <h4 class="font-semibold text-sm text-white mb-1">River rafting on Beas River</h4>
-              <div class="flex justify-between items-center text-xs text-white/70">
-                <span><i class="fa-regular fa-clock mr-1"></i> 3:30 PM</span>
-                <span class="font-medium text-white">₹900</span>
-              </div>
-            </div>
-
-            <!-- Item 4 -->
-            <div class="glass-item p-3.5 rounded-xl">
-              <h4 class="font-semibold text-sm text-white mb-1">Explore Old Manali Cafes</h4>
-              <div class="flex justify-between items-center text-xs text-white/70">
-                <span><i class="fa-regular fa-clock mr-1"></i> 5:00 PM</span>
-                <span class="font-medium text-emerald-300">Free</span>
-              </div>
-            </div>
-
           </div>
 
-          <!-- Evening Column -->
-          <div class="glass-column p-4 rounded-2xl flex flex-col gap-3">
-            <div class="flex items-center justify-between mb-2">
-              <span
-                class="bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1.5">
-                <i class="fa-solid fa-moon"></i> Evening
-              </span>
-              <span class="text-xs text-white/60">3 activities</span>
+          <!-- Footer Bar -->
+          <div class="flex flex-col sm:flex-row justify-between items-center gap-4 bg-black/30 p-4 rounded-2xl border border-white/10 backdrop-blur-md">
+            <div class="flex items-center gap-3 text-sm text-white">
+              <div class="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-400 font-bold text-base">₹</div>
+              <span id="budget-label">Total day budget: <strong class="text-white text-base font-bold">₹4,450</strong></span>
             </div>
-
-            <!-- Item 1 -->
-            <div class="glass-item p-3.5 rounded-xl">
-              <h4 class="font-semibold text-sm text-white mb-1">Bonfire & Stargazing at campsite</h4>
-              <div class="flex justify-between items-center text-xs text-white/70">
-                <span><i class="fa-regular fa-clock mr-1"></i> 6:30 PM</span>
-                <span class="font-medium text-emerald-300">Free</span>
-              </div>
+            <div class="flex items-center gap-2" id="day-switcher">
+              <button id="btn-day1" onclick="switchDay(1)" class="bg-white text-brand-blue font-semibold text-xs px-5 py-2 rounded-full shadow transition">Day 1</button>
+              <button id="btn-day2" onclick="switchDay(2)" class="bg-white/15 text-white hover:bg-white/25 font-semibold text-xs px-5 py-2 rounded-full border border-white/20 transition">Day 2</button>
             </div>
-
-            <!-- Item 2 -->
-            <div class="glass-item p-3.5 rounded-xl">
-              <h4 class="font-semibold text-sm text-white mb-1">Dinner at Himalayan Cafe</h4>
-              <div class="flex justify-between items-center text-xs text-white/70">
-                <span><i class="fa-regular fa-clock mr-1"></i> 8:00 PM</span>
-                <span class="font-medium text-white">₹500</span>
-              </div>
-            </div>
-
-            <!-- Item 3 -->
-            <div class="glass-item p-3.5 rounded-xl">
-              <h4 class="font-semibold text-sm text-white mb-1">Return overnight bus to Delhi</h4>
-              <div class="flex justify-between items-center text-xs text-white/70">
-                <span><i class="fa-regular fa-clock mr-1"></i> 10:00 PM</span>
-                <span class="font-medium text-white">₹800</span>
-              </div>
-            </div>
-
           </div>
 
-        </div>
-        </div><!-- end day2-content -->
-
-        <!-- Footer Cost Bar & Day Switcher -->
-        <div
-          class="flex flex-col sm:flex-row justify-between items-center gap-4 bg-black/30 p-4 rounded-2xl border border-white/10 backdrop-blur-md">
-          <div class="flex items-center gap-3 text-sm text-white">
-            <div
-              class="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-400 font-bold text-base">
-              ₹
-            </div>
-            <span id="budget-label">Total day budget: <strong class="text-white text-base font-bold">₹4,450</strong></span>
-          </div>
-
-          <!-- Day Buttons -->
-          <div class="flex items-center gap-2" id="day-switcher">
-            <button id="btn-day1" onclick="switchDay(1)"
-              class="bg-white text-brand-blue font-semibold text-xs px-5 py-2 rounded-full shadow transition">Day
-              1</button>
-            <button id="btn-day2" onclick="switchDay(2)"
-              class="bg-white/15 text-white hover:bg-white/25 font-semibold text-xs px-5 py-2 rounded-full border border-white/20 transition">Day
-              2</button>
-          </div>
         </div>
       </div>
-
     </div>
   </section>
-  <!-- END: Plan Preview Section -->
 
-  <!-- BEGIN: Destinations Section -->
+  <!-- Destinations -->
   <section class="py-16 px-4 w-full max-w-7xl mx-auto">
     <div class="text-center mb-10">
       <p class="text-gray-400 font-semibold text-xs tracking-widest uppercase mb-2">EXPLORE</p>
       <h2 class="text-3xl font-bold text-gray-900 mb-6">Handpicked Destinations</h2>
-
-      <!-- Filter Tabs -->
       <div class="flex flex-wrap justify-center gap-2 mb-8">
-        <button
-          class="px-5 py-2 rounded-full border border-gray-200 bg-white text-sm font-medium text-gray-700 hover:border-brand-blue hover:text-brand-blue transition-colors flex items-center gap-2 shadow-sm">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
-            <path
-              d="M2.5 13.5A.5.5 0 0 1 3 13h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zM2 2h12s2 0 2 2v6s0 2-2 2H2s-2 0-2-2V4s0-2 2-2z" />
-          </svg>
+        <button class="px-5 py-2 rounded-full border border-gray-200 bg-white text-sm font-medium text-gray-700 hover:border-brand-blue hover:text-brand-blue transition-colors flex items-center gap-2 shadow-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M2.5 13.5A.5.5 0 0 1 3 13h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zM2 2h12s2 0 2 2v6s0 2-2 2H2s-2 0-2-2V4s0-2 2-2z"/></svg>
           All Types
         </button>
-        <button
-          class="px-5 py-2 rounded-full border border-gray-200 bg-white text-sm font-medium text-gray-500 hover:border-gray-300 transition-colors">By
-          Season</button>
-        <button
-          class="px-5 py-2 rounded-full border border-gray-200 bg-white text-sm font-medium text-gray-500 hover:border-gray-300 transition-colors">By
-          Interest</button>
-        <button
-          class="px-5 py-2 rounded-full border border-gray-200 bg-white text-sm font-medium text-gray-500 hover:border-gray-300 transition-colors">Popularity</button>
-        <button
-          class="px-5 py-2 rounded-full border border-gray-200 bg-white text-sm font-medium text-gray-500 hover:border-gray-300 transition-colors">Region
-          Base</button>
+        <button class="px-5 py-2 rounded-full border border-gray-200 bg-white text-sm font-medium text-gray-500 hover:border-gray-300 transition-colors">By Season</button>
+        <button class="px-5 py-2 rounded-full border border-gray-200 bg-white text-sm font-medium text-gray-500 hover:border-gray-300 transition-colors">By Interest</button>
+        <button class="px-5 py-2 rounded-full border border-gray-200 bg-white text-sm font-medium text-gray-500 hover:border-gray-300 transition-colors">Popularity</button>
+        <button class="px-5 py-2 rounded-full border border-gray-200 bg-white text-sm font-medium text-gray-500 hover:border-gray-300 transition-colors">Region Base</button>
       </div>
     </div>
-
-    <!-- Search Bar -->
     <div class="max-w-2xl mx-auto mb-8 relative">
-      <input id="homeDestSearch" type="text" placeholder="Where do you want to go? e.g. Manali, Paris, Tokyo"
-        class="w-full bg-white border border-gray-200 rounded-full py-3 pl-5 pr-24 text-sm text-gray-800 focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 shadow-sm">
-      <button id="homeDestSearchBtn"
-        class="absolute right-1.5 top-1/2 -translate-y-1/2 bg-brand-blue text-white text-sm font-semibold px-5 py-2 rounded-full hover:bg-blue-600 transition-colors">
-        Search
-      </button>
+      <input id="homeDestSearch" type="text" placeholder="Where do you want to go? e.g. Manali, Paris, Tokyo" class="w-full bg-white border border-gray-200 rounded-full py-3 pl-5 pr-24 text-sm text-gray-800 focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 shadow-sm">
+      <button id="homeDestSearchBtn" class="absolute right-1.5 top-1/2 -translate-y-1/2 bg-brand-blue text-white text-sm font-semibold px-5 py-2 rounded-full hover:bg-blue-600 transition-colors">Search</button>
     </div>
-
-    <!-- Destination Cards Grid -->
-    <div id="destinationsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 min-h-[320px]">
-      <!-- Cards injected by JS -->
-    </div>
+    <div id="destinationsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 min-h-[320px]"></div>
   </section>
-  <!-- END: Destinations Section -->
 
-  <!-- BEGIN: Pricing Section -->
+  <!-- Pricing -->
   <section id="pricing" class="py-24 bg-slate-50">
     <div class="max-w-6xl mx-auto px-6">
-
-      <!-- Section Header -->
       <div class="text-center mb-16">
         <p class="text-brand-blue font-semibold text-xs md:text-sm uppercase tracking-wider mb-2">Choose the plan</p>
-        <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">
-          That Fits Your Journey
-        </h2>
-        <p class="text-slate-600 text-base md:text-lg max-w-2xl mx-auto">
-          Whether you're just exploring or planning your next group adventure, Kibi has a plan tailored to your needs.
-        </p>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">That Fits Your Journey</h2>
+        <p class="text-slate-600 text-base md:text-lg max-w-2xl mx-auto">Whether you're just exploring or planning your next group adventure, Kibi has a plan tailored to your needs.</p>
       </div>
-
-      <!-- 3 Pricing Cards Container -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center max-w-5xl mx-auto">
 
-        <!-- Card 1: Free Explorer -->
-        <div
-          class="bg-white rounded-3xl p-8 border border-slate-200/80 shadow-lg flex flex-col h-full hover:border-slate-300 transition">
-          <div class="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-2xl mb-6">
-            🎒
-          </div>
+        <!-- Free Explorer -->
+        <div class="bg-white rounded-3xl p-8 border border-slate-200/80 shadow-lg flex flex-col h-full hover:border-slate-300 transition">
+          <div class="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-2xl mb-6">🎒</div>
           <h3 class="text-2xl font-bold text-slate-900 mb-2">Free Explorer</h3>
-          <p class="text-slate-500 text-xs sm:text-sm mb-6 flex-grow">
-            A perfect way to get started. Discover what Kibi can do for you all at no cost.
-          </p>
-
+          <p class="text-slate-500 text-xs sm:text-sm mb-6 flex-grow">A perfect way to get started. Discover what Kibi can do for you all at no cost.</p>
           <div class="mb-8">
             <span class="text-4xl font-extrabold text-slate-900">₹0</span>
             <span class="text-slate-500 text-sm">/ per month</span>
           </div>
-
           <ul class="space-y-4 mb-8 text-xs sm:text-sm text-slate-600">
-            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-blue"></i> A perfect way to get
-              started</li>
-            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-blue"></i> 1 AI-generated
-              itinerary per month</li>
-            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-blue"></i> Basic suggestions
-              based on location</li>
-            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-blue"></i> Save & share trips
-            </li>
+            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-blue"></i> A perfect way to get started</li>
+            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-blue"></i> 1 AI-generated itinerary per month</li>
+            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-blue"></i> Basic suggestions based on location</li>
+            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-blue"></i> Save & share trips</li>
           </ul>
-
-          <a href="signup.html"
-            class="w-full py-3.5 rounded-full border-2 border-brand-blue text-brand-blue font-semibold hover:bg-blue-50 transition mt-auto text-center">
-            Try for free
-          </a>
+          <a href="signup.html" class="w-full py-3.5 rounded-full border-2 border-brand-blue text-brand-blue font-semibold hover:bg-blue-50 transition mt-auto text-center">Try for free</a>
           <p class="text-center text-xs text-slate-400 mt-3">No credit cards needed</p>
         </div>
 
-        <!-- Card 2: Smart Voyager (Highlighted Popular) -->
-        <div
-          class="pricing-card-highlight text-white rounded-3xl p-8 shadow-2xl relative z-10 flex flex-col h-[105%] transform md:-translate-y-2">
-
-          <!-- Popular Badge -->
-          <div
-            class="absolute -top-3.5 right-8 bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 font-extrabold text-xs px-4 py-1.5 rounded-full shadow-lg flex items-center gap-1.5">
+        <!-- Smart Voyager -->
+        <div class="pricing-card-highlight text-white rounded-3xl p-8 shadow-2xl relative z-10 flex flex-col h-[105%] transform md:-translate-y-2">
+          <div class="absolute -top-3.5 right-8 bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 font-extrabold text-xs px-4 py-1.5 rounded-full shadow-lg flex items-center gap-1.5">
             <i class="fa-solid fa-fire"></i> POPULAR
           </div>
-
-          <div
-            class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center text-2xl mb-6 backdrop-blur-md">
-            🧭
-          </div>
+          <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center text-2xl mb-6 backdrop-blur-md">🧭</div>
           <h3 class="text-2xl font-bold mb-2">Smart Voyager</h3>
-          <p class="text-white/80 text-xs sm:text-sm mb-6 flex-grow">
-            Ideal for solo travelers or couples who want tailored travel planning.
-          </p>
-
+          <p class="text-white/80 text-xs sm:text-sm mb-6 flex-grow">Ideal for solo travelers or couples who want tailored travel planning.</p>
           <div class="mb-8">
             <span class="text-4xl font-extrabold text-white">₹849</span>
             <span class="text-white/80 text-sm">/ per month</span>
           </div>
-
           <ul class="space-y-4 mb-8 text-xs sm:text-sm text-white/95">
-            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-amber-300"></i> Unlimited personalized
-              itineraries</li>
-            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-amber-300"></i> Fully personalized
-              travel, powered by AI</li>
-            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-amber-300"></i> Smart calendar with
-              full-day planning</li>
-            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-amber-300"></i> Access to top-rated
-              accommodations</li>
-            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-amber-300"></i> Seasonal travel tips &
-              trends</li>
+            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-amber-300"></i> Unlimited personalized itineraries</li>
+            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-amber-300"></i> Fully personalized travel, powered by AI</li>
+            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-amber-300"></i> Smart calendar with full-day planning</li>
+            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-amber-300"></i> Access to top-rated accommodations</li>
+            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-amber-300"></i> Seasonal travel tips & trends</li>
             <li class="flex items-center gap-3"><i class="fa-solid fa-check text-amber-300"></i> 24/7 chat support</li>
           </ul>
-
-          <a href="signup.html"
-            class="w-full py-3.5 rounded-full bg-brand-blue text-white font-semibold hover:bg-brand-dark transition shadow-lg mt-auto text-center">
-            Subscribe
-          </a>
+          <a href="signup.html" class="w-full py-3.5 rounded-full bg-brand-blue text-white font-semibold hover:bg-brand-dark transition shadow-lg mt-auto text-center">Subscribe</a>
           <p class="text-center text-xs text-white/80 mt-3">7-day free trial</p>
         </div>
 
-        <!-- Card 3: Group Adventurer -->
-        <div
-          class="bg-white rounded-3xl p-8 border border-slate-200/80 shadow-lg flex flex-col h-full hover:border-slate-300 transition">
-          <div class="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-2xl mb-6">
-            🌍
-          </div>
+        <!-- Group Adventurer -->
+        <div class="bg-white rounded-3xl p-8 border border-slate-200/80 shadow-lg flex flex-col h-full hover:border-slate-300 transition">
+          <div class="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-2xl mb-6">🌍</div>
           <h3 class="text-2xl font-bold text-slate-900 mb-2">Group Adventurer</h3>
-          <p class="text-slate-500 text-xs sm:text-sm mb-6 flex-grow">
-            Made for friends, families, or group travel organizers who want to plan together.
-          </p>
-
+          <p class="text-slate-500 text-xs sm:text-sm mb-6 flex-grow">Made for friends, families, or group travel organizers who want to plan together.</p>
           <div class="mb-8">
             <span class="text-4xl font-extrabold text-slate-900">₹1,649</span>
             <span class="text-slate-500 text-sm">/ per month</span>
           </div>
-
           <ul class="space-y-4 mb-8 text-xs sm:text-sm text-slate-600">
-            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-blue"></i> Everything in Smart
-              Voyager</li>
-            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-blue"></i> Multi-user itinerary
-              collaboration</li>
-            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-blue"></i> Shared budgeting and
-              cost split tools</li>
-            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-blue"></i> Group activity
-              suggestions</li>
-            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-blue"></i> AI-powered
-              coordination</li>
+            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-blue"></i> Everything in Smart Voyager</li>
+            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-blue"></i> Multi-user itinerary collaboration</li>
+            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-blue"></i> Shared budgeting and cost split tools</li>
+            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-blue"></i> Group activity suggestions</li>
+            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-blue"></i> AI-powered coordination</li>
           </ul>
-
-          <a href="signup.html"
-            class="w-full py-3.5 rounded-full border border-slate-200 text-slate-700 font-semibold hover:bg-slate-50 transition mt-auto text-center">
-            Subscribe
-          </a>
+          <a href="signup.html" class="w-full py-3.5 rounded-full border border-slate-200 text-slate-700 font-semibold hover:bg-slate-50 transition mt-auto text-center">Subscribe</a>
           <p class="text-center text-xs text-slate-400 mt-3">Cancel anytime</p>
         </div>
 
       </div>
-
-      <!-- Compare Button -->
       <div class="text-center mt-16">
         <p class="text-slate-600 text-sm mb-4">Still not sure which plan fits your journey?</p>
-        <a href="#faq"
-          class="text-brand-blue font-semibold border border-brand-blue/50 hover:border-brand-blue px-7 py-2.5 rounded-full hover:bg-blue-50 transition text-sm inline-flex items-center gap-2">
-          Compare All Plans
-        </a>
+        <a href="#faq" class="text-brand-blue font-semibold border border-brand-blue/50 hover:border-brand-blue px-7 py-2.5 rounded-full hover:bg-blue-50 transition text-sm inline-flex items-center gap-2">Compare All Plans</a>
       </div>
-
     </div>
   </section>
-  <!-- END: Pricing Section -->
 
-  <!-- BEGIN: Testimonials Section -->
+  <!-- Testimonials -->
   <section class="py-24 bg-white overflow-hidden">
     <div class="max-w-6xl mx-auto px-6">
-
-      <!-- Header -->
       <div class="text-center mb-16">
         <p class="text-brand-blue font-semibold text-xs md:text-sm uppercase tracking-wider mb-2">Real Stories</p>
-        <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">
-          Real Journeys
-        </h2>
-        <p class="text-slate-600 text-base md:text-lg max-w-2xl mx-auto">
-          See how Kibi has helped people plan unforgettable trips tailored to their style and preferences.
-        </p>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">Real Journeys</h2>
+        <p class="text-slate-600 text-base md:text-lg max-w-2xl mx-auto">See how Kibi has helped people plan unforgettable trips tailored to their style and preferences.</p>
       </div>
-
-      <!-- Testimonial Slider Container -->
       <div class="relative max-w-4xl mx-auto">
-
-        <div
-          class="bg-white rounded-3xl shadow-xl border border-slate-100 flex flex-col md:flex-row overflow-hidden relative z-10">
-
-          <!-- Left Photo -->
+        <div class="bg-white rounded-3xl shadow-xl border border-slate-100 flex flex-col md:flex-row overflow-hidden relative z-10">
           <div class="md:w-2/5 h-72 md:h-auto relative">
-            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80"
-              alt="Sofia L. traveler" class="w-full h-full object-cover" />
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80" alt="Sofia L. traveler" class="w-full h-full object-cover">
           </div>
-
-          <!-- Right Quote -->
           <div class="md:w-3/5 p-8 md:p-12 flex flex-col justify-between">
             <div>
               <h4 class="text-2xl font-bold text-slate-900 mb-3">Sofia L.</h4>
-              <p class="text-slate-600 leading-relaxed italic text-sm md:text-base mb-6">
-                "This was one of the most effortless and magical trips I've ever had. The suggestions felt tailored just
-                for me, from the quiet beaches to the perfect hotel views. Nostalgic and unforgettable. The personalized
-                itinerary was spot-on. Definitely using it again!"
-              </p>
+              <p class="text-slate-600 leading-relaxed italic text-sm md:text-base mb-6">"This was one of the most effortless and magical trips I've ever had. The suggestions felt tailored just for me, from the quiet beaches to the perfect hotel views. Nostalgic and unforgettable. The personalized itinerary was spot-on. Definitely using it again!"</p>
             </div>
-
             <div>
               <div class="flex items-center gap-2 text-xs font-semibold text-slate-500 mb-3">
                 <i class="fa-solid fa-location-dot text-brand-blue"></i>
                 <span>Amalfi Coast, Italy</span>
               </div>
               <div class="flex gap-1 text-amber-400 text-sm">
-                <i class="fa-solid fa-star"></i>
-                <i class="fa-solid fa-star"></i>
-                <i class="fa-solid fa-star"></i>
-                <i class="fa-solid fa-star"></i>
-                <i class="fa-solid fa-star"></i>
+                <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
               </div>
             </div>
           </div>
-
         </div>
-
-        <!-- Carousel Nav Controls -->
         <div class="flex justify-center items-center gap-4 mt-10">
-          <button aria-label="Previous story"
-            class="w-11 h-11 rounded-full border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-100 transition">
-            <i class="fa-solid fa-chevron-left text-sm"></i>
-          </button>
-          <button aria-label="Next story"
-            class="w-11 h-11 rounded-full bg-brand-blue text-white flex items-center justify-center hover:bg-blue-600 transition shadow-md">
-            <i class="fa-solid fa-chevron-right text-sm"></i>
-          </button>
+          <button aria-label="Previous story" class="w-11 h-11 rounded-full border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-100 transition"><i class="fa-solid fa-chevron-left text-sm"></i></button>
+          <button aria-label="Next story" class="w-11 h-11 rounded-full bg-brand-blue text-white flex items-center justify-center hover:bg-blue-600 transition shadow-md"><i class="fa-solid fa-chevron-right text-sm"></i></button>
         </div>
-
       </div>
-
     </div>
   </section>
-  <!-- END: Testimonials Section -->
 
-  <!-- BEGIN: FAQ Section -->
+  <!-- FAQ -->
   <section id="faq" class="py-24 bg-slate-50">
     <div class="max-w-3xl mx-auto px-6">
-
       <div class="text-center mb-16">
         <p class="text-brand-blue font-semibold text-xs md:text-sm uppercase tracking-wider mb-2">Got Questions?</p>
-        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-          We've Got Answers!
-        </h2>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">We've Got Answers!</h2>
       </div>
-
-      <!-- Accordion Container -->
       <div class="space-y-4" id="faq-accordion">
-
-        <!-- Item 1 (Expanded by default) -->
         <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden transition">
-          <button onclick="toggleFaq(this)"
-            class="w-full px-6 py-5 text-left flex justify-between items-center text-brand-blue font-bold text-base md:text-lg focus:outline-none">
+          <button onclick="toggleFaq(this)" class="w-full px-6 py-5 text-left flex justify-between items-center text-brand-blue font-bold text-base md:text-lg focus:outline-none">
             <span>How does Kibi personalize travel plans for me?</span>
             <i class="fa-solid fa-chevron-up text-brand-blue transition-transform duration-300"></i>
           </button>
-          <div class="faq-answer px-6 pb-6 text-slate-600 text-sm leading-relaxed border-t border-slate-100 pt-3">
-            Kibi uses AI to understand your preferences, budget, travel goals, and past behavior to build an itinerary
-            that feels tailor-made — from places to stay to hidden spots to explore.
-          </div>
+          <div class="faq-answer px-6 pb-6 text-slate-600 text-sm leading-relaxed border-t border-slate-100 pt-3">Kibi uses AI to understand your preferences, budget, travel goals, and past behavior to build an itinerary that feels tailor-made — from places to stay to hidden spots to explore.</div>
         </div>
-
-        <!-- Item 2 -->
         <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden transition">
-          <button onclick="toggleFaq(this)"
-            class="w-full px-6 py-5 text-left flex justify-between items-center text-slate-800 font-bold text-base md:text-lg focus:outline-none hover:text-brand-blue">
+          <button onclick="toggleFaq(this)" class="w-full px-6 py-5 text-left flex justify-between items-center text-slate-800 font-bold text-base md:text-lg focus:outline-none hover:text-brand-blue">
             <span>Is Kibi free to use?</span>
             <i class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300"></i>
           </button>
-          <div
-            class="faq-answer hidden px-6 pb-6 text-slate-600 text-sm leading-relaxed border-t border-slate-100 pt-3">
-            Yes! Kibi offers a Free Explorer tier that lets you create 1 complete AI-generated travel itinerary every
-            month with basic recommendations at zero cost.
-          </div>
+          <div class="faq-answer hidden px-6 pb-6 text-slate-600 text-sm leading-relaxed border-t border-slate-100 pt-3">Yes! Kibi offers a Free Explorer tier that lets you create 1 complete AI-generated travel itinerary every month with basic recommendations at zero cost.</div>
         </div>
-
-        <!-- Item 3 -->
         <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden transition">
-          <button onclick="toggleFaq(this)"
-            class="w-full px-6 py-5 text-left flex justify-between items-center text-slate-800 font-bold text-base md:text-lg focus:outline-none hover:text-brand-blue">
+          <button onclick="toggleFaq(this)" class="w-full px-6 py-5 text-left flex justify-between items-center text-slate-800 font-bold text-base md:text-lg focus:outline-none hover:text-brand-blue">
             <span>Can I edit the itinerary after it's generated?</span>
             <i class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300"></i>
           </button>
-          <div
-            class="faq-answer hidden px-6 pb-6 text-slate-600 text-sm leading-relaxed border-t border-slate-100 pt-3">
-            Absolutely. You can swap activities, modify budget allocations, add personal notes, and adjust timings on
-            any day of your trip.
-          </div>
+          <div class="faq-answer hidden px-6 pb-6 text-slate-600 text-sm leading-relaxed border-t border-slate-100 pt-3">Absolutely. You can swap activities, modify budget allocations, add personal notes, and adjust timings on any day of your trip.</div>
         </div>
-
-        <!-- Item 4 -->
         <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden transition">
-          <button onclick="toggleFaq(this)"
-            class="w-full px-6 py-5 text-left flex justify-between items-center text-slate-800 font-bold text-base md:text-lg focus:outline-none hover:text-brand-blue">
+          <button onclick="toggleFaq(this)" class="w-full px-6 py-5 text-left flex justify-between items-center text-slate-800 font-bold text-base md:text-lg focus:outline-none hover:text-brand-blue">
             <span>Does Kibi cover international destinations?</span>
             <i class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300"></i>
           </button>
-          <div
-            class="faq-answer hidden px-6 pb-6 text-slate-600 text-sm leading-relaxed border-t border-slate-100 pt-3">
-            Yes, Kibi supports thousands of global destinations across Europe, Asia, the Americas, Africa, and Oceania
-            with real-time local intelligence.
-          </div>
+          <div class="faq-answer hidden px-6 pb-6 text-slate-600 text-sm leading-relaxed border-t border-slate-100 pt-3">Yes, Kibi supports thousands of global destinations across Europe, Asia, the Americas, Africa, and Oceania with real-time local intelligence.</div>
         </div>
-
-        <!-- Item 5 -->
         <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden transition">
-          <button onclick="toggleFaq(this)"
-            class="w-full px-6 py-5 text-left flex justify-between items-center text-slate-800 font-bold text-base md:text-lg focus:outline-none hover:text-brand-blue">
+          <button onclick="toggleFaq(this)" class="w-full px-6 py-5 text-left flex justify-between items-center text-slate-800 font-bold text-base md:text-lg focus:outline-none hover:text-brand-blue">
             <span>What makes Kibi different from other travel apps?</span>
             <i class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300"></i>
           </button>
-          <div
-            class="faq-answer hidden px-6 pb-6 text-slate-600 text-sm leading-relaxed border-t border-slate-100 pt-3">
-            Unlike standard travel aggregators, Kibi combines emotional taste profiles, real-time routing logic, and
-            group collaboration tools into an intuitive, visual trip plan.
-          </div>
+          <div class="faq-answer hidden px-6 pb-6 text-slate-600 text-sm leading-relaxed border-t border-slate-100 pt-3">Unlike standard travel aggregators, Kibi combines emotional taste profiles, real-time routing logic, and group collaboration tools into an intuitive, visual trip plan.</div>
         </div>
-
       </div>
-
     </div>
   </section>
-  <!-- END: FAQ Section -->
 
   <div id="footerContainer"></div>
 
-  <!-- Landing page inline interactions -->
   <script>
-    // FAQ Toggle Handler
     function toggleFaq(btn) {
-      const item = btn.parentElement;
-      const answer = item.querySelector('.faq-answer');
+      const answer = btn.parentElement.querySelector('.faq-answer');
       const icon = btn.querySelector('i');
-
-      if (answer.classList.contains('hidden')) {
-        answer.classList.remove('hidden');
-        btn.classList.add('text-brand-blue');
-        btn.classList.remove('text-slate-800');
-        icon.classList.remove('fa-chevron-down', 'text-slate-400');
-        icon.classList.add('fa-chevron-up', 'text-brand-blue');
-      } else {
-        answer.classList.add('hidden');
-        btn.classList.remove('text-brand-blue');
-        btn.classList.add('text-slate-800');
-        icon.classList.remove('fa-chevron-up', 'text-brand-blue');
-        icon.classList.add('fa-chevron-down', 'text-slate-400');
-      }
+      const open = answer.classList.contains('hidden');
+      answer.classList.toggle('hidden', !open);
+      btn.classList.toggle('text-brand-blue', open);
+      btn.classList.toggle('text-slate-800', !open);
+      icon.classList.toggle('fa-chevron-up', open);
+      icon.classList.toggle('fa-chevron-down', !open);
+      icon.classList.toggle('text-brand-blue', open);
+      icon.classList.toggle('text-slate-400', !open);
     }
 
-    // Destination Filter Handler
     function filterDestinations(category, btn) {
-      const buttons = document.querySelectorAll('#destination-filters .filter-btn');
-      buttons.forEach(b => {
-        b.classList.remove('bg-brand-blue', 'text-white', 'shadow-sm');
-        b.classList.add('bg-white', 'text-gray-500');
+      document.querySelectorAll('#destination-filters .filter-btn').forEach(b => {
+        b.classList.remove('bg-brand-blue','text-white','shadow-sm');
+        b.classList.add('bg-white','text-gray-500');
       });
-
-      btn.classList.remove('bg-white', 'text-gray-500');
-      btn.classList.add('bg-brand-blue', 'text-white', 'shadow-sm');
-
-      const cards = document.querySelectorAll('#destinations-grid .dest-card');
-      cards.forEach(card => {
-        if (category === 'all' || card.dataset.category === category) {
-          card.style.display = '';
-        } else {
-          card.style.display = 'none';
-        }
+      btn.classList.remove('bg-white','text-gray-500');
+      btn.classList.add('bg-brand-blue','text-white','shadow-sm');
+      document.querySelectorAll('#destinations-grid .dest-card').forEach(card => {
+        card.style.display = (category === 'all' || card.dataset.category === category) ? '' : 'none';
       });
     }
 
-    // Day Switcher Logic
     function switchDay(dayNum) {
       const btn1 = document.getElementById('btn-day1');
       const btn2 = document.getElementById('btn-day2');
-      const day1Content = document.getElementById('day1-content');
-      const day2Content = document.getElementById('day2-content');
-      const budgetLabel = document.getElementById('budget-label');
-
+      const day1 = document.getElementById('day1-content');
+      const day2 = document.getElementById('day2-content');
+      const label = document.getElementById('budget-label');
+      const active = 'bg-white text-brand-blue font-semibold text-xs px-5 py-2 rounded-full shadow transition';
+      const inactive = 'bg-white/15 text-white hover:bg-white/25 font-semibold text-xs px-5 py-2 rounded-full border border-white/20 transition';
       if (dayNum === 1) {
-        btn1.className = "bg-white text-brand-blue font-semibold text-xs px-5 py-2 rounded-full shadow transition";
-        btn2.className = "bg-white/15 text-white hover:bg-white/25 font-semibold text-xs px-5 py-2 rounded-full border border-white/20 transition";
-        day1Content.classList.remove('hidden');
-        day2Content.classList.add('hidden');
-        budgetLabel.innerHTML = 'Total day budget: <strong class="text-white text-base font-bold">₹4,450</strong>';
+        btn1.className = active; btn2.className = inactive;
+        day1.classList.remove('hidden'); day2.classList.add('hidden');
+        label.innerHTML = 'Total day budget: <strong class="text-white text-base font-bold">₹4,450</strong>';
       } else {
-        btn2.className = "bg-white text-brand-blue font-semibold text-xs px-5 py-2 rounded-full shadow transition";
-        btn1.className = "bg-white/15 text-white hover:bg-white/25 font-semibold text-xs px-5 py-2 rounded-full border border-white/20 transition";
-        day1Content.classList.add('hidden');
-        day2Content.classList.remove('hidden');
-        budgetLabel.innerHTML = 'Total day budget: <strong class="text-white text-base font-bold">₹4,750</strong>';
+        btn2.className = active; btn1.className = inactive;
+        day2.classList.remove('hidden'); day1.classList.add('hidden');
+        label.innerHTML = 'Total day budget: <strong class="text-white text-base font-bold">₹4,750</strong>';
       }
     }
   </script>
@@ -1163,5 +653,4 @@
   <script src="js/animations.js?v=10"></script>
   <script src="js/home.js?v=10"></script>
 </body>
-
 </html>
