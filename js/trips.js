@@ -1043,14 +1043,12 @@ function initMapModal(itinerary) {
     if (!initialized) {
       // Leaflet requires the container to be visible and measured.
       // Wait for the modal to fully render before initializing.
-      requestAnimationFrame(() => {
-        setTimeout(() => {
-          ensureCoords().then(() => {
-            initMap();
-            initialized = true;
-          });
-        }, 250);
-      });
+      setTimeout(() => {
+        ensureCoords().then(() => {
+          initMap();
+          initialized = true;
+        });
+      }, 400);
     } else if (map) {
       requestAnimationFrame(() => {
         setTimeout(() => map.invalidateSize(), 100);
@@ -1125,8 +1123,15 @@ function initMapModal(itinerary) {
     mapContainer.style.width = '100%';
     mapContainer.style.height = '100%';
 
+    // Ensure Leaflet sees a measured container
+    const rect = mapContainer.getBoundingClientRect();
     console.log('[Kibi Map] initMap called with lat/lon:', lat, lon);
-    console.log('[Kibi Map] container dimensions:', mapContainer.getBoundingClientRect());
+    console.log('[Kibi Map] container dimensions:', rect);
+    if (rect.width === 0 || rect.height === 0) {
+      console.warn('[Kibi Map] container has zero size; delaying init.');
+      setTimeout(() => initMap(), 300);
+      return;
+    }
 
     map = L.map('tripMap', { zoomControl: false }).setView([lat, lon], 13);
     L.control.zoom({ position: 'bottomright' }).addTo(map);
