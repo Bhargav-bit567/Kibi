@@ -329,10 +329,10 @@
     if (!grid) return;
 
     const CURATED = [
-      { id: 'dest_manali', name: 'Manali', state: 'Himachal Pradesh', tags: ['Nature', 'Adventure'], image: 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80' },
-      { id: 'dest_kasol', name: 'Kasol', state: 'Himachal Pradesh', tags: ['Slow Travel', 'Mountains'], image: 'https://images.unsplash.com/photo-1506905927185-0d3c0e4d3f4e?w=1200&q=80' },
-      { id: 'dest_goa', name: 'Goa', state: 'Goa', tags: ['Beach', 'Relaxation'], image: 'https://images.unsplash.com/photo-1512343879784-a73133f1bf21?w=1200&q=80' },
-      { id: 'dest_rishikesh', name: 'Rishikesh', state: 'Uttarakhand', tags: ['Adventure', 'Wellness'], image: 'https://images.unsplash.com/photo-1527697891168-4d3a18e2955e?w=1200&q=80' }
+      { id: 'dest_manali', name: 'Manali', state: 'Himachal Pradesh', tags: ['Nature', 'Adventure'], image: 'assets/images/dest-manali.jpg' },
+      { id: 'dest_kasol', name: 'Kasol', state: 'Himachal Pradesh', tags: ['Slow Travel', 'Mountains'], image: 'assets/images/dest-kasol.jpg' },
+      { id: 'dest_goa', name: 'Goa', state: 'Goa', tags: ['Beach', 'Relaxation'], image: 'assets/images/dest-goa.jpg' },
+      { id: 'dest_rishikesh', name: 'Rishikesh', state: 'Uttarakhand', tags: ['Adventure', 'Wellness'], image: 'assets/images/dest-rishikesh.jpg' }
     ];
 
     function addDays(date, days) {
@@ -343,23 +343,22 @@
 
     function renderCard(dest, large = false) {
       return `
-        <div class="${large ? 'lg:col-span-2' : ''} destination-card group relative rounded-[2rem] overflow-hidden shadow-lg h-80 cursor-pointer" role="link" tabindex="0">
-          <img src="${dest.image}" alt="${dest.name}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80'">
+        <div class="destination-card group relative rounded-[2rem] overflow-hidden shadow-lg h-80 cursor-pointer" role="link" tabindex="0">
+          <img src="${dest.image}" alt="${dest.name}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" onerror="this.src='assets/images/dest-manali.jpg'">
           <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
           <div class="absolute top-4 left-4 bg-white/20 backdrop-blur-md rounded-full px-3 py-1 text-xs text-white font-medium border border-white/30">
             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="inline mr-1" viewBox="0 0 16 16"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg>
             4.9
           </div>
           <div class="absolute bottom-6 left-6 right-6">
-            <h3 class="text-white ${large ? 'text-2xl' : 'text-xl'} font-bold mb-1">${dest.name}</h3>
-            <p class="text-white/80 ${large ? 'text-sm' : 'text-xs line-clamp-2'}">${dest.description || `Explore ${dest.name}, ${dest.state || ''}`}</p>
-            ${large ? `
-            <div class="flex justify-between items-end mt-4">
+            <h3 class="text-white text-xl font-bold mb-1">${dest.name}</h3>
+            <p class="text-white/80 text-xs line-clamp-2">${dest.description || `Explore ${dest.name}, ${dest.state || ''}`}</p>
+            <div class="flex justify-between items-end mt-3">
               <div class="flex flex-wrap gap-2">
-                ${(dest.tags || []).slice(0, 2).map(tag => `<span class="text-xs px-2 py-1 bg-white/20 backdrop-blur-sm rounded-full">${tag}</span>`).join('')}
+                ${(dest.tags || []).slice(0, 2).map(tag => `<span class="text-xs px-2 py-1 bg-white/20 backdrop-blur-sm rounded-full text-white">${tag}</span>`).join('')}
               </div>
-              <button class="bg-white text-gray-900 text-sm font-semibold py-2 px-5 rounded-full hover:bg-gray-100 transition-colors pointer-events-none">View details</button>
-            </div>` : ''}
+              <button class="bg-white text-gray-900 text-xs font-semibold py-1.5 px-4 rounded-full hover:bg-gray-100 transition-colors pointer-events-none">View details</button>
+            </div>
           </div>
         </div>
       `;
@@ -378,7 +377,7 @@
     }
 
     function renderFallback() {
-      grid.innerHTML = CURATED.map((dest, i) => renderCard(dest, i === 0)).join('');
+      grid.innerHTML = CURATED.map((dest) => renderCard(dest, false)).join('');
       wireCardClicks((e) => {
         const card = e.currentTarget;
         const idx = Array.from(grid.children).indexOf(card);

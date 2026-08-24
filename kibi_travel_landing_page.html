@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Kibi - AI Travel Planner</title>
+
+    <!-- Tailwind CSS with plugins -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            blue: '#4A90E2',
+                            lightBlue: '#7BB2E3',
+                            sky: '#D8E5F1',
+                            accent: '#3B82F6',
+                            dark: '#0A192F',
+                            cardDark: '#112240',
+                            light: '#F8FAFC',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+            script: ['Caveat', 'cursive'],
+                        heading: ['Outfit', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'glass': '0 8px 32px 0 rgba(31, 38, 135, 0.15)',
+                        'card-glow': '0 10px 30px -10px rgba(74, 144, 226, 0.3)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts & Font Awesome -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet"/>
+
+    <!-- Custom CSS Styles -->
+    <style data-purpose="custom-styles">
+        body {
+            
+            background-color: #F8FAFC;
+            color: #1E293B;
+            overflow-x: hidden;
+        }
+        
+        
+
+        .hero-bg-gradient {
+            background: linear-gradient(180deg, #62A8EA 0%, #9BC3EC 50%, #E3EDF7 100%);
+        }
+
+        .hero-bg {
+            background-image: url('https://images.unsplash.com/photo-1523987355523-c7b5b0dd90a7?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center bottom;
+            background-repeat: no-repeat;
+            position: relative;
+        }
+
+        .hero-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(123,161,179,0.8) 0%, rgba(230,237,242,0.4) 50%, rgba(248,250,252,1) 100%);
+            z-index: 1;
+        }
+
+        .dotted-path {
+            position: absolute;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .path-svg {
+            stroke-dasharray: 4, 8;
+            stroke: rgba(255,255,255,0.6);
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .glass-panel {
+            background: rgba(30, 41, 59, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .glass-badge {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+        }
+
+        .itinerary-preview-bg {
+            background: linear-gradient(135deg, rgba(20, 30, 48, 0.82) 0%, rgba(36, 59, 85, 0.82) 100%),
+                        url('https://images.unsplash.com/photo-1474044159687-1ee9f3a51722?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .glass-column {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .glass-item {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            transition: all 0.25s ease;
+        }
+
+        .glass-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .pricing-card-highlight {
+            background: linear-gradient(180deg, #4A90E2 0%, #357ABD 100%);
+            box-shadow: 0 20px 40px -15px rgba(74, 144, 226, 0.5);
+        }
+
+        /* SVG Flight Line Animation */
+        .dash-line {
+            stroke-dasharray: 8 8;
+            animation: dash 30s linear infinite;
+        }
+
+        @keyframes dash {
+            to {
+                stroke-dashoffset: -1000;
+            }
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-brand-blue selection:text-white">
+
+<!-- BEGIN: Hero Section -->
+<section class="relative min-h-[800px] lg:h-[900px] w-full flex flex-col pt-6 overflow-hidden hero-bg">
+
+    <!-- Header -->
+    <header class="relative z-50 px-6 lg:px-12 flex justify-between items-center w-full max-w-7xl mx-auto">
+        <div class="flex items-center gap-2 text-white font-bold text-2xl tracking-tighter">
+            <div class="w-8 h-8 rounded-full bg-white flex items-center justify-center text-brand-blue">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/></svg>
+            </div>
+            kibi
+        </div>
+
+        <nav class="hidden md:flex items-center bg-white/20 backdrop-blur-md rounded-full px-6 py-3 border border-white/30">
+            <ul class="flex items-center gap-8 text-white text-sm font-medium">
+                <li><a href="#" class="bg-white text-brand-blue px-4 py-1.5 rounded-full shadow-sm">Home</a></li>
+                <li><a href="#" class="hover:text-white/80 transition-colors">Destinations</a></li>
+                <li><a href="#" class="hover:text-white/80 transition-colors">Packages</a></li>
+                <li><a href="#" class="hover:text-white/80 transition-colors">Reviews</a></li>
+                <li><a href="#" class="hover:text-white/80 transition-colors">About Us</a></li>
+            </ul>
+        </nav>
+
+        <button class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+        </button>
+    </header>
+
+    <!-- Dotted Path Background (Hero) -->
+    <svg class="dotted-path w-full h-full top-0 left-0 z-10" viewBox="0 0 1440 600" preserveAspectRatio="none">
+        <path class="path-svg" d="M-50,150 Q100,300 300,150 T600,100 T1000,200 T1500,400" />
+    </svg>
+
+    <!-- Floating UI Elements -->
+    <div class="absolute left-[10%] top-[30%] z-20 bg-white/90 backdrop-blur rounded-2xl p-3 shadow-lg flex items-center gap-3 w-48 border border-white/50">
+        <div class="w-10 h-10 bg-brand-blue/10 rounded-full flex items-center justify-center text-brand-blue">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <div class="text-xs">
+            <p class="font-bold text-gray-800">Itinerary Plan</p>
+            <p class="text-gray-500">Fast & intelligent generation</p>
+        </div>
+    </div>
+
+    <div class="absolute right-[15%] top-[40%] z-20 bg-white rounded-full p-2 shadow-lg flex items-center gap-2 border border-gray-100">
+        <div class="w-8 h-8 rounded-full overflow-hidden">
+             <img src="https://i.pravatar.cc/100?img=33" alt="User" class="w-full h-full object-cover">
+        </div>
+        <span class="text-xs font-semibold pr-3 text-gray-700">Excellent</span>
+    </div>
+
+    <!-- Hero Content -->
+    <div class="relative z-20 flex flex-col items-center justify-center text-center mt-20 lg:mt-24 px-4 w-full max-w-4xl mx-auto">
+        <p class="text-white text-lg md:text-xl font-medium mb-2 tracking-wide drop-shadow-md">Let's plan a great</p>
+        <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold text-white mb-6 drop-shadow-lg tracking-tight">Journey</h1>
+        <p class="text-white/90 text-sm md:text-base max-w-lg mb-8 drop-shadow leading-relaxed">
+            Plan your perfect adventure from booking flights to finding the best deals, to creating detailed itineraries, we have got you covered.
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-4 items-center">
+            <button class="bg-white text-brand-blue font-semibold py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition-shadow flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                Start your plan
+            </button>
+            <button class="bg-transparent border border-white text-white font-medium py-3 px-8 rounded-full hover:bg-white/10 transition-colors flex items-center gap-2 backdrop-blur-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                How it works
+            </button>
+        </div>
+    </div>
+</section>
+<!-- END: Hero Section -->
+
+<!-- BEGIN: How It Works Section -->
+<section id="how-it-works" class="py-24 bg-white relative overflow-hidden">
+    
+    <!-- Curved Dotted Flow Line SVG for Desktop -->
+    <svg class="hidden md:block absolute top-1/2 left-0 w-full h-32 pointer-events-none -translate-y-12 z-0" viewBox="0 0 1200 120" fill="none">
+        <path d="M 100,60 Q 300,10 500,60 T 900,60 T 1100,60" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="6 6"/>
+    </svg>
+
+    <div class="max-w-6xl mx-auto px-6 relative z-10">
+        
+        <!-- Section Header -->
+        <div class="text-center mb-16">
+            <p class="text-brand-blue font-semibold text-xs md:text-sm uppercase tracking-wider mb-2">How Kibi Plans</p>
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
+                Your Perfect Journey
+            </h2>
+        </div>
+
+        <!-- 4 Steps Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 relative">
+            
+            <!-- Step 1 -->
+            <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 flex flex-col items-center text-center group hover:-translate-y-2 transition duration-300">
+                <div class="w-16 h-16 rounded-2xl bg-red-50 text-red-500 flex items-center justify-center text-2xl mb-6 shadow-inner group-hover:scale-110 transition">
+                    <i class="fa-solid fa-list-check"></i>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900 mb-3">Tell Us What You Like</h3>
+                <p class="text-slate-500 text-sm leading-relaxed">
+                    Pick your travel style, mood, interests, and answer a few questions. We'll handle the rest.
+                </p>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 flex flex-col items-center text-center group hover:-translate-y-2 transition duration-300 md:translate-y-6">
+                <div class="w-16 h-16 rounded-2xl bg-blue-50 text-brand-blue flex items-center justify-center text-2xl mb-6 shadow-inner group-hover:scale-110 transition">
+                    <i class="fa-solid fa-microchip"></i>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900 mb-3">Let AI Curate</h3>
+                <p class="text-slate-500 text-sm leading-relaxed">
+                    Our AI blends nostalgia with your taste to build a journey that feels just right.
+                </p>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 flex flex-col items-center text-center group hover:-translate-y-2 transition duration-300">
+                <div class="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-500 flex items-center justify-center text-2xl mb-6 shadow-inner group-hover:scale-110 transition">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900 mb-3">Connect & Share</h3>
+                <p class="text-slate-500 text-sm leading-relaxed">
+                    See who's going, join groups, or invite friends for a shared adventure.
+                </p>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 flex flex-col items-center text-center group hover:-translate-y-2 transition duration-300 md:translate-y-6">
+                <div class="w-16 h-16 rounded-2xl bg-purple-50 text-purple-500 flex items-center justify-center text-2xl mb-6 shadow-inner group-hover:scale-110 transition">
+                    <i class="fa-solid fa-plane-departure"></i>
+                </div>
+                <h3 class="text-xl font-bold text-slate-900 mb-3">Go & Feel It</h3>
+                <p class="text-slate-500 text-sm leading-relaxed">
+                    Rediscover the magic of travel: personalized, emotional, and unforgettable.
+                </p>
+            </div>
+
+        </div>
+
+        <!-- Section CTA Button -->
+        <div class="text-center mt-16 md:mt-20">
+            <a href="#pricing" class="inline-block bg-brand-blue hover:bg-blue-600 text-white font-semibold px-9 py-3.5 rounded-full shadow-lg shadow-blue-500/30 transition transform hover:-translate-y-0.5">
+                Try for free
+            </a>
+        </div>
+
+    </div>
+</section>
+<!-- END: How It Works Section -->
+
+<!-- BEGIN: Plan Preview Section -->
+<section id="services" class="py-24 bg-slate-50">
+    <div class="max-w-6xl mx-auto px-6">
+        
+        <!-- Section Title -->
+        <div class="text-center mb-16">
+            <p class="text-brand-blue font-semibold text-xs md:text-sm uppercase tracking-wider mb-2">Plan Preview</p>
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">
+                A Personalized Getaway
+            </h2>
+            <p class="text-slate-600 text-base md:text-lg max-w-2xl mx-auto">
+                A real example of an AI-generated itinerary — tailored to your taste, budget, and travel style.
+            </p>
+        </div>
+
+        <!-- Glassmorphic Dark Dashboard Mockup -->
+        <div class="itinerary-preview-bg rounded-3xl p-6 md:p-10 text-white shadow-2xl relative overflow-hidden">
+            
+            <!-- Dashboard Top Nav Bar -->
+            <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8 border-b border-white/10 pb-6">
+                <div>
+                    <h3 class="text-2xl md:text-3xl font-bold mb-2 text-white">Grand Canyon Adventure</h3>
+                    
+                    <!-- Sub Tabs -->
+                    <div class="flex flex-wrap items-center gap-2 text-xs font-medium text-white/80">
+                        <button class="bg-white/20 text-white px-3 py-1 rounded-full border border-white/30 backdrop-blur-md">Overview</button>
+                        <button class="hover:bg-white/10 px-3 py-1 rounded-full transition">Saved Places</button>
+                        <button class="hover:bg-white/10 px-3 py-1 rounded-full transition">Booking</button>
+                        <button class="hover:bg-white/10 px-3 py-1 rounded-full transition">Transport</button>
+                        <button class="hover:bg-white/10 px-3 py-1 rounded-full transition">Hotels</button>
+                    </div>
+                </div>
+
+                <!-- Right Badges -->
+                <div class="flex flex-wrap items-center gap-2 text-xs font-medium">
+                    <span class="text-white/70">Interests:</span>
+                    <span class="bg-white/15 text-white px-3 py-1 rounded-full border border-white/20">Scenic Views</span>
+                    <span class="bg-white/15 text-white px-3 py-1 rounded-full border border-white/20">Relaxing</span>
+                    <span class="bg-white/15 text-white px-3 py-1 rounded-full border border-white/20">Photography</span>
+                    <span class="bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-3 py-1 rounded-full">₹500 budget</span>
+                </div>
+            </div>
+
+            <!-- 3 Column Itinerary Day Schedule -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                
+                <!-- Morning Column -->
+                <div class="glass-column p-4 rounded-2xl flex flex-col gap-3">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="bg-amber-500/20 text-amber-300 border border-amber-400/30 text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1.5">
+                            <i class="fa-regular fa-sun"></i> Morning
+                        </span>
+                        <span class="text-xs text-white/60">3 activities</span>
+                    </div>
+
+                    <!-- Item 1 -->
+                    <div class="glass-item p-3.5 rounded-xl">
+                        <h4 class="font-semibold text-sm text-white mb-1">Depart from Phoenix</h4>
+                        <div class="flex justify-between items-center text-xs text-white/70">
+                            <span><i class="fa-regular fa-clock mr-1"></i> 8:00 AM</span>
+                            <span class="font-medium text-white">₹25</span>
+                        </div>
+                    </div>
+
+                    <!-- Item 2 -->
+                    <div class="glass-item p-3.5 rounded-xl">
+                        <h4 class="font-semibold text-sm text-white mb-1">Stop for breakfast in Flagstaff</h4>
+                        <div class="flex justify-between items-center text-xs text-white/70">
+                            <span><i class="fa-regular fa-clock mr-1"></i> 10:30 AM</span>
+                            <span class="font-medium text-white">₹15</span>
+                        </div>
+                    </div>
+
+                    <!-- Item 3 Card with Thumbnail Image -->
+                    <div class="glass-item p-3.5 rounded-xl overflow-hidden relative group">
+                        <div class="flex gap-3 items-center">
+                            <img src="https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?auto=format&fit=crop&w=300&q=80" 
+                                 alt="Route 66 Drive" 
+                                 class="w-16 h-16 rounded-lg object-cover flex-shrink-0 border border-white/20"/>
+                            <div>
+                                <h4 class="font-semibold text-sm text-white mb-1">Continue scenic drive via Route 66</h4>
+                                <div class="flex justify-between items-center text-xs text-white/70 mb-1">
+                                    <span><i class="fa-regular fa-clock mr-1"></i> 11:30 AM</span>
+                                    <span class="font-medium text-emerald-300">Free</span>
+                                </div>
+                                <p class="text-[11px] text-white/80 line-clamp-2 leading-tight">
+                                    Enjoy a nostalgic drive along iconic Route 66 with desert views.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Afternoon Column -->
+                <div class="glass-column p-4 rounded-2xl flex flex-col gap-3">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="bg-blue-500/20 text-blue-300 border border-blue-400/30 text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1.5">
+                            <i class="fa-solid fa-cloud-sun"></i> Afternoon
+                        </span>
+                        <span class="text-xs text-white/60">4 activities</span>
+                    </div>
+
+                    <!-- Item 1 -->
+                    <div class="glass-item p-3.5 rounded-xl">
+                        <h4 class="font-semibold text-sm text-white mb-1">Check-in at Yavapai Lodge</h4>
+                        <div class="flex justify-between items-center text-xs text-white/70">
+                            <span><i class="fa-regular fa-clock mr-1"></i> 1:00 PM</span>
+                            <span class="font-medium text-white">₹120</span>
+                        </div>
+                    </div>
+
+                    <!-- Item 2 -->
+                    <div class="glass-item p-3.5 rounded-xl">
+                        <h4 class="font-semibold text-sm text-white mb-1">Light lunch at El Tovar Restaurant</h4>
+                        <div class="flex justify-between items-center text-xs text-white/70">
+                            <span><i class="fa-regular fa-clock mr-1"></i> 1:30 PM</span>
+                            <span class="font-medium text-white">₹20</span>
+                        </div>
+                    </div>
+
+                    <!-- Item 3 -->
+                    <div class="glass-item p-3.5 rounded-xl">
+                        <h4 class="font-semibold text-sm text-white mb-1">Visit Mather Point Overlook</h4>
+                        <div class="flex justify-between items-center text-xs text-white/70">
+                            <span><i class="fa-regular fa-clock mr-1"></i> 2:30 PM</span>
+                            <span class="font-medium text-emerald-300">Free</span>
+                        </div>
+                    </div>
+
+                    <!-- Item 4 -->
+                    <div class="glass-item p-3.5 rounded-xl">
+                        <h4 class="font-semibold text-sm text-white mb-1">Walk along South Rim Trail</h4>
+                        <div class="flex justify-between items-center text-xs text-white/70">
+                            <span><i class="fa-regular fa-clock mr-1"></i> 3:30 PM</span>
+                            <span class="font-medium text-emerald-300">Free</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Evening Column -->
+                <div class="glass-column p-4 rounded-2xl flex flex-col gap-3">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1.5">
+                            <i class="fa-solid fa-moon"></i> Evening
+                        </span>
+                        <span class="text-xs text-white/60">3 activities</span>
+                    </div>
+
+                    <!-- Item 1 -->
+                    <div class="glass-item p-3.5 rounded-xl">
+                        <h4 class="font-semibold text-sm text-white mb-1">Sunset view at Hopi Point</h4>
+                        <div class="flex justify-between items-center text-xs text-white/70">
+                            <span><i class="fa-regular fa-clock mr-1"></i> 6:00 PM</span>
+                            <span class="font-medium text-emerald-300">Free</span>
+                        </div>
+                    </div>
+
+                    <!-- Item 2 -->
+                    <div class="glass-item p-3.5 rounded-xl">
+                        <h4 class="font-semibold text-sm text-white mb-1">Dinner near Grand Canyon Village</h4>
+                        <div class="flex justify-between items-center text-xs text-white/70">
+                            <span><i class="fa-regular fa-clock mr-1"></i> 7:30 PM</span>
+                            <span class="font-medium text-white">₹20</span>
+                        </div>
+                    </div>
+
+                    <!-- Item 3 -->
+                    <div class="glass-item p-3.5 rounded-xl">
+                        <h4 class="font-semibold text-sm text-white mb-1">Rest at lodge</h4>
+                        <div class="flex justify-between items-center text-xs text-white/70">
+                            <span><i class="fa-regular fa-clock mr-1"></i> 9:00 PM</span>
+                            <span class="font-medium text-blue-200">Already included</span>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- Footer Cost Bar & Day Switcher -->
+            <div class="flex flex-col sm:flex-row justify-between items-center gap-4 bg-black/30 p-4 rounded-2xl border border-white/10 backdrop-blur-md">
+                <div class="flex items-center gap-3 text-sm text-white">
+                    <div class="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-400">
+                        <span class="font-bold text-base">₹</span>
+                    </div>
+                    <span>Total day budget: <strong class="text-white text-base font-bold">₹200</strong></span>
+                </div>
+
+                <!-- Day Buttons -->
+                <div class="flex items-center gap-2" id="day-switcher">
+                    <button id="btn-day1" onclick="switchDay(1)" class="bg-white text-brand-blue font-semibold text-xs px-5 py-2 rounded-full shadow transition">Day 1</button>
+                    <button id="btn-day2" onclick="switchDay(2)" class="bg-white/15 text-white hover:bg-white/25 font-semibold text-xs px-5 py-2 rounded-full border border-white/20 transition">Day 2</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+<!-- END: Plan Preview Section -->
+
+<!-- BEGIN: Destinations Section -->
+<section class="py-16 px-4 w-full max-w-7xl mx-auto">
+    <div class="text-center mb-10">
+        <p class="text-gray-400 font-semibold text-xs tracking-widest uppercase mb-2">EXPLORE</p>
+        <h2 class="text-3xl font-bold text-gray-900 mb-6">Handpicked Destinations</h2>
+
+        <!-- Filter Tabs -->
+        <div class="flex flex-wrap justify-center gap-2 mb-8">
+            <button class="px-5 py-2 rounded-full border border-gray-200 bg-white text-sm font-medium text-gray-700 hover:border-brand-blue hover:text-brand-blue transition-colors flex items-center gap-2 shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M2.5 13.5A.5.5 0 0 1 3 13h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zM2 2h12s2 0 2 2v6s0 2-2 2H2s-2 0-2-2V4s0-2 2-2z"/></svg>
+                All Types
+            </button>
+            <button class="px-5 py-2 rounded-full border border-gray-200 bg-white text-sm font-medium text-gray-500 hover:border-gray-300 transition-colors">By Season</button>
+            <button class="px-5 py-2 rounded-full border border-gray-200 bg-white text-sm font-medium text-gray-500 hover:border-gray-300 transition-colors">By Interest</button>
+            <button class="px-5 py-2 rounded-full border border-gray-200 bg-white text-sm font-medium text-gray-500 hover:border-gray-300 transition-colors">Popularity</button>
+            <button class="px-5 py-2 rounded-full border border-gray-200 bg-white text-sm font-medium text-gray-500 hover:border-gray-300 transition-colors">Region Base</button>
+        </div>
+    </div>
+
+    <!-- Destination Cards Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+        <!-- Card 1 (Large) -->
+        <div class="lg:col-span-2 group relative rounded-[2rem] overflow-hidden shadow-lg h-80">
+            <img src="https://images.unsplash.com/photo-1516483638261-f4dbaf036963?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Tuscany, Italy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+
+            <div class="absolute top-4 left-4 bg-white/20 backdrop-blur-md rounded-full px-3 py-1 text-xs text-white font-medium border border-white/30">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="inline mr-1" viewBox="0 0 16 16"><path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/></svg>
+                4.9
+            </div>
+
+            <div class="absolute bottom-6 left-6 right-6 flex justify-between items-end">
+                <div>
+                    <h3 class="text-white text-2xl font-bold mb-1">Tuscany, Italy</h3>
+                    <p class="text-white/80 text-sm">Experience the rolling hills of Chianti.</p>
+                </div>
+                <button class="bg-white text-gray-900 text-sm font-semibold py-2 px-5 rounded-full hover:bg-gray-100 transition-colors">
+                    View details
+                </button>
+            </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="group relative rounded-[2rem] overflow-hidden shadow-lg h-80">
+             <img src="https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Kyoto, Japan" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+
+            <div class="absolute bottom-6 left-6 right-6">
+                <h3 class="text-white text-xl font-bold mb-1">Kyoto, Japan</h3>
+                <p class="text-white/80 text-xs line-clamp-2">Immerse yourself in traditional Japanese culture and beautiful gardens.</p>
+            </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="group relative rounded-[2rem] overflow-hidden shadow-lg h-80">
+            <img src="https://images.unsplash.com/photo-1555400038-63f5ba517a47?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Bali, Indonesia" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+
+            <div class="absolute bottom-6 left-6 right-6">
+                <h3 class="text-white text-xl font-bold mb-1">Bali, Indonesia</h3>
+                <p class="text-white/80 text-xs line-clamp-2">Relax on pristine beaches and explore lush landscapes.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Carousel Controls (Static) -->
+    <div class="flex justify-center gap-4 mt-8">
+         <button class="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-400 hover:text-brand-blue hover:border-brand-blue transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+        </button>
+        <button class="w-10 h-10 rounded-full border border-brand-blue bg-white flex items-center justify-center text-brand-blue shadow-sm hover:bg-brand-blue hover:text-white transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+        </button>
+    </div>
+</section>
+<!-- END: Destinations Section -->
+
+<!-- BEGIN: Pricing Section -->
+<section id="pricing" class="py-24 bg-slate-50">
+    <div class="max-w-6xl mx-auto px-6">
+        
+        <!-- Section Header -->
+        <div class="text-center mb-16">
+            <p class="text-brand-blue font-semibold text-xs md:text-sm uppercase tracking-wider mb-2">Choose the plan</p>
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">
+                That Fits Your Journey
+            </h2>
+            <p class="text-slate-600 text-base md:text-lg max-w-2xl mx-auto">
+                Whether you're just exploring or planning your next group adventure, Kibi has a plan tailored to your needs.
+            </p>
+        </div>
+
+        <!-- 3 Pricing Cards Container -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center max-w-5xl mx-auto">
+            
+            <!-- Card 1: Free Explorer -->
+            <div class="bg-white rounded-3xl p-8 border border-slate-200/80 shadow-lg flex flex-col h-full hover:border-slate-300 transition">
+                <div class="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-2xl mb-6">
+                    🎒
+                </div>
+                <h3 class="text-2xl font-bold text-slate-900 mb-2">Free Explorer</h3>
+                <p class="text-slate-500 text-xs sm:text-sm mb-6 flex-grow">
+                    A perfect way to get started. Discover what Kibi can do for you all at no cost.
+                </p>
+                
+                <div class="mb-8">
+                    <span class="text-4xl font-extrabold text-slate-900">₹0</span>
+                    <span class="text-slate-500 text-sm">/ per month</span>
+                </div>
+
+                <ul class="space-y-4 mb-8 text-xs sm:text-sm text-slate-600">
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-blue"></i> A perfect way to get started</li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-blue"></i> 1 AI-generated itinerary per month</li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-blue"></i> Basic suggestions based on location</li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-blue"></i> Save & share trips</li>
+                </ul>
+
+                <button class="w-full py-3.5 rounded-full border-2 border-brand-blue text-brand-blue font-semibold hover:bg-blue-50 transition mt-auto">
+                    Try for free
+                </button>
+                <p class="text-center text-xs text-slate-400 mt-3">No credit cards needed</p>
+            </div>
+
+            <!-- Card 2: Smart Voyager (Highlighted Popular) -->
+            <div class="pricing-card-highlight text-white rounded-3xl p-8 shadow-2xl relative z-10 flex flex-col h-[105%] transform md:-translate-y-2">
+                
+                <!-- Popular Badge -->
+                <div class="absolute -top-3.5 right-8 bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 font-extrabold text-xs px-4 py-1.5 rounded-full shadow-lg flex items-center gap-1.5">
+                    <i class="fa-solid fa-fire"></i> POPULAR
+                </div>
+
+                <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center text-2xl mb-6 backdrop-blur-md">
+                    🧭
+                </div>
+                <h3 class="text-2xl font-bold mb-2">Smart Voyager</h3>
+                <p class="text-white/80 text-xs sm:text-sm mb-6 flex-grow">
+                    Ideal for solo travelers or couples who want tailored travel planning.
+                </p>
+                
+                <div class="mb-8">
+                    <span class="text-4xl font-extrabold text-white">₹9.99</span>
+                    <span class="text-white/80 text-sm">/ per month</span>
+                </div>
+
+                <ul class="space-y-4 mb-8 text-xs sm:text-sm text-white/95">
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-amber-300"></i> Unlimited personalized itineraries</li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-amber-300"></i> Fully personalized travel, powered by AI</li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-amber-300"></i> Smart calendar with full-day planning</li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-amber-300"></i> Access to top-rated accommodations</li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-amber-300"></i> Seasonal travel tips & trends</li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-amber-300"></i> 24/7 chat support</li>
+                </ul>
+
+                <button class="w-full py-3.5 rounded-full bg-white text-brand-blue font-bold hover:bg-slate-100 transition shadow-lg mt-auto">
+                    Subscribe
+                </button>
+                <p class="text-center text-xs text-white/80 mt-3">7-day free trial</p>
+            </div>
+
+            <!-- Card 3: Group Adventurer -->
+            <div class="bg-white rounded-3xl p-8 border border-slate-200/80 shadow-lg flex flex-col h-full hover:border-slate-300 transition">
+                <div class="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-2xl mb-6">
+                    🌍
+                </div>
+                <h3 class="text-2xl font-bold text-slate-900 mb-2">Group Adventurer</h3>
+                <p class="text-slate-500 text-xs sm:text-sm mb-6 flex-grow">
+                    Made for friends, families, or group travel organizers who want to plan together.
+                </p>
+                
+                <div class="mb-8">
+                    <span class="text-4xl font-extrabold text-slate-900">₹19.99</span>
+                    <span class="text-slate-500 text-sm">/ per month</span>
+                </div>
+
+                <ul class="space-y-4 mb-8 text-xs sm:text-sm text-slate-600">
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-blue"></i> Everything in Smart Voyager</li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-blue"></i> Multi-user itinerary collaboration</li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-blue"></i> Shared budgeting and cost split tools</li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-blue"></i> Group activity suggestions</li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-blue"></i> AI-powered coordination</li>
+                </ul>
+
+                <button class="w-full py-3.5 rounded-full border-2 border-brand-blue text-brand-blue font-semibold hover:bg-blue-50 transition mt-auto">
+                    Subscribe
+                </button>
+                <p class="text-center text-xs text-slate-400 mt-3">Cancel anytime</p>
+            </div>
+
+        </div>
+
+        <!-- Compare Button -->
+        <div class="text-center mt-16">
+            <p class="text-slate-600 text-sm mb-4">Still not sure which plan fits your journey?</p>
+            <button class="text-brand-blue font-semibold border border-brand-blue/50 hover:border-brand-blue px-7 py-2.5 rounded-full hover:bg-blue-50 transition text-sm">
+                Compare All Plans
+            </button>
+        </div>
+
+    </div>
+</section>
+<!-- END: Pricing Section -->
+
+<!-- BEGIN: Testimonials Section -->
+<section class="py-24 bg-white overflow-hidden">
+    <div class="max-w-6xl mx-auto px-6">
+        
+        <!-- Header -->
+        <div class="text-center mb-16">
+            <p class="text-brand-blue font-semibold text-xs md:text-sm uppercase tracking-wider mb-2">Real Stories</p>
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">
+                Real Journeys
+            </h2>
+            <p class="text-slate-600 text-base md:text-lg max-w-2xl mx-auto">
+                See how Kibi has helped people plan unforgettable trips tailored to their style and preferences.
+            </p>
+        </div>
+
+        <!-- Testimonial Slider Container -->
+        <div class="relative max-w-4xl mx-auto">
+            
+            <div class="bg-white rounded-3xl shadow-xl border border-slate-100 flex flex-col md:flex-row overflow-hidden relative z-10">
+                
+                <!-- Left Photo -->
+                <div class="md:w-2/5 h-72 md:h-auto relative">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80" 
+                         alt="Sofia L. traveler" 
+                         class="w-full h-full object-cover"/>
+                </div>
+
+                <!-- Right Quote -->
+                <div class="md:w-3/5 p-8 md:p-12 flex flex-col justify-between">
+                    <div>
+                        <h4 class="text-2xl font-bold text-slate-900 mb-3">Sofia L.</h4>
+                        <p class="text-slate-600 leading-relaxed italic text-sm md:text-base mb-6">
+                            "This was one of the most effortless and magical trips I've ever had. The suggestions felt tailored just for me, from the quiet beaches to the perfect hotel views. Nostalgic and unforgettable. The personalized itinerary was spot-on. Definitely using it again!"
+                        </p>
+                    </div>
+
+                    <div>
+                        <div class="flex items-center gap-2 text-xs font-semibold text-slate-500 mb-3">
+                            <i class="fa-solid fa-location-dot text-brand-blue"></i>
+                            <span>Amalfi Coast, Italy</span>
+                        </div>
+                        <div class="flex gap-1 text-amber-400 text-sm">
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Carousel Nav Controls -->
+            <div class="flex justify-center items-center gap-4 mt-10">
+                <button aria-label="Previous story" class="w-11 h-11 rounded-full border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-100 transition">
+                    <i class="fa-solid fa-chevron-left text-sm"></i>
+                </button>
+                <button aria-label="Next story" class="w-11 h-11 rounded-full bg-brand-blue text-white flex items-center justify-center hover:bg-blue-600 transition shadow-md">
+                    <i class="fa-solid fa-chevron-right text-sm"></i>
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+<!-- END: Testimonials Section -->
+
+<!-- BEGIN: FAQ Section -->
+<section id="faq" class="py-24 bg-slate-50">
+    <div class="max-w-3xl mx-auto px-6">
+        
+        <div class="text-center mb-16">
+            <p class="text-brand-blue font-semibold text-xs md:text-sm uppercase tracking-wider mb-2">Got Questions?</p>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                We've Got Answers!
+            </h2>
+        </div>
+
+        <!-- Accordion Container -->
+        <div class="space-y-4" id="faq-accordion">
+            
+            <!-- Item 1 (Expanded by default) -->
+            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden transition">
+                <button onclick="toggleFaq(this)" class="w-full px-6 py-5 text-left flex justify-between items-center text-brand-blue font-bold text-base md:text-lg focus:outline-none">
+                    <span>How does Kibi personalize travel plans for me?</span>
+                    <i class="fa-solid fa-chevron-up text-brand-blue transition-transform duration-300"></i>
+                </button>
+                <div class="faq-answer px-6 pb-6 text-slate-600 text-sm leading-relaxed border-t border-slate-100 pt-3">
+                    Kibi uses AI to understand your preferences, budget, travel goals, and past behavior to build an itinerary that feels tailor-made — from places to stay to hidden spots to explore.
+                </div>
+            </div>
+
+            <!-- Item 2 -->
+            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden transition">
+                <button onclick="toggleFaq(this)" class="w-full px-6 py-5 text-left flex justify-between items-center text-slate-800 font-bold text-base md:text-lg focus:outline-none hover:text-brand-blue">
+                    <span>Is Kibi free to use?</span>
+                    <i class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300"></i>
+                </button>
+                <div class="faq-answer hidden px-6 pb-6 text-slate-600 text-sm leading-relaxed border-t border-slate-100 pt-3">
+                    Yes! Kibi offers a Free Explorer tier that lets you create 1 complete AI-generated travel itinerary every month with basic recommendations at zero cost.
+                </div>
+            </div>
+
+            <!-- Item 3 -->
+            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden transition">
+                <button onclick="toggleFaq(this)" class="w-full px-6 py-5 text-left flex justify-between items-center text-slate-800 font-bold text-base md:text-lg focus:outline-none hover:text-brand-blue">
+                    <span>Can I edit the itinerary after it's generated?</span>
+                    <i class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300"></i>
+                </button>
+                <div class="faq-answer hidden px-6 pb-6 text-slate-600 text-sm leading-relaxed border-t border-slate-100 pt-3">
+                    Absolutely. You can swap activities, modify budget allocations, add personal notes, and adjust timings on any day of your trip.
+                </div>
+            </div>
+
+            <!-- Item 4 -->
+            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden transition">
+                <button onclick="toggleFaq(this)" class="w-full px-6 py-5 text-left flex justify-between items-center text-slate-800 font-bold text-base md:text-lg focus:outline-none hover:text-brand-blue">
+                    <span>Does Kibi cover international destinations?</span>
+                    <i class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300"></i>
+                </button>
+                <div class="faq-answer hidden px-6 pb-6 text-slate-600 text-sm leading-relaxed border-t border-slate-100 pt-3">
+                    Yes, Kibi supports thousands of global destinations across Europe, Asia, the Americas, Africa, and Oceania with real-time local intelligence.
+                </div>
+            </div>
+
+            <!-- Item 5 -->
+            <div class="bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden transition">
+                <button onclick="toggleFaq(this)" class="w-full px-6 py-5 text-left flex justify-between items-center text-slate-800 font-bold text-base md:text-lg focus:outline-none hover:text-brand-blue">
+                    <span>What makes Kibi different from other travel apps?</span>
+                    <i class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300"></i>
+                </button>
+                <div class="faq-answer hidden px-6 pb-6 text-slate-600 text-sm leading-relaxed border-t border-slate-100 pt-3">
+                    Unlike standard travel aggregators, Kibi combines emotional taste profiles, real-time routing logic, and group collaboration tools into an intuitive, visual trip plan.
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</section>
+<!-- END: FAQ Section -->
+
+<!-- BEGIN: Footer Section -->
+<footer class="bg-brand-dark text-white pt-16 pb-8 px-6 lg:px-12 rounded-t-[3rem] mt-10">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-4 mb-12">
+
+        <!-- Brand Column -->
+        <div class="md:col-span-1">
+            <div class="flex items-center gap-2 font-bold text-2xl tracking-tighter mb-4">
+                <div class="w-8 h-8 rounded-full bg-brand-blue flex items-center justify-center text-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/></svg>
+                </div>
+                kibi
+            </div>
+            <p class="text-white/60 text-xs mb-6 max-w-[200px] leading-relaxed">
+                Making travel planning effortless and personal for the modern explorer.
+            </p>
+            <!-- Socials -->
+            <div class="flex gap-4">
+                <a href="#" class="text-white/60 hover:text-white transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M16 8.049c0-4.446-3.582-8.05-8-8.05C3.58 0-.002 3.603-.002 8.05c0 4.017 2.926 7.347 6.75 7.951v-5.625h-2.03V8.05H6.75V6.275c0-2.017 1.195-3.131 3.022-3.131.876 0 1.791.157 1.791.157v1.98h-1.009c-.993 0-1.303.621-1.303 1.258v1.51h2.218l-.354 2.326H9.25V16c3.824-.604 6.75-3.934 6.75-7.951z"/></svg>
+                </a>
+                <a href="#" class="text-white/60 hover:text-white transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z"/></svg>
+                </a>
+                <a href="#" class="text-white/60 hover:text-white transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0C5.829 0 5.556.01 4.703.048 3.85.088 3.269.222 2.76.42a3.917 3.917 0 0 0-1.417.923A3.927 3.927 0 0 0 .42 2.76C.222 3.268.087 3.85.048 4.7.01 5.555 0 5.827 0 8.001c0 2.172.01 2.444.048 3.297.04.852.174 1.433.372 1.942.205.526.478.972.923 1.417.444.445.89.719 1.416.923.51.198 1.09.333 1.942.372C5.555 15.99 5.827 16 8 16s2.444-.01 3.298-.048c.851-.04 1.434-.174 1.943-.372a3.916 3.916 0 0 0 1.416-.923c.445-.445.718-.891.923-1.417.197-.509.332-1.09.372-1.942C15.99 10.445 16 10.173 16 8s-.01-2.445-.048-3.299c-.04-.851-.175-1.433-.372-1.941a3.926 3.926 0 0 0-.923-1.417A3.911 3.911 0 0 0 13.24.42c-.51-.198-1.092-.333-1.943-.372C10.443.01 10.172 0 7.998 0h.003zm-.717 1.442h.718c2.136 0 2.389.007 3.232.046.78.035 1.204.166 1.486.275.373.145.64.319.92.599.28.28.453.546.598.92.11.281.24.705.275 1.485.039.843.047 1.096.047 3.231s-.008 2.389-.047 3.232c-.035.78-.166 1.203-.275 1.485a2.47 2.47 0 0 1-.599.919c-.28.28-.546.453-.92.598-.28.11-.704.24-1.485.276-.843.038-1.096.047-3.232.047s-2.39-.009-3.233-.047c-.78-.036-1.203-.166-1.485-.276a2.478 2.478 0 0 1-.92-.598 2.48 2.48 0 0 1-.6-.92c-.109-.281-.24-.705-.275-1.485-.038-.843-.046-1.096-.046-3.233 0-2.136.008-2.388.046-3.231.036-.78.166-1.204.276-1.486.145-.373.319-.64.599-.92.28-.28.546-.453.92-.598.282-.11.705-.24 1.485-.276.738-.034 1.024-.044 2.515-.045v.002zm4.988 1.328a.96.96 0 1 0 0 1.92.96.96 0 0 0 0-1.92zm-4.27 1.122a4.109 4.109 0 1 0 0 8.217 4.109 4.109 0 0 0 0-8.217zm0 1.441a2.667 2.667 0 1 1 0 5.334 2.667 2.667 0 0 1 0-5.334z"/></svg>
+                </a>
+            </div>
+        </div>
+
+        <!-- Links Column 1 -->
+        <div class="md:col-span-1 md:justify-self-center">
+            <ul class="space-y-3 text-sm">
+                <li><a href="#" class="text-white hover:text-brand-blue transition-colors">Home</a></li>
+                <li><a href="#" class="text-white/60 hover:text-white transition-colors">Destinations</a></li>
+                <li><a href="#" class="text-white/60 hover:text-white transition-colors">Packages</a></li>
+                <li><a href="#" class="text-white/60 hover:text-white transition-colors">Reviews</a></li>
+                <li><a href="#" class="text-white/60 hover:text-white transition-colors">About Us</a></li>
+            </ul>
+        </div>
+
+        <!-- Links Column 2 -->
+        <div class="md:col-span-1 md:justify-self-center">
+            <ul class="space-y-3 text-sm">
+                <li><a href="#" class="text-white/60 hover:text-white transition-colors">FAQ</a></li>
+                <li><a href="#" class="text-white/60 hover:text-white transition-colors">Support</a></li>
+                <li><a href="#" class="text-white/60 hover:text-white transition-colors">User Guide</a></li>
+                <li><a href="#" class="text-white/60 hover:text-white transition-colors">Terms of Service</a></li>
+                <li><a href="#" class="text-white/60 hover:text-white transition-colors">API Access</a></li>
+            </ul>
+        </div>
+
+        <!-- Contact Column -->
+        <div class="md:col-span-1 md:justify-self-end text-sm">
+            <ul class="space-y-3">
+                <li class="text-white/60">Contact Us</li>
+                <li class="text-white/80">info@kibi.io</li>
+                <li class="text-white/80">+1 (555) 123-4567</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="max-w-7xl mx-auto pt-6 border-t border-white/10 flex flex-col md:flex-row justify-between items-center text-xs text-white/40 gap-4">
+        <p>&copy; 2024 Kibi. All rights reserved.</p>
+        <div class="flex gap-6">
+            <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+            <a href="#" class="hover:text-white transition-colors">Cookie Policy</a>
+            <a href="#" class="hover:text-white transition-colors">Manage Cookies</a>
+        </div>
+    </div>
+</footer>
+<!-- END: Footer Section -->
+
+<script>
+    // FAQ Toggle Handler
+    function toggleFaq(btn) {
+        const item = btn.parentElement;
+        const answer = item.querySelector('.faq-answer');
+        const icon = btn.querySelector('i');
+
+        // Toggle state
+        if (answer.classList.contains('hidden')) {
+            answer.classList.remove('hidden');
+            btn.classList.add('text-brand-blue');
+            btn.classList.remove('text-slate-800');
+            icon.classList.remove('fa-chevron-down', 'text-slate-400');
+            icon.classList.add('fa-chevron-up', 'text-brand-blue');
+        } else {
+            answer.classList.add('hidden');
+            btn.classList.remove('text-brand-blue');
+            btn.classList.add('text-slate-800');
+            icon.classList.remove('fa-chevron-up', 'text-brand-blue');
+            icon.classList.add('fa-chevron-down', 'text-slate-400');
+        }
+    }
+
+    // Destination Filter Handler
+    function filterDestinations(category, btn) {
+        // Update button styles
+        const buttons = document.querySelectorAll('.filter-btn');
+        buttons.forEach(b => {
+            b.classList.remove('bg-brand-blue', 'text-white', 'shadow-sm');
+            b.classList.add('bg-slate-100', 'text-slate-700');
+        });
+
+        btn.classList.remove('bg-slate-100', 'text-slate-700');
+        btn.classList.add('bg-brand-blue', 'text-white', 'shadow-sm');
+
+        // Filter destination cards
+        const cards = document.querySelectorAll('.dest-card');
+        cards.forEach(card => {
+            if (category === 'all' || card.classList.contains(category)) {
+                card.style.display = 'flex';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+    // Day Switcher Logic
+    function switchDay(dayNum) {
+        const btn1 = document.getElementById('btn-day1');
+        const btn2 = document.getElementById('btn-day2');
+
+        if (dayNum === 1) {
+            btn1.className = "bg-white text-brand-blue font-semibold text-xs px-5 py-2 rounded-full shadow transition";
+            btn2.className = "bg-white/15 text-white hover:bg-white/25 font-semibold text-xs px-5 py-2 rounded-full border border-white/20 transition";
+        } else {
+            btn2.className = "bg-white text-brand-blue font-semibold text-xs px-5 py-2 rounded-full shadow transition";
+            btn1.className = "bg-white/15 text-white hover:bg-white/25 font-semibold text-xs px-5 py-2 rounded-full border border-white/20 transition";
+        }
+    }
+</script>
+
+</body>
+</html>
