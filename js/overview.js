@@ -355,19 +355,31 @@
     });
   }
 
-  // Hook into itinerary render lifecycle
-  const originalRender = window.renderLoadedItinerary;
-  if (originalRender) {
+  // Tab switching must be wired up as soon as DOM is ready.
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initOverviewTabs);
+  } else {
+    initOverviewTabs();
+  }
+
+  // Hook into itinerary render lifecycle by wrapping renderLoadedItinerary.
+  // If trips.js loads later, re-wrap after it executes.
+  function wrapRender() {
+    const originalRender = window.renderLoadedItinerary;
+    if (!originalRender || originalRender.__overviewWrapped) return;
     window.renderLoadedItinerary = function (itinerary) {
+      window.__currentItinerary = itinerary;
       originalRender(itinerary);
-      initOverviewTabs();
       renderOverview(itinerary);
     };
-  } else {
-    // Fallback: listen for a custom event if renderLoadedItinerary isn't loaded yet
-    document.addEventListener('DOMContentLoaded', () => {
-      initOverviewTabs();
-      if (window.__currentItinerary) renderOverview(window.__currentItinerary);
-    });
+    window.renderLoadedItinerary.__overviewWrapped = true;
+    // If an itinerary is already rendered, refresh overview.
+    if (window.__currentItinerary) renderOverview(window.__currentItinerary);
   }
+
+  wrapRender();
+  document.addEventListener('DOMContentLoaded', wrapRender);
+  // Safety net: trips.js runs after this file; give it a moment then wrap again.
+  setTimeout(wrapRender, 0);
+  setTimeout(wrapRender, 100);
 })();
