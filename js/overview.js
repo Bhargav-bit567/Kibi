@@ -166,6 +166,88 @@
     });
   }
 
+  async function renderAccommodations(itinerary) {
+    const grid = document.getElementById('accommodationsGrid');
+    const summary = document.getElementById('accommodationSummary');
+    if (!grid) return;
+
+    grid.innerHTML = '<div class="col-span-full text-sm text-gray-400 dark:text-[#9AA0A6] flex items-center gap-2"><span class="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></span> Finding places to stay...</div>';
+
+    let list = Array.isArray(itinerary.accommodations) ? itinerary.accommodations.slice() : [];
+
+    // Fallback: ask Gemini for realistic accommodations if none exist
+    if (list.length === 0 && typeof GeminiAPI !== 'undefined' && GeminiAPI.askGemini) {
+      try {
+        const prompt = `For ${itinerary.destination}, suggest 4 realistic hotels/lodging options. Return ONLY a valid JSON array (no markdown, no explanations) like:
+[{"name":"Hotel Name","costPerNight":2500,"type":"Comfort","description":"One-line description","amenities":["Wi-Fi","Breakfast"]}]`;
+        const text = await GeminiAPI.askGemini(prompt, { temperature: 0.4, maxOutputTokens: 1024 });
+        if (text) {
+          const cleaned = text.replace(/```(?:json)?\s*|\s*```/g, '').trim();
+          const arr = JSON.parse(cleaned);
+          if (Array.isArray(arr) && arr.length) list = arr.slice(0, 4);
+        }
+      } catch (e) { console.warn('[Overview] Gemini accommodations fallback failed:', e); }
+    }
+
+    if (list.length === 0) {
+      grid.innerHTML = `<p class="col-span-full text-sm text-gray-500 dark:text-[#9AA0A6]">Accommodation suggestions will appear once your itinerary is generated.</p>`;
+      if (summary) summary.innerHTML = '';
+      return;
+    }
+
+    const nights = Math.max(1, Math.round((new Date(itinerary.endDate) - new Date(itinerary.startDate)) / (1000 * 60 * 60 * 24)));
+    const totalStay = list.reduce((sum, a) => sum + ((a.costPerNight || 0) * nights), 0);
+    const avgPerNight = Math.round(totalStay / nights / list.length);
+
+    grid.innerHTML = list.map((acc, idx) => `
+      <div class="glass-panel rounded-3xl overflow-hidden group dark:bg-[#161B22] dark:border-white/[0.08]" data-acc-idx="${idx}">
+        <div class="h-48 relative overflow-hidden bg-gradient-to-br from-blue-100 to-cream dark:from-[#1F2630] dark:to-[#0B0F17] flex items-center justify-center acc-image-placeholder">
+          <i class="fa-solid fa-hotel text-5xl text-primary/30 dark:text-primary/50"></i>
+        </div>
+        <div class="p-6">
+          <div class="flex justify-between items-start mb-2">
+            <h3 class="text-lg font-bold text-gray-900 dark:text-[#F1F3F4]">${acc.name || 'Stay'}</h3>
+            <span class="text-brand-blue font-bold text-sm dark:text-[#7EB8FF]">₹${(acc.costPerNight || 0).toLocaleString()}<span class="text-gray-400 dark:text-[#9AA0A6] font-normal">/nt</span></span>
+          </div>
+          <p class="text-gray-500 dark:text-[#BDC1C6] text-sm mb-1">${acc.type || 'Mid-Range'}${acc.source === 'real' || acc.source === 'overpass' ? ' · Real listing' : ' · AI Suggested'}</p>
+          <p class="text-gray-600 dark:text-[#BDC1C6] text-sm mb-4">${acc.description || 'A comfortable stay tailored to your trip.'}</p>
+          ${Array.isArray(acc.amenities) && acc.amenities.length ? `
+          <div class="flex flex-wrap gap-2 mb-4">
+            ${acc.amenities.map(am => `<span class="text-xs text-gray-600 dark:text-[#BDC1C6] bg-gray-100 dark:bg-[#1F2630] px-2.5 py-1 rounded-md">${am}</span>`).join('')}
+          </div>` : ''}
+          <button class="w-full py-2.5 rounded-xl border border-gray-200 dark:border-white/[0.12] text-gray-700 dark:text-[#F1F3F4] text-sm font-semibold hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">View Details</button>
+        </div>
+      </div>
+    `).join('');
+
+    // Try to load real images for each card
+    if (typeof TripMateAPI !== 'undefined') {
+      list.forEach((acc, idx) => {
+        TripMateAPI.searchForImage(`${acc.name || ''} ${itinerary.destination} hotel`).then(url => {
+          if (url) {
+            const card = grid.querySelector(`[data-acc-idx="${idx}"]`);
+            if (card) {
+              const placeholder = card.querySelector('.acc-image-placeholder');
+              if (placeholder) {
+                placeholder.innerHTML = `<img src="${url}" alt="${acc.name || 'Stay'}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition duration-500" />`;
+                placeholder.classList.remove('bg-gradient-to-br', 'from-blue-100', 'to-cream', 'flex', 'items-center', 'justify-center');
+              }
+            }
+          }
+        }).catch(() => {});
+      });
+    }
+
+    if (summary) {
+      summary.innerHTML = `
+        <li class="flex items-center justify-between text-gray-700 dark:text-[#BDC1C6]"><span><i class="fa-solid fa-moon text-brand-blue dark:text-[#7EB8FF] w-5 text-center mr-2"></i>${nights} Night${nights !== 1 ? 's' : ''}</span><span class="font-semibold text-gray-900 dark:text-[#F1F3F4]">${nights}</span></li>
+        <li class="flex items-center justify-between text-gray-700 dark:text-[#BDC1C6]"><span><i class="fa-solid fa-hotel text-brand-blue dark:text-[#7EB8FF] w-5 text-center mr-2"></i>Options</span><span class="font-semibold text-gray-900 dark:text-[#F1F3F4]">${list.length}</span></li>
+        <li class="flex items-center justify-between text-gray-700 dark:text-[#BDC1C6]"><span><i class="fa-solid fa-indian-rupee-sign text-brand-blue dark:text-[#7EB8FF] w-5 text-center mr-2"></i>Avg/night</span><span class="font-semibold text-gray-900 dark:text-[#F1F3F4]">₹${avgPerNight.toLocaleString()}</span></li>
+        <li class="flex items-center justify-between text-gray-700 dark:text-[#BDC1C6]"><span><i class="fa-solid fa-wallet text-brand-blue dark:text-[#7EB8FF] w-5 text-center mr-2"></i>Est. stay total</span><span class="font-semibold text-gray-900 dark:text-[#F1F3F4]">₹${totalStay.toLocaleString()}</span></li>
+      `;
+    }
+  }
+
   async function renderOverview(itinerary) {
     showLoadingState();
     const info = getDestinationInfo(itinerary.destination);
@@ -432,6 +514,7 @@
       window.__currentItinerary = itinerary;
       originalRender(itinerary);
       await renderOverview(itinerary);
+      await renderAccommodations(itinerary);
     };
     window.renderLoadedItinerary.__overviewWrapped = true;
     if (window.__currentItinerary) renderOverview(window.__currentItinerary);
