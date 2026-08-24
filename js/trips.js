@@ -572,7 +572,7 @@ function initPlanTrip() {
 
       showToast('Itinerary generated! 🎉', 'success');
       setTimeout(() => {
-        window.location.href = 'itinerary.html';
+        window.location.href = 'itinerary.html#overview';
       }, 500);
 
     } catch (err) {
