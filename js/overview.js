@@ -1,13 +1,6 @@
-/* ============================================
-   Kibi — Itinerary Overview Module
-   Renders a rich Overview tab using real data.
-   Priority: TripMate APIs → Gemini AI → curated fallback.
-   ============================================ */
-
 (function () {
   'use strict';
 
-  // Minimal curated fallback for when APIs fail entirely.
   const DESTINATION_INFO = {
     'paris': {
       description: "Paris is a global center for art, fashion, gastronomy and culture.",
@@ -100,12 +93,21 @@
     return set.size;
   }
 
-  /* ---------- Gemini helpers ---------- */
+  function extractJson(text) {
+    if (!text) return null;
+    const cleaned = text.replace(/```(?:json)?\s*|\s*```/g, '').trim();
+    const firstBrace = cleaned.indexOf('[');
+    const firstCurly = cleaned.indexOf('{');
+    const start = firstBrace === -1 ? firstCurly : firstCurly === -1 ? firstBrace : Math.min(firstBrace, firstCurly);
+    const lastBrace = cleaned.lastIndexOf(']');
+    const lastCurly = cleaned.lastIndexOf('}');
+    const end = Math.max(lastBrace, lastCurly);
+    if (start === -1 || end === -1 || end < start) return null;
+    return JSON.parse(cleaned.substring(start, end + 1));
+  }
+
   async function askGeminiForOverview(destination) {
-    if (typeof GeminiAPI === 'undefined' || !GeminiAPI.askGemini) {
-      console.warn('[Overview] GeminiAPI.askGemini not available');
-      return null;
-    }
+    if (typeof GeminiAPI === 'undefined' || !GeminiAPI.askGemini) return null;
     const prompt = `For the travel destination "${destination}", return ONLY a valid JSON object (no markdown, no explanations) with this exact structure:
 {
   "description": "2-3 sentence overview of the destination",
@@ -116,12 +118,7 @@
 }`;
     try {
       const text = await GeminiAPI.askGemini(prompt, { temperature: 0.4, maxOutputTokens: 1024 });
-      if (!text) return null;
-      const cleaned = text.replace(/```(?:json)?\s*|\s*```/g, '').trim();
-      const firstBrace = cleaned.indexOf('{');
-      const lastBrace = cleaned.lastIndexOf('}');
-      if (firstBrace === -1 || lastBrace === -1 || lastBrace < firstBrace) return null;
-      return JSON.parse(cleaned.substring(firstBrace, lastBrace + 1));
+      return extractJson(text);
     } catch (e) {
       console.warn('[Overview] Gemini overview fetch failed:', e);
       return null;
@@ -134,30 +131,23 @@
       try {
         const list = await TripMateAPI.getAttractions(destination);
         if (list && list.length) {
-          list.slice(0, 6).forEach(a => {
-            if (a.name) results.push({ name: a.name, source: 'api' });
-          });
+          list.slice(0, 6).forEach(a => { if (a.name) results.push({ name: a.name, source: 'api' }); });
         }
       } catch (e) { console.warn('[Overview] TripMate attractions failed:', e); }
     }
     if (results.length >= 4) return results.map(r => r.name);
 
-    // Try Gemini fallback
     if (typeof GeminiAPI !== 'undefined' && GeminiAPI.askGemini) {
       try {
         const prompt = `List the top 6 must-visit attractions in ${destination}. Return ONLY a JSON array of strings, no markdown, no explanations.`;
         const text = await GeminiAPI.askGemini(prompt, { temperature: 0.3, maxOutputTokens: 512 });
-        if (text) {
-          const cleaned = text.replace(/```(?:json)?\s*|\s*```/g, '').trim();
-          const arr = JSON.parse(cleaned);
-          if (Array.isArray(arr) && arr.length) return arr.slice(0, 6);
-        }
+        const arr = extractJson(text);
+        if (Array.isArray(arr) && arr.length) return arr.slice(0, 6);
       } catch (e) { console.warn('[Overview] Gemini attractions failed:', e); }
     }
     return null;
   }
 
-  /* ---------- Render sections ---------- */
   function showLoadingState() {
     const ids = ['overviewDescription', 'overviewBestTime', 'overviewCuisine', 'overviewTips', 'overviewAttractions'];
     ids.forEach(id => {
@@ -175,17 +165,13 @@
 
     let list = Array.isArray(itinerary.accommodations) ? itinerary.accommodations.slice() : [];
 
-    // Fallback: ask Gemini for realistic accommodations if none exist
     if (list.length === 0 && typeof GeminiAPI !== 'undefined' && GeminiAPI.askGemini) {
       try {
         const prompt = `For ${itinerary.destination}, suggest 4 realistic hotels/lodging options. Return ONLY a valid JSON array (no markdown, no explanations) like:
 [{"name":"Hotel Name","costPerNight":2500,"type":"Comfort","description":"One-line description","amenities":["Wi-Fi","Breakfast"]}]`;
         const text = await GeminiAPI.askGemini(prompt, { temperature: 0.4, maxOutputTokens: 1024 });
-        if (text) {
-          const cleaned = text.replace(/```(?:json)?\s*|\s*```/g, '').trim();
-          const arr = JSON.parse(cleaned);
-          if (Array.isArray(arr) && arr.length) list = arr.slice(0, 4);
-        }
+        const arr = extractJson(text);
+        if (Array.isArray(arr) && arr.length) list = arr.slice(0, 4);
       } catch (e) { console.warn('[Overview] Gemini accommodations fallback failed:', e); }
     }
 
@@ -220,7 +206,6 @@
       </div>
     `).join('');
 
-    // Try to load real images for each card
     if (typeof TripMateAPI !== 'undefined') {
       list.forEach((acc, idx) => {
         TripMateAPI.searchForImage(`${acc.name || ''} ${itinerary.destination} hotel`).then(url => {
@@ -253,14 +238,12 @@
     const info = getDestinationInfo(itinerary.destination);
     const nights = Math.max(0, Math.round((new Date(itinerary.endDate) - new Date(itinerary.startDate)) / (1000 * 60 * 60 * 24)));
 
-    // Description: TripMate first, then Gemini, then fallback.
     let description = itinerary.placeDescription || info?.description || null;
     let bestTime = info?.bestTime || null;
     let cuisine = info?.cuisine || null;
     let tips = info?.tips || null;
     let attractions = info?.attractions || null;
 
-    // Try TripMate place info for description
     if (typeof TripMateAPI !== 'undefined' && TripMateAPI.getPlaceInfo) {
       try {
         const place = await TripMateAPI.getPlaceInfo(itinerary.destination);
@@ -268,7 +251,6 @@
       } catch (e) { console.warn('[Overview] TripMate place info failed:', e); }
     }
 
-    // Try Gemini for richer data
     const geminiData = await askGeminiForOverview(itinerary.destination);
     if (geminiData) {
       if (geminiData.description && !description) description = geminiData.description;
@@ -278,19 +260,16 @@
       if (geminiData.attractions && geminiData.attractions.length) attractions = geminiData.attractions;
     }
 
-    // Attractions from API/Gemini if not already set
     if (!attractions || attractions.length < 4) {
       const fetched = await fetchAttractions(itinerary.destination);
       if (fetched && fetched.length) attractions = fetched;
     }
 
-    // Defaults if still missing
     description = description || `${itinerary.destination} offers a wonderful mix of experiences for travelers. Plan your days to make the most of your trip.`;
     bestTime = bestTime || 'Varies by season — check local climate before booking.';
     cuisine = cuisine || ['Local street food', 'Regional specialties', 'Popular cafes', 'Traditional desserts'];
     tips = tips || ['Keep digital copies of important documents.', 'Carry a portable charger and adapter.', 'Book popular attractions in advance when possible.'];
 
-    // Description
     const descEl = document.getElementById('overviewDescription');
     if (descEl) {
       descEl.textContent = description;
@@ -299,7 +278,6 @@
     const introSection = document.getElementById('overviewIntro');
     if (introSection) introSection.querySelector('h2').textContent = `About ${itinerary.destination}`;
 
-    // Stats
     const statsEl = document.getElementById('overviewStats');
     if (statsEl) {
       statsEl.innerHTML = `
@@ -322,7 +300,6 @@
       `;
     }
 
-    // Highlights from itinerary data
     const highlightsEl = document.getElementById('overviewHighlights');
     if (highlightsEl) {
       const activities = [];
@@ -350,7 +327,6 @@
       `).join('');
     }
 
-    // Attractions
     const attractionsEl = document.getElementById('overviewAttractions');
     if (attractionsEl) {
       const activityNames = [];
@@ -372,7 +348,6 @@
       }
     }
 
-    // Timeline preview
     const timelineEl = document.getElementById('overviewTimeline');
     if (timelineEl) {
       const days = (itinerary.itinerary || []).slice(0, 3);
@@ -398,7 +373,6 @@
       }
     }
 
-    // Quick Info with icons
     const quickEl = document.getElementById('overviewQuickInfo');
     if (quickEl) {
       quickEl.innerHTML = `
@@ -425,14 +399,12 @@
       `;
     }
 
-    // Best time
     const bestTimeEl = document.getElementById('overviewBestTime');
     if (bestTimeEl) {
       bestTimeEl.textContent = bestTime;
       bestTimeEl.dataset.loaded = 'true';
     }
 
-    // Cuisine
     const cuisineEl = document.getElementById('overviewCuisine');
     if (cuisineEl) {
       cuisineEl.innerHTML = cuisine.slice(0, 5).map(item => `
@@ -444,7 +416,6 @@
       cuisineEl.dataset.loaded = 'true';
     }
 
-    // Tips
     const tipsEl = document.getElementById('overviewTips');
     if (tipsEl) {
       tipsEl.innerHTML = tips.slice(0, 5).map(tip => `
@@ -457,7 +428,6 @@
     }
   }
 
-  // Tab switching helper exposed globally
   window.switchItinTab = function (tabName, pushState = true) {
     document.querySelectorAll('.itin-tab').forEach(btn => {
       const isActive = btn.dataset.tab === tabName;
@@ -494,7 +464,6 @@
       btn.addEventListener('click', () => switchItinTab(btn.dataset.tab));
     });
 
-    // Restore tab from URL hash on load
     const initialTab = window.location.hash?.replace('#', '') || 'itinerary';
     if (['overview', 'itinerary', 'accommodations'].includes(initialTab)) {
       switchItinTab(initialTab, false);
