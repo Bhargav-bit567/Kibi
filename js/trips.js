@@ -1040,9 +1040,6 @@ function initMapModal(itinerary) {
       document.body.appendChild(modal);
     }
     modal.classList.remove('hidden');
-    modal.style.display = 'flex';
-    modal.style.alignItems = 'center';
-    modal.style.justifyContent = 'center';
     document.body.style.overflow = 'hidden';
     document.documentElement.style.overflow = 'hidden';
 
@@ -1065,9 +1062,6 @@ function initMapModal(itinerary) {
 
   function closeModal() {
     modal.classList.add('hidden');
-    modal.style.display = 'none';
-    modal.style.alignItems = '';
-    modal.style.justifyContent = '';
     document.body.style.overflow = '';
     document.documentElement.style.overflow = '';
   }
