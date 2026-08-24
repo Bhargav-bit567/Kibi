@@ -3,7 +3,11 @@
    ============================================ */
 
 // IMPORTANT: Set your Gemini API key in config.json or via env, never commit it.
-const GEMINI_API_KEY = (typeof window !== 'undefined' && window.KIBI_CONFIG && window.KIBI_CONFIG.geminiApiKey) ? window.KIBI_CONFIG.geminiApiKey : '';
+function getGeminiApiKey() {
+  return (typeof window !== 'undefined' && window.KIBI_CONFIG && window.KIBI_CONFIG.geminiApiKey)
+    ? window.KIBI_CONFIG.geminiApiKey
+    : '';
+}
 const GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models";
 const GEMINI_MODEL = "gemini-1.5-flash-latest";
 
@@ -17,7 +21,7 @@ const GeminiAPI = {
     const prompt = this.buildPrompt(params);
 
     try {
-      const response = await fetch(`${GEMINI_BASE_URL}/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`, {
+      const response = await fetch(`${GEMINI_BASE_URL}/${GEMINI_MODEL}:generateContent?key=${getGeminiApiKey()}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -71,12 +75,12 @@ const GeminiAPI = {
    * @returns {Promise<string|null>}
    */
   async askGemini(prompt, opts = {}) {
-    if (!GEMINI_API_KEY) {
+    if (!getGeminiApiKey()) {
       console.warn('[GeminiAPI] No API key configured.');
       return null;
     }
     try {
-      const response = await fetch(`${GEMINI_BASE_URL}/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`, {
+      const response = await fetch(`${GEMINI_BASE_URL}/${GEMINI_MODEL}:generateContent?key=${getGeminiApiKey()}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -105,7 +109,7 @@ const GeminiAPI = {
     const prompt = `Return ONLY a valid HTTPS URL to a high-quality, representative travel photo of ${destination}. No explanation, no markdown, just the URL. If unsure, return "null".`;
 
     try {
-      const response = await fetch(`${GEMINI_BASE_URL}/${GEMINI_MODEL}:generateContent?key=${GEMINI_API_KEY}`, {
+      const response = await fetch(`${GEMINI_BASE_URL}/${GEMINI_MODEL}:generateContent?key=${getGeminiApiKey()}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

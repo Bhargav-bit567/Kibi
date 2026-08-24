@@ -162,7 +162,7 @@
     const ids = ['overviewDescription', 'overviewBestTime', 'overviewCuisine', 'overviewTips', 'overviewAttractions'];
     ids.forEach(id => {
       const el = document.getElementById(id);
-      if (el && !el.dataset.loaded) el.innerHTML = '<span class="text-sm text-gray-400 dark:text-[#9AA0A6] flex items-center gap-2"><span class="material-symbols-outlined animate-spin text-base">progress_activity</span> Loading...</span>';
+      if (el && !el.dataset.loaded) el.innerHTML = '<span class="text-sm text-gray-400 dark:text-[#9AA0A6] flex items-center gap-2"><span class="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></span> Loading...</span>';
     });
   }
 
@@ -321,23 +321,23 @@
     if (quickEl) {
       quickEl.innerHTML = `
         <li class="flex items-center gap-3 text-gray-700 dark:text-[#BDC1C6]">
-          <span class="material-symbols-outlined text-brand-blue dark:text-[#7EB8FF]">calendar_month</span>
+          <i class="fa-regular fa-calendar text-brand-blue dark:text-[#7EB8FF] w-5 text-center"></i>
           <span>${formatDateRange(itinerary.startDate, itinerary.endDate)}</span>
         </li>
         <li class="flex items-center gap-3 text-gray-700 dark:text-[#BDC1C6]">
-          <span class="material-symbols-outlined text-brand-blue dark:text-[#7EB8FF]">schedule</span>
+          <i class="fa-regular fa-clock text-brand-blue dark:text-[#7EB8FF] w-5 text-center"></i>
           <span>${formatDays(nights)} · ${nights} Night${nights !== 1 ? 's' : ''}</span>
         </li>
         <li class="flex items-center gap-3 text-gray-700 dark:text-[#BDC1C6]">
-          <span class="material-symbols-outlined text-brand-blue dark:text-[#7EB8FF]">payments</span>
+          <i class="fa-solid fa-indian-rupee-sign text-brand-blue dark:text-[#7EB8FF] w-5 text-center"></i>
           <span>₹${(itinerary.budgetBreakdown?.total || itinerary.totalBudget || itinerary.budget || 0).toLocaleString()}</span>
         </li>
         <li class="flex items-center gap-3 text-gray-700 dark:text-[#BDC1C6]">
-          <span class="material-symbols-outlined text-brand-blue dark:text-[#7EB8FF]">hiking</span>
+          <i class="fa-solid fa-person-hiking text-brand-blue dark:text-[#7EB8FF] w-5 text-center"></i>
           <span>${Array.isArray(itinerary.travelStyle) ? itinerary.travelStyle.join(', ') : (itinerary.travelStyle || 'Travel')}</span>
         </li>
         <li class="flex items-center gap-3 text-gray-700 dark:text-[#BDC1C6]">
-          <span class="material-symbols-outlined text-brand-blue dark:text-[#7EB8FF]">group</span>
+          <i class="fa-solid fa-user-group text-brand-blue dark:text-[#7EB8FF] w-5 text-center"></i>
           <span>${itinerary.socialPreference || 'Small Group'}</span>
         </li>
       `;
@@ -367,7 +367,7 @@
     if (tipsEl) {
       tipsEl.innerHTML = tips.slice(0, 5).map(tip => `
         <li class="flex items-start gap-3 text-gray-700 dark:text-[#BDC1C6]">
-          <span class="material-symbols-outlined text-brand-blue dark:text-[#7EB8FF] text-base mt-0.5">lightbulb</span>
+          <i class="fa-regular fa-lightbulb text-brand-blue dark:text-[#7EB8FF] text-sm mt-0.5 w-5 text-center"></i>
           <span>${tip}</span>
         </li>
       `).join('');
@@ -376,7 +376,7 @@
   }
 
   // Tab switching helper exposed globally
-  window.switchItinTab = function (tabName) {
+  window.switchItinTab = function (tabName, pushState = true) {
     document.querySelectorAll('.itin-tab').forEach(btn => {
       const isActive = btn.dataset.tab === tabName;
       btn.classList.toggle('bg-white', isActive);
@@ -389,6 +389,17 @@
 
     document.getElementById('overviewTab').classList.toggle('hidden', tabName !== 'overview');
     document.getElementById('itineraryTab').classList.toggle('hidden', tabName !== 'itinerary');
+    const accTab = document.getElementById('accommodationsTab');
+    if (accTab) accTab.classList.toggle('hidden', tabName !== 'accommodations');
+
+    const hiddenInput = document.getElementById('currentTabInput');
+    if (hiddenInput) hiddenInput.value = tabName;
+
+    if (pushState) {
+      const url = new URL(window.location.href);
+      url.hash = tabName;
+      history.replaceState(null, '', url.toString());
+    }
 
     const content = document.getElementById('tabContent');
     if (content && window.scrollY > content.offsetTop - 200) {
@@ -400,6 +411,12 @@
     document.querySelectorAll('.itin-tab').forEach(btn => {
       btn.addEventListener('click', () => switchItinTab(btn.dataset.tab));
     });
+
+    // Restore tab from URL hash on load
+    const initialTab = window.location.hash?.replace('#', '') || 'itinerary';
+    if (['overview', 'itinerary', 'accommodations'].includes(initialTab)) {
+      switchItinTab(initialTab, false);
+    }
   }
 
   if (document.readyState === 'loading') {

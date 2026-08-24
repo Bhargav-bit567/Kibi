@@ -8,6 +8,7 @@
     <meta http-equiv="Expires" content="0"/>
     <title>Trip Itinerary - Kibi</title>
       <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <script id="tailwind-config">
     tailwind.config = {
@@ -113,6 +114,7 @@
         }
     </style>
 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/animations.css">
   <link rel="stylesheet" href="css/responsive.css">
@@ -189,6 +191,7 @@
                     <button data-tab="itinerary" class="itin-tab px-6 py-2 rounded-full text-xs font-bold bg-white text-primary shadow-sm transition-colors">Itinerary</button>
                     <button data-tab="accommodations" class="itin-tab px-6 py-2 rounded-full text-xs font-medium text-on-surface-variant hover:text-primary transition-colors">Accommodations</button>
                 </div>
+                <input type="hidden" id="currentTabInput" value="itinerary">
             </div>
         </div>
 
@@ -280,6 +283,34 @@
                     </div>
                 </div>
 
+                <!-- Accommodations Tab -->
+                <div id="accommodationsTab" class="hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                        <!-- Left Column: Accommodation Cards -->
+                        <div class="lg:col-span-8 flex flex-col gap-10">
+                            <section>
+                                <div class="flex justify-between items-center mb-6">
+                                    <h2 class="text-2xl font-bold text-gray-900 dark:text-[#F1F3F4]">Where You'll Stay</h2>
+                                    <span class="text-xs text-gray-500 dark:text-[#9AA0A6]">Powered by AI recommendations</span>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="accommodationsGrid">
+                                    <!-- Injected via JS -->
+                                </div>
+                            </section>
+                        </div>
+
+                        <!-- Right Column: Stay Summary -->
+                        <div class="lg:col-span-4 flex flex-col gap-8">
+                            <div class="glass-panel rounded-3xl p-8 shadow-sm border border-gray-200/50 dark:bg-[#161B22] dark:border-white/[0.08]">
+                                <h3 class="text-xl font-bold text-gray-900 dark:text-[#F1F3F4] mb-4">Stay Summary</h3>
+                                <ul class="space-y-4 text-sm" id="accommodationSummary">
+                                    <!-- Injected via JS -->
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Itinerary Tab -->
                 <div id="itineraryTab">
                     <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
@@ -298,11 +329,7 @@
                                 </div>
                             </section>
 
-                            <!-- Accommodations Section (Dynamic) -->
-                            <section class="pt-4" id="itinAccommodations">
-                                <!-- Injected via JS -->
-                            </section>
-
+        
                             <!-- Travel Essentials -->
                             <section class="pt-4">
                                 <div class="flex justify-between items-center mb-6">
@@ -371,11 +398,11 @@
     <div class="bg-white dark:bg-[#161B22] rounded-3xl shadow-2xl w-full max-w-5xl h-[80vh] flex flex-col overflow-hidden relative">
       <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
         <h3 id="mapModalTitle" class="font-bold text-gray-900 text-lg flex items-center gap-2">
-          <span class="material-symbols-outlined text-primary">map</span>
+          <i class="fa-solid fa-map text-primary"></i>
           Trip Map
         </h3>
         <button id="closeMapBtn" class="w-10 h-10 rounded-full hover:bg-gray-100 flex items-center justify-center text-gray-600 transition-colors">
-          <span class="material-symbols-outlined">close</span>
+          <i class="fa-solid fa-xmark text-lg"></i>
         </button>
       </div>
       <div class="flex-1 relative min-h-[300px]">
@@ -388,6 +415,8 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script src="https://unpkg.com/polyline-encoded@0.0.3/Polyline.encoded.js"></script>
+<script src="js/config.js?v=10"></script>
+<script src="js/api/gemini-api.js?v=10"></script>
 <script src="js/api/api-config.js?v=10"></script>
 <script src="js/api/api-cache.js?v=10"></script>
 <script src="js/api/geocoding-api.js?v=10"></script>
