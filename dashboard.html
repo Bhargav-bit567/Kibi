@@ -134,6 +134,47 @@
     html.dark body.dashboard-page footer {
       background-color: #030712 !important;
     }
+
+    /* Profile popup dark mode */
+    html.dark body.dashboard-page #editProfileModal {
+      background-color: rgba(0, 0, 0, 0.75) !important;
+    }
+    html.dark body.dashboard-page #editProfileModal > div {
+      background-color: #0F172A !important;
+      border-color: rgba(255, 255, 255, 0.1) !important;
+    }
+    html.dark body.dashboard-page #editProfileModal h3,
+    html.dark body.dashboard-page #editProfileModal label,
+    html.dark body.dashboard-page #editProfileModal .text-on-surface {
+      color: #F8FAFC !important;
+    }
+    html.dark body.dashboard-page #editProfileModal .text-on-surface-variant {
+      color: #94A3B8 !important;
+    }
+    html.dark body.dashboard-page #editProfileModal input,
+    html.dark body.dashboard-page #editProfileModal textarea {
+      background-color: #1E293B !important;
+      border-color: #334155 !important;
+      color: #F8FAFC !important;
+    }
+    html.dark body.dashboard-page #editProfileModal input::placeholder,
+    html.dark body.dashboard-page #editProfileModal textarea::placeholder {
+      color: #64748B !important;
+    }
+    html.dark body.dashboard-page #editProfileModal button[type="button"]#cancelEditBtn {
+      border-color: #334155 !important;
+      color: #F8FAFC !important;
+    }
+    html.dark body.dashboard-page #editProfileModal button[type="button"]#cancelEditBtn:hover {
+      background-color: #1E293B !important;
+    }
+    html.dark body.dashboard-page #editProfileModal #closeEditModal {
+      color: #94A3B8 !important;
+    }
+    html.dark body.dashboard-page #editProfileModal #closeEditModal:hover {
+      background-color: #1E293B !important;
+      color: #F8FAFC !important;
+    }
   </style>
 </head>
 <body class="dashboard-page bg-background text-on-surface min-h-screen flex flex-col font-sans antialiased selection:bg-primary/20 selection:text-primary">
