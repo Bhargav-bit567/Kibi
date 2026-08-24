@@ -1,9 +1,3 @@
-/* ============================================
-   Kibi — Responsive Overrides
-   Tailwind handles most breakpoints; use this
-   for complex component-level tweaks only.
-   ============================================ */
-
 @media (max-width: 767px) {
   .page {
     padding-top: 5rem;
