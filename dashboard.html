@@ -605,66 +605,13 @@
       });
     }
 
-    // Saved Trips Grid Render
-    const savedGrid = document.getElementById('profileSavedTripsGrid');
-    const savedTrips = getSavedTrips(user.id);
-    const displaySaved = savedTrips.length ? savedTrips.slice(0, 4) : [];
-
-    if (displaySaved.length === 0) {
-      savedGrid.innerHTML = `
-        <div class="col-span-full glass-panel rounded-3xl p-8 text-center border border-slate-200/80 dark:border-slate-800">
-          <div class="w-16 h-16 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center mx-auto mb-4">
-            <span class="material-symbols-outlined text-3xl" style="font-variation-settings: 'FILL' 1;">bookmark</span>
-          </div>
-          <h3 class="font-heading font-bold text-lg text-on-surface mb-1">No saved itineraries</h3>
-          <p class="font-body text-sm text-on-surface-variant max-w-sm mx-auto mb-6">Explore community itineraries and save your favorite trips.</p>
-          <a href="discover.html" class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary text-white font-heading font-bold text-sm hover:bg-primary-container shadow-md hover:shadow-lg transition-all">
-            <span class="material-symbols-outlined text-lg">explore</span>
-            Discover Trips
-          </a>
-        </div>
-      `;
-    } else {
-      savedGrid.innerHTML = displaySaved.map((trip, idx) => `
-        <div class="glass-panel rounded-3xl overflow-hidden group cursor-pointer card-hover-effect border border-slate-200/80 dark:border-slate-800 flex flex-col justify-between" onclick="window.location.href='saved-itinerary.html?id=${trip.id}'">
-          <div class="h-48 w-full relative overflow-hidden bg-slate-100 dark:bg-slate-800">
-            <img id="savedTripImg-${idx}" alt="${trip.destination || 'Trip'}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="${trip.image || 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80'}"/>
-            <div class="absolute top-3.5 right-3.5 bg-amber-500 text-white backdrop-blur-md px-3 py-1 rounded-full font-heading font-bold text-xs shadow-sm flex items-center gap-1">
-              <span class="material-symbols-outlined text-xs" style="font-variation-settings: 'FILL' 1;">bookmark</span> Saved
-            </div>
-          </div>
-          <div class="p-5 space-y-3 flex-grow flex flex-col justify-between">
-            <div>
-              <h3 class="font-heading font-bold text-lg text-on-surface group-hover:text-primary transition-colors line-clamp-1">${trip.title || trip.destination}</h3>
-              <p class="font-body text-xs text-on-surface-variant flex items-center gap-1.5 mt-1">
-                <span class="material-symbols-outlined text-sm text-primary">calendar_month</span> ${formatDateRange(trip.startDate, trip.endDate)}
-              </p>
-            </div>
-            <div class="flex flex-wrap items-center gap-2 pt-1 border-t border-slate-100 dark:border-slate-800/80">
-              <span class="px-2.5 py-1 bg-amber-500/10 text-amber-600 dark:text-amber-400 font-heading font-semibold text-xs rounded-full">${trip.destination}</span>
-              <span class="px-2.5 py-1 bg-slate-100 dark:bg-slate-800 text-on-surface font-heading font-semibold text-xs rounded-full">${(trip.itinerary || []).length} days</span>
-            </div>
-          </div>
-        </div>
-      `).join('');
-
-      // Load place-specific images for saved trips
-      displaySaved.forEach((trip, idx) => {
-        if (!trip.image && typeof getDestinationImage === 'function') {
-          getDestinationImage(trip.destination).then(url => {
-            const img = document.getElementById(`savedTripImg-${idx}`);
-            if (img && url) img.src = url;
-          });
-        }
-      });
-    }
-
     // Modal default inputs
     document.getElementById('editName').value = user.name || '';
     document.getElementById('editEmail').value = user.email || '';
     document.getElementById('editBio').value = user.bio || '';
     renderAvatarPreview(user);
     renderCoverPreview(user);
+    renderHeroCover(user);
   }
 
   function renderAvatarPreview(user) {
@@ -777,10 +724,20 @@
     }
 
     if (typeof updateUser === 'function') {
-      updateUser(user.id, updates);
-    }
-    if (typeof showToast === 'function') {
-      showToast('Profile updated!', 'success');
+      const updatedUser = updateUser(user.id, updates);
+      // Sync the unified auth session so navbar/dropdown reflect changes
+      try {
+        const session = JSON.parse(localStorage.getItem('kibi_auth_user'));
+        if (session && session.id === user.id) {
+          session.name = updates.name || session.name;
+          session.email = updates.email || session.email;
+          session.avatar = updates.avatar || session.avatar;
+          localStorage.setItem('kibi_auth_user', JSON.stringify(session));
+        }
+      } catch (e) {}
+      if (updatedUser) {
+        showToast('Profile updated!', 'success');
+      }
     }
     closeModal();
     renderDashboard();
