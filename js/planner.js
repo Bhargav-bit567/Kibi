@@ -35,11 +35,11 @@ async function generateItinerary(params) {
   };
 
   const [placeInfo, attractions] = await Promise.all([
-    withTimeout(TripMateAPI.getPlaceInfo(destination.name), 8000, 'place info').catch(e => {
+    withTimeout(TripMateAPI.getPlaceInfo(destination.name), 3000, 'place info').catch(e => {
       console.warn('TripMate place info failed:', e);
       return null;
     }),
-    withTimeout(TripMateAPI.getAttractions(destination.name), 12000, 'attractions').catch(e => {
+    withTimeout(TripMateAPI.getAttractions(destination.name), 4000, 'attractions').catch(e => {
       console.warn('TripMate attractions failed:', e);
       return [];
     })
@@ -49,11 +49,11 @@ async function generateItinerary(params) {
 
   if (destination.lat && destination.lon) {
     const [weatherRaw, hotels] = await Promise.all([
-      withTimeout(TripMateAPI.getWeather(destination.lat, destination.lon), 8000, 'weather').catch(e => {
+      withTimeout(TripMateAPI.getWeather(destination.lat, destination.lon), 3000, 'weather').catch(e => {
         console.warn('TripMate weather failed:', e);
         return null;
       }),
-      withTimeout(searchRealHotels(destination.lat, destination.lon), 15000, 'hotels').catch(e => {
+      withTimeout(searchRealHotels(destination.lat, destination.lon), 5000, 'hotels').catch(e => {
         console.warn('Real hotel search failed:', e);
         return [];
       })
