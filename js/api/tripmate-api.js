@@ -9,31 +9,54 @@
 const OPENTRIPMAP_KEY = "5ae2e3f221c38a28845f05b65ad5c69491fc9e193e19e64eaaf88418";
 
 const TripMateAPI = {
+  /* ---------- IMAGE QUALITY FILTER ---------- */
+  _isGoodImage(url) {
+    if (!url) return false;
+    const lower = url.toLowerCase();
+    const bad = ['map', 'locator', 'flag', 'coat_of_arms', 'coa_', 'logo', 'icon',
+      'symbol', 'seal', 'emblem', 'svg', 'diagram', 'chart', 'location', 'position',
+      'outline', 'sign', 'wikimedia', 'commons-logo', 'stub', 'red_dot', 'blue_dot',
+      'arrow', 'blank', 'silhouette', 'placeholder'];
+    if (bad.some(kw => lower.includes(kw))) return false;
+    if (!/\.(jpg|jpeg|png)/i.test(lower)) return false;
+    return true;
+  },
+
   /* ---------- 1. PLACE INFO (description + hero image) ---------- */
   async getPlaceInfo(placeName) {
-    try {
-      const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(placeName)}`;
-      const response = await fetch(url);
-      if (!response.ok) throw new Error("Place not found");
-      const data = await response.json();
+    // Try multiple search terms for better results
+    const variants = [
+      placeName + ' India',
+      placeName,
+      placeName + ' tourism',
+      placeName + ' travel'
+    ];
 
-      let image = (data.originalimage && data.originalimage.source)
-        || (data.thumbnail && data.thumbnail.source)
-        || null;
+    for (const term of variants) {
+      try {
+        const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(term)}`;
+        const response = await fetch(url);
+        if (!response.ok) continue;
+        const data = await response.json();
 
-      if (!image) image = await this.searchForImage(placeName);
+        // Prefer originalimage (full-res) over thumbnail
+        const img = (data.originalimage?.source) || (data.thumbnail?.source) || null;
+        const goodImg = this._isGoodImage(img) ? img : null;
 
-      return {
-        title: data.title,
-        description: data.extract,
-        image: image,
-        coordinates: data.coordinates || null
-      };
-    } catch (err) {
-      console.error("Error fetching place info:", err);
-      const fallbackImage = await this.searchForImage(placeName);
-      return { title: placeName, description: "No details available for this place.", image: fallbackImage, coordinates: null };
+        if (data.extract && data.extract.length > 30) {
+          return {
+            title: data.title,
+            description: data.extract,
+            image: goodImg || await this.searchForImage(placeName),
+            coordinates: data.coordinates || null
+          };
+        }
+      } catch (_) {}
     }
+
+    // All variants failed — try image search only
+    const fallbackImage = await this.searchForImage(placeName);
+    return { title: placeName, description: "No details available for this place.", image: fallbackImage, coordinates: null };
   },
 
   /* ---------- 2. MULTIPLE SCENIC PHOTOS (gallery) ---------- */
@@ -60,7 +83,6 @@ const TripMateAPI = {
         })
         .filter(info => info.width >= 500 && info.height >= 350)
         .sort((a, b) => (b.width * b.height) - (a.width * a.height));
-
       return candidates.slice(0, 8).map(info => info.url);
     } catch (err) {
       console.error("Multiple images fetch failed:", err);
@@ -181,19 +203,49 @@ const TripMateAPI = {
     }
   },
 
-  /* ---------- Fallback image search ---------- */
+  /* ---------- Fallback image search (multi-strategy) ---------- */
   async searchForImage(placeName) {
-    try {
-      const searchUrl = `https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(placeName)}&gsrlimit=5&prop=pageimages&piprop=original&format=json&origin=*`;
-      const res = await fetch(searchUrl);
-      const data = await res.json();
-      if (!data.query || !data.query.pages) return null;
-      const pages = Object.values(data.query.pages);
-      const withImage = pages.find(p => p.original && p.original.source);
-      return withImage ? withImage.original.source : null;
-    } catch (err) {
-      console.error("Image search fallback failed:", err);
-      return null;
+    // Strategy 1: Wikipedia search API — scans multiple related pages
+    const queries = [
+      placeName + ' India tourism',
+      placeName + ' India',
+      placeName
+    ];
+
+    for (const q of queries) {
+      try {
+        const url = `https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(q)}&gsrlimit=8&prop=pageimages&piprop=original|thumbnail&format=json&origin=*`;
+        const res = await fetch(url);
+        const data = await res.json();
+        if (!data.query?.pages) continue;
+
+        const pages = Object.values(data.query.pages);
+        for (const page of pages) {
+          const src = page.original?.source || page.thumbnail?.source;
+          if (this._isGoodImage(src)) return src;
+        }
+      } catch (_) {}
     }
+
+    // Strategy 2: Wikimedia Commons image search
+    try {
+      const url = `https://en.wikipedia.org/w/api.php?action=query&generator=images&titles=${encodeURIComponent(placeName)}&prop=imageinfo&iiprop=url|size&format=json&origin=*&gimlimit=20`;
+      const res = await fetch(url);
+      const data = await res.json();
+      if (data.query?.pages) {
+        const imgs = Object.values(data.query.pages)
+          .map(p => p.imageinfo?.[0])
+          .filter(info => info?.url && this._isGoodImage(info.url) && (info.width || 0) >= 400)
+          .sort((a, b) => (b.width * b.height) - (a.width * a.height));
+        if (imgs.length > 0) return imgs[0].url;
+      }
+    } catch (_) {}
+
+    return null;
+  },
+
+  /* ---------- Fetch multiple scenic images for a place (alias for getMultipleImages) ---------- */
+  async getGalleryImages(placeName) {
+    return this.getMultipleImages(placeName);
   }
 };
