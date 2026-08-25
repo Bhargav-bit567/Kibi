@@ -1,302 +1,397 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Kibi Admin</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Lora:ital,wght@0,600;1,500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script defer src="https://cdn.tailwindcss.com"></script>
   <script>
-    // Fallback palette in case js/tailwind-config.js isn't present in this deployment.
-    // If that file loads after this and redefines tailwind.config, its values win.
     window.tailwind = window.tailwind || {};
     tailwind.config = {
       theme: {
         extend: {
-          fontFamily: {
-            sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-            serif: ['Lora', 'ui-serif', 'Georgia', 'serif']
-          },
+          fontFamily: { sans: ['Inter','ui-sans-serif','system-ui','sans-serif'], heading: ['Outfit','ui-sans-serif'] },
           colors: {
-            primary: '#1e3a5f',
-            'primary-light': '#2c527f',
-            'primary-dark': '#132842',
-            accent: '#e07a5f',
-            sage: '#81b29a',
-            charcoal: '#2b2d2e',
-            cream: '#f4f1ea',
-            error: '#dc2626',
-            'brand-blue': '#3b82f6'
-          },
-          boxShadow: {
-            soft: '0 1px 2px rgba(19,40,66,.06), 0 8px 24px -8px rgba(19,40,66,.12)',
-            card: '0 1px 3px rgba(19,40,66,.08), 0 1px 2px rgba(19,40,66,.04)',
-            modal: '0 20px 60px -12px rgba(15,23,42,.35), 0 8px 24px -8px rgba(15,23,42,.2)'
+            brand: { blue: '#5C9CE6', dark: '#0A1B29' },
+            kibi: { 50:'#eff6ff', 100:'#dbeafe', 500:'#3b82f6', 600:'#2563eb', 700:'#1d4ed8', 900:'#1e3a5f' }
           }
         }
       }
     };
   </script>
-  <script defer src="js/tailwind-config.js" onerror="this.remove()"></script>
   <style>
-    body { -webkit-font-smoothing: antialiased; }
+    body { -webkit-font-smoothing:antialiased; background:#f0f4f8; }
 
-    .admin-sidebar { background: linear-gradient(180deg, #16324f 0%, #0e2138 100%); }
-    .sidebar-link { color: #a8bcd4; position: relative; }
-    .sidebar-link svg { color: #7690b0; transition: color .15s ease; }
-    .sidebar-link:hover { background-color: rgba(255,255,255,.06); color: #f4f1ea; }
-    .sidebar-link:hover svg { color: #f4f1ea; }
-    .sidebar-link.active { background-color: rgba(224,122,95,.14); color: #fff; }
-    .sidebar-link.active svg { color: #e07a5f; }
-    .sidebar-link.active::before {
-      content: ''; position: absolute; left: -12px; top: 50%; transform: translateY(-50%);
-      width: 3px; height: 20px; border-radius: 0 3px 3px 0; background: #e07a5f;
-    }
+    /* Sidebar */
+    .sidebar { background:linear-gradient(175deg,#0f1e36 0%,#162845 55%,#1a3257 100%); }
+    .sidebar-logo { background:linear-gradient(135deg,#5C9CE6,#3b82f6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+    .nav-link { color:#8faec9; transition:all .18s ease; border-radius:10px; }
+    .nav-link:hover { background:rgba(255,255,255,.07); color:#e2eaf4; }
+    .nav-link.active { background:linear-gradient(135deg,rgba(92,156,230,.2),rgba(59,130,246,.12)); color:#fff; box-shadow:inset 0 0 0 1px rgba(92,156,230,.25); }
+    .nav-link.active .nav-icon { color:#5C9CE6; }
+    .nav-link .nav-icon { color:#6a8fb0; transition:color .18s; }
+    .nav-link:hover .nav-icon { color:#93c5fd; }
+    .nav-indicator { width:3px; height:18px; background:linear-gradient(180deg,#5C9CE6,#3b82f6); border-radius:0 3px 3px 0; position:absolute; left:0; top:50%; transform:translateY(-50%); }
 
-    .tab-panel { display: none; }
-    .tab-panel.active { display: block; animation: fade-in .2s ease-out; }
-    @keyframes fade-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+    /* Stat cards */
+    .stat-card { background:#fff; border-radius:16px; box-shadow:0 1px 3px rgba(0,0,0,.05),0 4px 16px -4px rgba(0,0,0,.08); transition:transform .2s ease, box-shadow .2s ease; overflow:hidden; }
+    .stat-card:hover { transform:translateY(-3px); box-shadow:0 4px 24px -4px rgba(0,0,0,.14); }
+    .stat-icon { width:44px; height:44px; border-radius:12px; display:flex; align-items:center; justify-content:center; font-size:20px; }
 
-    .modal-backdrop { background: rgba(19, 40, 66, 0.55); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
-    .modal-panel { animation: modal-in .18s cubic-bezier(.16,1,.3,1); }
-    @keyframes modal-in { from { opacity: 0; transform: translateY(8px) scale(.98); } to { opacity: 1; transform: none; } }
+    /* Tables */
+    .data-table { border-radius:14px; overflow:hidden; background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.05),0 4px 16px -4px rgba(0,0,0,.08); }
+    .data-table thead th { background:#f8fafc; font-size:11px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; color:#6b7280; padding:12px 16px; border-bottom:1px solid #f1f5f9; }
+    .data-table tbody tr { border-bottom:1px solid #f8fafc; transition:background .12s; }
+    .data-table tbody tr:last-child { border-bottom:none; }
+    .data-table tbody tr:hover { background:#fafbff; }
+    .data-table td { padding:12px 16px; font-size:13.5px; color:#374151; vertical-align:middle; }
 
-    .toast { animation: toast-in .25s ease-out; }
-    @keyframes toast-in { from { opacity:0; transform: translateY(8px);} to {opacity:1; transform:none;} }
+    /* Badges */
+    .badge { display:inline-flex; align-items:center; padding:3px 10px; border-radius:999px; font-size:11.5px; font-weight:600; gap:4px; }
+    .badge-admin { background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; }
+    .badge-moderator { background:#fff7ed; color:#c2410c; border:1px solid #fed7aa; }
+    .badge-user { background:#f8fafc; color:#475569; border:1px solid #e2e8f0; }
+    .badge-active { background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0; }
+    .badge-suspended { background:#fffbeb; color:#b45309; border:1px solid #fde68a; }
+    .badge-banned { background:#fef2f2; color:#b91c1c; border:1px solid #fecaca; }
+    .badge-open { background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0; }
+    .badge-closed { background:#f1f5f9; color:#475569; border:1px solid #e2e8f0; }
+    .badge-full { background:#fffbeb; color:#b45309; border:1px solid #fde68a; }
+    .badge-pending { background:#fffbeb; color:#b45309; border:1px solid #fde68a; }
+    .badge-approved { background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0; }
+    .badge-rejected { background:#fef2f2; color:#b91c1c; border:1px solid #fecaca; }
 
-    ::-webkit-scrollbar { width: 8px; height: 8px; }
-    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+    /* Tab panels */
+    .tab-panel { display:none; }
+    .tab-panel.active { display:block; animation:panelIn .22s ease-out; }
+    @keyframes panelIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
 
-    .role-badge-admin { background:#1e3a5f14; color:#1e3a5f; border: 1px solid #1e3a5f26; }
-    .role-badge-moderator { background:#e07a5f14; color:#b9552f; border: 1px solid #e07a5f26; }
-    .role-badge-user { background:#f1f5f9; color:#475569; border: 1px solid #e2e8f0; }
-    .status-badge-active { background:#ecfdf3; color:#12664f; border: 1px solid #a7f0d1; }
-    .status-badge-suspended { background:#fffbea; color:#8a5a11; border: 1px solid #fde68a; }
-    .status-badge-banned { background:#fef2f2; color:#a3222b; border: 1px solid #fecaca; }
+    /* Modals */
+    .modal-backdrop { background:rgba(15,23,42,.5); backdrop-filter:blur(4px); }
+    .modal-card { animation:modalIn .2s cubic-bezier(.16,1,.3,1); }
+    @keyframes modalIn { from { opacity:0; transform:translateY(10px) scale(.97); } to { opacity:1; transform:none; } }
 
-    .btn-primary {
-      background: linear-gradient(180deg, #234a75, #1e3a5f);
-      color: #fff; box-shadow: 0 1px 2px rgba(19,40,66,.15), inset 0 1px 0 rgba(255,255,255,.08);
-      transition: filter .15s ease, transform .1s ease;
-    }
-    .btn-primary:hover { filter: brightness(1.08); }
-    .btn-primary:active { transform: translateY(1px); }
+    /* Toast */
+    .toast { animation:toastIn .22s ease-out; }
+    @keyframes toastIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
 
-    :focus-visible { outline: 2px solid #e07a5f; outline-offset: 2px; }
+    /* Search */
+    .search-wrap input:focus { border-color:#5C9CE6; box-shadow:0 0 0 3px rgba(92,156,230,.15); }
+
+    /* Buttons */
+    .btn-blue { background:linear-gradient(135deg,#5C9CE6,#3b82f6); color:#fff; font-weight:600; border-radius:8px; padding:8px 16px; font-size:13px; transition:filter .15s, transform .1s; box-shadow:0 2px 8px rgba(59,130,246,.3); }
+    .btn-blue:hover { filter:brightness(1.07); }
+    .btn-blue:active { transform:scale(.98); }
+    .btn-ghost { background:transparent; color:#5C9CE6; border:1px solid #bfdbfe; border-radius:8px; padding:5px 12px; font-size:12.5px; font-weight:600; transition:all .15s; }
+    .btn-ghost:hover { background:#eff6ff; }
+    .btn-danger { color:#dc2626; font-weight:600; font-size:12.5px; transition:color .15s; }
+    .btn-danger:hover { color:#b91c1c; text-decoration:underline; }
+
+    /* Avatar */
+    .avatar { border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; flex-shrink:0; }
+
+    /* Activity item */
+    .activity-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width:6px; height:6px; }
+    ::-webkit-scrollbar-track { background:transparent; }
+    ::-webkit-scrollbar-thumb { background:#cbd5e1; border-radius:6px; }
+    ::-webkit-scrollbar-thumb:hover { background:#94a3b8; }
+
+    /* Mini bar for activity */
+    .mini-bar { height:4px; border-radius:4px; background:#e2e8f0; overflow:hidden; }
+    .mini-bar-fill { height:100%; border-radius:4px; transition:width .6s ease; }
+
+    /* Chart placeholder bars */
+    .chart-bar { background:linear-gradient(180deg,#5C9CE6,#3b82f6); border-radius:4px 4px 0 0; transition:height .5s cubic-bezier(.34,1.56,.64,1); min-width:20px; }
+    .chart-bar:hover { background:linear-gradient(180deg,#7cb3ee,#5C9CE6); }
   </style>
 </head>
-<body class="bg-[#f7f8fa] text-charcoal font-sans">
+<body>
 
-  <!-- ============ ACCESS GATE ============ -->
-  <div id="accessGate" class="min-h-screen flex items-center justify-center p-6 hidden bg-[#f7f8fa]">
-    <div class="max-w-md w-full bg-white ring-1 ring-black/5 shadow-modal rounded-2xl p-8 text-center">
-      <div class="w-14 h-14 mx-auto rounded-full bg-gradient-to-br from-red-50 to-orange-50 ring-1 ring-red-100 flex items-center justify-center mb-4">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-red-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" /></svg>
-      </div>
-      <h1 id="gateTitle" class="text-xl font-bold text-charcoal mb-2 font-serif">Admin access required</h1>
-      <p id="gateMessage" class="text-gray-500 text-sm mb-6 leading-relaxed">You need to be signed in with an admin account to view this dashboard.</p>
-      <div id="gateActions" class="space-y-3"></div>
+<!-- ============ ACCESS GATE ============ -->
+<div id="accessGate" class="hidden min-h-screen flex items-center justify-center p-6">
+  <div class="w-full max-w-md bg-white rounded-2xl shadow-xl ring-1 ring-black/5 p-8 text-center">
+    <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 ring-1 ring-blue-100 flex items-center justify-center mb-5">
+      <i class="fa-solid fa-shield-halved text-2xl text-blue-400"></i>
     </div>
+    <h1 id="gateTitle" class="text-xl font-bold text-gray-900 mb-2 font-heading">Admin access required</h1>
+    <p id="gateMessage" class="text-gray-500 text-sm mb-6 leading-relaxed">You need to be signed in with an admin account to view this dashboard.</p>
+    <div id="gateActions" class="space-y-3"></div>
   </div>
+</div>
 
-  <!-- ============ DASHBOARD SHELL ============ -->
-  <div id="dashboardShell" class="hidden min-h-screen flex">
+<!-- ============ DASHBOARD SHELL ============ -->
+<div id="dashboardShell" class="hidden min-h-screen flex">
 
-    <!-- Sidebar -->
-    <aside class="w-64 shrink-0 admin-sidebar flex flex-col">
-      <div class="px-6 py-5 border-b border-white/10">
-        <div class="text-lg font-bold text-white font-serif tracking-tight">Kibi</div>
-        <div class="text-[11px] font-medium tracking-widest uppercase mt-0.5" style="color:#7690b0;">Admin Dashboard</div>
-      </div>
-      <nav class="flex-1 px-3 py-4 ml-3 space-y-1" id="sidebarNav">
-        <button data-tab="tab-dashboard" class="sidebar-link active w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" /></svg>
-          Dashboard
-        </button>
-        <button data-tab="tab-users" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" /></svg>
-          Users
-          <span id="navUserCount" class="ml-auto text-xs bg-white/10 text-white/70 rounded-full px-2 py-0.5">0</span>
-        </button>
-        <button data-tab="tab-trips" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498l4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 00-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.379 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0z" /></svg>
-          Trips
-          <span id="navTripCount" class="ml-auto text-xs bg-white/10 text-white/70 rounded-full px-2 py-0.5">0</span>
-        </button>
-        <button data-tab="tab-requests" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-          Join Requests
-          <span id="navRequestCount" class="ml-auto text-xs bg-amber-400/90 text-amber-950 font-semibold rounded-full px-2 py-0.5">0</span>
-        </button>
-        <button data-tab="tab-activity" class="sidebar-link w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-          Activity Log
-        </button>
-      </nav>
-      <div class="px-3 py-4 border-t border-white/10">
-        <div id="sidebarUser" class="flex items-center gap-3 px-3 py-2"></div>
-        <button id="logoutBtn" class="w-full mt-1 flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/60 hover:bg-white/10 hover:text-white transition-colors">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75" /></svg>
-          Log out
-        </button>
-      </div>
-    </aside>
+  <!-- ====== SIDEBAR ====== -->
+  <aside class="sidebar w-64 shrink-0 flex flex-col fixed inset-y-0 left-0 z-20">
 
-    <!-- Main -->
-    <main class="flex-1 min-w-0">
-      <header class="bg-white/80 backdrop-blur border-b border-gray-200 px-8 py-4 flex items-center justify-between sticky top-0 z-10">
-        <h1 id="pageTitle" class="text-xl font-semibold text-charcoal font-serif">Dashboard</h1>
-        <div class="flex items-center gap-3">
-          <span id="lastUpdated" class="text-xs text-gray-400"></span>
-          <button id="refreshBtn" class="text-sm px-3 py-1.5 rounded-lg border border-gray-200 bg-white text-gray-600 shadow-sm hover:bg-gray-50 hover:border-gray-300 transition-colors">Refresh</button>
+    <!-- Logo -->
+    <div class="px-6 py-5 border-b border-white/10">
+      <div class="flex items-center gap-2.5 mb-0.5">
+        <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+          <i class="fa-solid fa-paper-plane text-white text-sm -rotate-12"></i>
         </div>
-      </header>
-
-      <div class="p-8 max-w-7xl mx-auto">
-
-        <!-- ===== DASHBOARD TAB ===== -->
-        <section id="tab-dashboard" class="tab-panel active">
-          <div id="statsGrid" class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8"></div>
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div class="bg-white shadow-card ring-1 ring-black/5 rounded-xl p-6">
-              <h3 class="font-semibold text-charcoal mb-4 flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-accent"></span>Recent Users</h3>
-              <div id="recentUsers" class="space-y-3"></div>
-            </div>
-            <div class="bg-white shadow-card ring-1 ring-black/5 rounded-xl p-6">
-              <h3 class="font-semibold text-charcoal mb-4 flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-sage"></span>Recent Activity</h3>
-              <div id="recentActivity" class="space-y-3"></div>
-            </div>
-          </div>
-        </section>
-
-        <!-- ===== USERS TAB ===== -->
-        <section id="tab-users" class="tab-panel">
-          <div class="flex flex-col sm:flex-row gap-3 sm:items-center justify-between mb-4">
-            <div class="relative flex-1 max-w-sm">
-              <input id="userSearch" type="text" placeholder="Search name or email..." class="w-full pl-9 pr-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent/50">
-              <svg class="w-4 h-4 text-gray-400 absolute left-3 top-2.5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" /></svg>
-            </div>
-            <div class="flex items-center gap-2">
-              <select id="userRoleFilter" class="text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none">
-                <option value="">All roles</option>
-                <option value="admin">Admin</option>
-                <option value="moderator">Moderator</option>
-                <option value="user">User</option>
-              </select>
-              <select id="userStatusFilter" class="text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none">
-                <option value="">All statuses</option>
-                <option value="active">Active</option>
-                <option value="suspended">Suspended</option>
-                <option value="banned">Banned</option>
-              </select>
-              <button id="exportUsersBtn" class="text-sm px-3 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50">Export CSV</button>
-            </div>
-          </div>
-          <div class="bg-white shadow-card ring-1 ring-black/5 rounded-xl overflow-x-auto">
-            <div id="usersContainer"></div>
-          </div>
-          <div id="usersPagination" class="flex items-center justify-between mt-4 text-sm text-gray-500"></div>
-        </section>
-
-        <!-- ===== TRIPS TAB ===== -->
-        <section id="tab-trips" class="tab-panel">
-          <div class="flex flex-col sm:flex-row gap-3 sm:items-center justify-between mb-4">
-            <div class="relative flex-1 max-w-sm">
-              <input id="tripSearch" type="text" placeholder="Search title or destination..." class="w-full pl-9 pr-3 py-2 rounded-lg border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent/50">
-              <svg class="w-4 h-4 text-gray-400 absolute left-3 top-2.5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" /></svg>
-            </div>
-            <div class="flex items-center gap-2">
-              <select id="tripStatusFilter" class="text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none">
-                <option value="">All statuses</option>
-                <option value="open">Open</option>
-                <option value="closed">Closed</option>
-                <option value="full">Full</option>
-              </select>
-              <button id="exportTripsBtn" class="text-sm px-3 py-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50">Export CSV</button>
-            </div>
-          </div>
-          <div class="bg-white shadow-card ring-1 ring-black/5 rounded-xl overflow-x-auto">
-            <div id="tripsContainer"></div>
-          </div>
-          <div id="tripsPagination" class="flex items-center justify-between mt-4 text-sm text-gray-500"></div>
-        </section>
-
-        <!-- ===== JOIN REQUESTS TAB ===== -->
-        <section id="tab-requests" class="tab-panel">
-          <div class="flex items-center justify-between mb-4">
-            <div class="flex items-center gap-2">
-              <select id="requestStatusFilter" class="text-sm border border-gray-200 rounded-lg px-3 py-2 focus:outline-none">
-                <option value="pending">Pending</option>
-                <option value="approved">Approved</option>
-                <option value="rejected">Rejected</option>
-                <option value="">All</option>
-              </select>
-            </div>
-          </div>
-          <div class="bg-white shadow-card ring-1 ring-black/5 rounded-xl overflow-x-auto">
-            <div id="requestsContainer"></div>
-          </div>
-        </section>
-
-        <!-- ===== ACTIVITY LOG TAB ===== -->
-        <section id="tab-activity" class="tab-panel">
-          <div class="flex items-center justify-between mb-4">
-            <p class="text-sm text-gray-500">Audit trail of admin actions performed in this browser.</p>
-            <button id="clearLogBtn" class="text-sm px-3 py-2 rounded-lg border border-gray-200 text-red-500 hover:bg-red-50">Clear Log</button>
-          </div>
-          <div class="bg-white shadow-card ring-1 ring-black/5 rounded-xl overflow-x-auto">
-            <div id="activityContainer"></div>
-          </div>
-        </section>
-
+        <span class="text-xl font-heading font-bold sidebar-logo">Kibi</span>
       </div>
-    </main>
+      <p class="text-[10.5px] font-semibold tracking-widest uppercase mt-1" style="color:#4d7aac;">Admin Dashboard</p>
+    </div>
+
+    <!-- Nav -->
+    <nav class="flex-1 px-3 py-5 space-y-1 overflow-y-auto" id="sidebarNav">
+      <button data-tab="tab-dashboard" class="nav-link active relative w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium">
+        <span class="nav-indicator"></span>
+        <i class="fa-solid fa-chart-pie nav-icon w-5 text-center"></i> Dashboard
+      </button>
+      <button data-tab="tab-users" class="nav-link relative w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium">
+        <i class="fa-solid fa-users nav-icon w-5 text-center"></i> Users
+        <span id="navUserCount" class="ml-auto text-[11px] bg-white/10 text-white/60 rounded-full px-2 py-0.5 min-w-[22px] text-center">0</span>
+      </button>
+      <button data-tab="tab-trips" class="nav-link relative w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium">
+        <i class="fa-solid fa-route nav-icon w-5 text-center"></i> Trips
+        <span id="navTripCount" class="ml-auto text-[11px] bg-white/10 text-white/60 rounded-full px-2 py-0.5 min-w-[22px] text-center">0</span>
+      </button>
+      <button data-tab="tab-requests" class="nav-link relative w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium">
+        <i class="fa-solid fa-envelope-open-text nav-icon w-5 text-center"></i> Join Requests
+        <span id="navRequestCount" class="ml-auto text-[11px] bg-amber-500 text-white rounded-full px-2 py-0.5 min-w-[22px] text-center hidden">0</span>
+      </button>
+      <button data-tab="tab-activity" class="nav-link relative w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium">
+        <i class="fa-solid fa-clock-rotate-left nav-icon w-5 text-center"></i> Activity Log
+      </button>
+    </nav>
+
+    <!-- Sidebar footer -->
+    <div class="px-4 py-4 border-t border-white/10">
+      <div class="flex items-center gap-3 mb-3 px-1">
+        <div id="sidebarUserAvatar" class="avatar w-9 h-9 bg-gradient-to-br from-blue-400 to-indigo-600 text-white text-sm shrink-0"></div>
+        <div id="sidebarUserInfo" class="min-w-0 flex-1">
+          <div class="text-sm font-semibold text-white truncate"></div>
+          <div class="text-[11px] text-blue-300/70 truncate"></div>
+        </div>
+      </div>
+      <button id="logoutBtn" class="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-red-400/80 hover:text-red-400 hover:bg-red-500/10 transition-colors font-medium">
+        <i class="fa-solid fa-arrow-right-from-bracket w-4 text-center"></i> Sign out
+      </button>
+    </div>
+  </aside>
+
+  <!-- ====== MAIN ====== -->
+  <main class="flex-1 ml-64 flex flex-col min-h-screen">
+
+    <!-- Top bar -->
+    <header class="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b border-gray-200/70 px-8 py-3.5 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <h1 id="pageTitle" class="text-lg font-semibold text-gray-900 font-heading">Dashboard</h1>
+        <span id="pageSubtitle" class="text-xs text-gray-400 font-normal hidden md:block"></span>
+      </div>
+      <div class="flex items-center gap-3">
+        <span id="lastUpdated" class="text-xs text-gray-400 hidden sm:block"></span>
+        <button id="refreshBtn" class="flex items-center gap-1.5 text-sm px-3 py-1.5 rounded-lg border border-gray-200 bg-white text-gray-600 shadow-sm hover:bg-gray-50 transition-colors">
+          <i class="fa-solid fa-arrows-rotate text-xs"></i> Refresh
+        </button>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <div class="flex-1 p-8 max-w-[1400px] mx-auto w-full">
+
+      <!-- ===== DASHBOARD TAB ===== -->
+      <section id="tab-dashboard" class="tab-panel active">
+
+        <!-- Stat cards -->
+        <div id="statsGrid" class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4 mb-8"></div>
+
+        <!-- Charts row -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 mb-6">
+          <!-- User growth chart -->
+          <div class="bg-white rounded-2xl shadow-sm ring-1 ring-black/5 p-5 lg:col-span-2">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <h3 class="font-semibold text-gray-800 font-heading text-sm">User & Trip Growth</h3>
+                <p class="text-xs text-gray-400 mt-0.5">Activity over time (local data)</p>
+              </div>
+              <div class="flex items-center gap-3 text-xs text-gray-500">
+                <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm bg-blue-400 inline-block"></span>Users</span>
+                <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-sm bg-emerald-400 inline-block"></span>Trips</span>
+              </div>
+            </div>
+            <div id="growthChart" class="flex items-end gap-2 h-28 px-1"></div>
+            <div id="growthLabels" class="flex gap-2 mt-1 px-1"></div>
+          </div>
+
+          <!-- Role breakdown donut -->
+          <div class="bg-white rounded-2xl shadow-sm ring-1 ring-black/5 p-5">
+            <h3 class="font-semibold text-gray-800 font-heading text-sm mb-1">User Roles</h3>
+            <p class="text-xs text-gray-400 mb-4">Current distribution</p>
+            <div id="rolesDonut" class="space-y-3"></div>
+          </div>
+        </div>
+
+        <!-- Recent panels -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <div class="bg-white rounded-2xl shadow-sm ring-1 ring-black/5 p-5">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="font-semibold text-gray-800 font-heading text-sm flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-blue-400"></span>New Members
+              </h3>
+              <button onclick="document.querySelector('[data-tab=tab-users]').click()" class="text-xs text-blue-500 hover:text-blue-600 font-medium">View all →</button>
+            </div>
+            <div id="recentUsers" class="space-y-3"></div>
+          </div>
+          <div class="bg-white rounded-2xl shadow-sm ring-1 ring-black/5 p-5">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="font-semibold text-gray-800 font-heading text-sm flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>Recent Activity
+              </h3>
+              <button onclick="document.querySelector('[data-tab=tab-activity]').click()" class="text-xs text-blue-500 hover:text-blue-600 font-medium">View all →</button>
+            </div>
+            <div id="recentActivity" class="space-y-2.5"></div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ===== USERS TAB ===== -->
+      <section id="tab-users" class="tab-panel">
+        <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between mb-5">
+          <div class="search-wrap relative flex-1 max-w-sm">
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+            <input id="userSearch" type="text" placeholder="Search name or email…" class="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 text-sm bg-white shadow-sm focus:outline-none transition-all">
+          </div>
+          <div class="flex flex-wrap items-center gap-2">
+            <select id="userRoleFilter" class="text-sm border border-gray-200 rounded-xl px-3 py-2.5 bg-white shadow-sm focus:outline-none">
+              <option value="">All roles</option>
+              <option value="admin">Admin</option>
+              <option value="moderator">Moderator</option>
+              <option value="user">User</option>
+            </select>
+            <select id="userStatusFilter" class="text-sm border border-gray-200 rounded-xl px-3 py-2.5 bg-white shadow-sm focus:outline-none">
+              <option value="">All statuses</option>
+              <option value="active">Active</option>
+              <option value="suspended">Suspended</option>
+              <option value="banned">Banned</option>
+            </select>
+            <button id="exportUsersBtn" class="flex items-center gap-1.5 text-sm px-3 py-2.5 rounded-xl border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 shadow-sm transition-colors">
+              <i class="fa-solid fa-file-csv text-xs"></i> Export
+            </button>
+          </div>
+        </div>
+        <div class="data-table">
+          <div id="usersContainer"></div>
+        </div>
+        <div id="usersPagination" class="flex items-center justify-between mt-4 text-sm text-gray-500"></div>
+      </section>
+
+      <!-- ===== TRIPS TAB ===== -->
+      <section id="tab-trips" class="tab-panel">
+        <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between mb-5">
+          <div class="search-wrap relative flex-1 max-w-sm">
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs"></i>
+            <input id="tripSearch" type="text" placeholder="Search title or destination…" class="w-full pl-9 pr-4 py-2.5 rounded-xl border border-gray-200 text-sm bg-white shadow-sm focus:outline-none transition-all">
+          </div>
+          <div class="flex items-center gap-2">
+            <select id="tripStatusFilter" class="text-sm border border-gray-200 rounded-xl px-3 py-2.5 bg-white shadow-sm focus:outline-none">
+              <option value="">All statuses</option>
+              <option value="open">Open</option>
+              <option value="closed">Closed</option>
+              <option value="full">Full</option>
+            </select>
+            <button id="exportTripsBtn" class="flex items-center gap-1.5 text-sm px-3 py-2.5 rounded-xl border border-gray-200 bg-white text-gray-600 hover:bg-gray-50 shadow-sm transition-colors">
+              <i class="fa-solid fa-file-csv text-xs"></i> Export
+            </button>
+          </div>
+        </div>
+        <div class="data-table">
+          <div id="tripsContainer"></div>
+        </div>
+        <div id="tripsPagination" class="flex items-center justify-between mt-4 text-sm text-gray-500"></div>
+      </section>
+
+      <!-- ===== JOIN REQUESTS TAB ===== -->
+      <section id="tab-requests" class="tab-panel">
+        <div class="flex items-center justify-between mb-5">
+          <div class="flex items-center gap-2">
+            <select id="requestStatusFilter" class="text-sm border border-gray-200 rounded-xl px-3 py-2.5 bg-white shadow-sm focus:outline-none">
+              <option value="pending">Pending</option>
+              <option value="approved">Approved</option>
+              <option value="rejected">Rejected</option>
+              <option value="">All</option>
+            </select>
+          </div>
+        </div>
+        <div class="data-table">
+          <div id="requestsContainer"></div>
+        </div>
+      </section>
+
+      <!-- ===== ACTIVITY LOG TAB ===== -->
+      <section id="tab-activity" class="tab-panel">
+        <div class="flex items-center justify-between mb-5">
+          <p class="text-sm text-gray-500">Audit trail of admin actions in this browser session.</p>
+          <button id="clearLogBtn" class="flex items-center gap-1.5 text-sm px-3 py-2.5 rounded-xl border border-red-200 bg-white text-red-500 hover:bg-red-50 shadow-sm transition-colors">
+            <i class="fa-solid fa-trash-can text-xs"></i> Clear Log
+          </button>
+        </div>
+        <div class="data-table">
+          <div id="activityContainer"></div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+</div>
+
+<!-- ============ EDIT USER MODAL ============ -->
+<div id="userModal" class="fixed inset-0 z-40 hidden items-center justify-center modal-backdrop p-4">
+  <div class="modal-card bg-white rounded-2xl shadow-2xl ring-1 ring-black/5 w-full max-w-md overflow-hidden">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+      <h3 class="text-base font-semibold text-gray-900 font-heading">Edit User</h3>
+      <button class="modal-close w-8 h-8 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors" data-modal="userModal">
+        <i class="fa-solid fa-xmark text-sm"></i>
+      </button>
+    </div>
+    <div id="userModalBody" class="space-y-4 p-6"></div>
   </div>
+</div>
 
-  <!-- ============ EDIT USER MODAL ============ -->
-  <div id="userModal" class="fixed inset-0 z-40 hidden items-center justify-center modal-backdrop">
-    <div class="modal-panel bg-white rounded-2xl shadow-modal ring-1 ring-black/5 w-full max-w-md mx-4 overflow-hidden">
-      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 bg-gray-50/60">
-        <h3 class="text-base font-semibold text-charcoal">Edit User</h3>
-        <button class="modal-close w-7 h-7 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-200/70 transition-colors" data-modal="userModal">✕</button>
-      </div>
-      <div id="userModalBody" class="space-y-4 p-6"></div>
+<!-- ============ TRIP DETAILS MODAL ============ -->
+<div id="tripModal" class="fixed inset-0 z-40 hidden items-center justify-center modal-backdrop p-4">
+  <div class="modal-card bg-white rounded-2xl shadow-2xl ring-1 ring-black/5 w-full max-w-lg max-h-[85vh] overflow-hidden flex flex-col">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 shrink-0">
+      <h3 class="text-base font-semibold text-gray-900 font-heading">Trip Details</h3>
+      <button class="modal-close w-8 h-8 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors" data-modal="tripModal">
+        <i class="fa-solid fa-xmark text-sm"></i>
+      </button>
+    </div>
+    <div id="tripModalBody" class="space-y-4 text-sm p-6 overflow-y-auto"></div>
+  </div>
+</div>
+
+<!-- ============ CONFIRM MODAL ============ -->
+<div id="confirmModal" class="fixed inset-0 z-50 hidden items-center justify-center modal-backdrop p-4">
+  <div class="modal-card bg-white rounded-2xl shadow-2xl ring-1 ring-black/5 w-full max-w-sm p-6 text-center">
+    <div class="w-12 h-12 mx-auto rounded-full bg-red-50 ring-1 ring-red-100 flex items-center justify-center mb-4">
+      <i class="fa-solid fa-triangle-exclamation text-red-500"></i>
+    </div>
+    <h3 id="confirmTitle" class="text-base font-semibold text-gray-900 mb-1 font-heading">Are you sure?</h3>
+    <p id="confirmMessage" class="text-sm text-gray-500 mb-5 leading-relaxed">This action cannot be undone.</p>
+    <div class="flex gap-3">
+      <button id="confirmCancelBtn" class="flex-1 py-2.5 rounded-xl border border-gray-200 text-gray-600 text-sm font-semibold hover:bg-gray-50 transition-colors">Cancel</button>
+      <button id="confirmOkBtn" class="flex-1 py-2.5 rounded-xl bg-red-600 text-white text-sm font-semibold shadow-sm hover:bg-red-700 transition-colors">Confirm</button>
     </div>
   </div>
+</div>
 
-  <!-- ============ TRIP DETAILS MODAL ============ -->
-  <div id="tripModal" class="fixed inset-0 z-40 hidden items-center justify-center modal-backdrop">
-    <div class="modal-panel bg-white rounded-2xl shadow-modal ring-1 ring-black/5 w-full max-w-lg mx-4 max-h-[85vh] overflow-hidden flex flex-col">
-      <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 bg-gray-50/60 shrink-0">
-        <h3 class="text-base font-semibold text-charcoal">Trip Details</h3>
-        <button class="modal-close w-7 h-7 flex items-center justify-center rounded-full text-gray-400 hover:text-gray-700 hover:bg-gray-200/70 transition-colors" data-modal="tripModal">✕</button>
-      </div>
-      <div id="tripModalBody" class="space-y-3 text-sm p-6 overflow-y-auto"></div>
-    </div>
-  </div>
+<!-- ============ TOASTS ============ -->
+<div id="toastContainer" class="fixed bottom-6 right-6 z-[60] space-y-2 pointer-events-none"></div>
 
-  <!-- ============ CONFIRM MODAL ============ -->
-  <div id="confirmModal" class="fixed inset-0 z-50 hidden items-center justify-center modal-backdrop">
-    <div class="modal-panel bg-white rounded-2xl shadow-modal ring-1 ring-black/5 w-full max-w-sm mx-4 p-6 text-center">
-      <div class="w-12 h-12 mx-auto rounded-full bg-gradient-to-br from-red-50 to-orange-50 ring-1 ring-red-100 flex items-center justify-center mb-3">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-red-500" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" /></svg>
-      </div>
-      <h3 id="confirmTitle" class="text-lg font-semibold text-charcoal mb-1">Are you sure?</h3>
-      <p id="confirmMessage" class="text-sm text-gray-500 mb-6 leading-relaxed">This action cannot be undone.</p>
-      <div class="flex gap-3">
-        <button id="confirmCancelBtn" class="flex-1 py-2.5 rounded-lg border border-gray-200 text-gray-600 text-sm font-medium hover:bg-gray-50">Cancel</button>
-        <button id="confirmOkBtn" class="flex-1 py-2.5 rounded-lg bg-red-600 text-white text-sm font-medium shadow-sm hover:bg-red-700">Confirm</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ============ TOASTS ============ -->
-  <div id="toastContainer" class="fixed bottom-6 right-6 z-[60] space-y-2"></div>
-
-  <script src="js/storage.js"></script>
-  <script src="js/admin.js"></script>
+<script src="js/storage.js"></script>
+<script src="js/admin.js"></script>
 </body>
 </html>
