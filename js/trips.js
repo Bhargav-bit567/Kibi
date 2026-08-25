@@ -649,6 +649,10 @@ function renderLoadedItinerary(itinerary) {
   itinerary.budgetBreakdown = itinerary.budgetBreakdown || { stay: 0, food: 0, transport: 0, activities: 0, total: 0 };
   itinerary.weather = itinerary.weather || {};
 
+  // Fix static heading
+  const destTitle = document.getElementById('overviewDestTitle');
+  if (destTitle) destTitle.textContent = `About ${itinerary.destination}`;
+
   const heroEl = document.getElementById('itinHero');
   if (heroEl) {
     const fallbackBg = `https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1600&q=80`;
