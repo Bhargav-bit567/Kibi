@@ -216,49 +216,59 @@ function renderNavCounts() {
 function renderDashboard() {
   const stats = getAdminStats();
   const cards = [
-    { label: 'Total Users', value: stats.totalUsers, sub: `+${stats.newUsersThisWeek} this week`, icon: '👥', accent: '#1e3a5f', tint: '#1e3a5f0d' },
-    { label: 'Admins', value: stats.admins, sub: `${stats.suspended} suspended`, icon: '🛡️', accent: '#3b82f6', tint: '#3b82f60d' },
-    { label: 'Total Trips', value: stats.totalTrips, sub: `+${stats.newTripsThisWeek} this week`, icon: '🧳', accent: '#e07a5f', tint: '#e07a5f0d' },
-    { label: 'Open Trips', value: stats.openTrips, sub: `${stats.totalTrips - stats.openTrips} closed/full`, icon: '🗺️', accent: '#81b29a', tint: '#81b29a0d' },
-    { label: 'Join Requests', value: stats.totalRequests, sub: `${stats.pendingRequests} pending`, icon: '📥', accent: '#b45309', tint: '#b453090d' }
+    { label: 'Total Users', value: stats.totalUsers, sub: `+${stats.newUsersThisWeek} this week`, icon: 'fa-users', iconBg: 'bg-blue-50', iconColor: 'text-blue-500', accent: 'from-blue-500 to-blue-600' },
+    { label: 'Admins', value: stats.admins, sub: `${stats.suspended} suspended`, icon: 'fa-shield-halved', iconBg: 'bg-indigo-50', iconColor: 'text-indigo-500', accent: 'from-indigo-500 to-indigo-600' },
+    { label: 'Total Trips', value: stats.totalTrips, sub: `+${stats.newTripsThisWeek} this week`, icon: 'fa-route', iconBg: 'bg-orange-50', iconColor: 'text-orange-500', accent: 'from-orange-400 to-orange-500' },
+    { label: 'Open Trips', value: stats.openTrips, sub: `${stats.totalTrips - stats.openTrips} closed/full`, icon: 'fa-map-location-dot', iconBg: 'bg-emerald-50', iconColor: 'text-emerald-500', accent: 'from-emerald-500 to-emerald-600' },
+    { label: 'Pending Requests', value: stats.pendingRequests, sub: `${stats.totalRequests} total`, icon: 'fa-envelope-open-text', iconBg: 'bg-amber-50', iconColor: 'text-amber-500', accent: 'from-amber-400 to-amber-500' }
   ];
 
   document.getElementById('statsGrid').innerHTML = cards.map(c => `
-    <div class="bg-white shadow-card ring-1 ring-black/5 rounded-xl p-5 relative overflow-hidden hover:-translate-y-0.5 hover:shadow-soft transition-all duration-150">
-      <div class="absolute inset-y-0 left-0 w-1" style="background:${c.accent};"></div>
-      <div class="flex items-center justify-between mb-3">
-        <span class="w-9 h-9 rounded-lg flex items-center justify-center text-lg" style="background:${c.tint};">${c.icon}</span>
+    <div class="stat-card p-5 cursor-default">
+      <div class="flex items-start justify-between mb-3">
+        <div class="stat-icon ${c.iconBg}"><i class="fa-solid ${c.icon} ${c.iconColor} text-lg"></i></div>
+        <div class="h-1 w-12 rounded-full bg-gradient-to-r ${c.accent} opacity-60"></div>
       </div>
-      <div class="text-2xl font-bold text-charcoal tracking-tight">${c.value}</div>
-      <div class="text-sm text-gray-500 font-medium">${c.label}</div>
-      <div class="text-xs text-gray-400 mt-1.5">${c.sub}</div>
+      <div class="text-3xl font-bold text-gray-900 font-heading tracking-tight mb-0.5">${c.value}</div>
+      <div class="text-sm font-semibold text-gray-600">${c.label}</div>
+      <div class="text-xs text-gray-400 mt-1">${c.sub}</div>
     </div>
   `).join('');
 
+  const avatarColors = ['bg-blue-100 text-blue-600', 'bg-violet-100 text-violet-600', 'bg-emerald-100 text-emerald-600', 'bg-amber-100 text-amber-600', 'bg-rose-100 text-rose-600'];
   const recentUsers = [...getUsers()].sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0)).slice(0, 5);
-  document.getElementById('recentUsers').innerHTML = recentUsers.length ? recentUsers.map(u => `
-    <div class="flex items-center justify-between">
-      <div class="flex items-center gap-3 min-w-0">
-        <div class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-xs font-semibold text-gray-500 shrink-0">${(u.name || u.email || '?').charAt(0).toUpperCase()}</div>
-        <div class="min-w-0">
-          <div class="text-sm font-medium text-gray-900 truncate">${escapeHtml(u.name || 'N/A')}</div>
-          <div class="text-xs text-gray-400 truncate">${escapeHtml(u.email || '')}</div>
+  document.getElementById('recentUsers').innerHTML = recentUsers.length ? recentUsers.map(u => {
+    const role = u.role || 'user';
+    const initial = (u.name || u.email || '?').charAt(0).toUpperCase();
+    const color = avatarColors[initial.charCodeAt(0) % avatarColors.length];
+    return `
+      <div class="flex items-center justify-between gap-3 py-1">
+        <div class="flex items-center gap-3 min-w-0">
+          <div class="w-9 h-9 rounded-full ${color} flex items-center justify-center text-sm font-bold shrink-0">${initial}</div>
+          <div class="min-w-0">
+            <div class="text-sm font-semibold text-gray-800 truncate">${escapeHtml(u.name || 'N/A')}</div>
+            <div class="text-xs text-gray-400 truncate">${escapeHtml(u.email || '')}</div>
+          </div>
         </div>
-      </div>
-      <span class="text-xs text-gray-400 whitespace-nowrap">${timeAgo(u.createdAt)}</span>
-    </div>
-  `).join('') : `<p class="text-sm text-gray-400">No users yet.</p>`;
+        <div class="flex items-center gap-2 shrink-0">
+          <span class="badge badge-${role}">${capitalize(role)}</span>
+          <span class="text-xs text-gray-400 whitespace-nowrap">${timeAgo(u.createdAt)}</span>
+        </div>
+      </div>`;
+  }).join('') : `<div class="text-center py-6"><i class="fa-solid fa-users text-gray-200 text-3xl mb-2"></i><p class="text-sm text-gray-400">No users yet.</p></div>`;
 
+  const actColors = { role_change: 'bg-blue-400', status_change: 'bg-amber-400', user_deleted: 'bg-red-400', trip_featured: 'bg-purple-400', trip_deleted: 'bg-red-400', join_approved: 'bg-emerald-400', join_rejected: 'bg-orange-400' };
   const recentActivity = getActivityLog().slice(0, 6);
   document.getElementById('recentActivity').innerHTML = recentActivity.length ? recentActivity.map(a => `
-    <div class="flex items-start justify-between gap-3">
-      <div class="min-w-0">
-        <div class="text-sm text-gray-900">${escapeHtml(a.details || a.action)}</div>
-        <div class="text-xs text-gray-400">${actionLabel(a.action)}</div>
+    <div class="flex items-start gap-3 py-1">
+      <div class="activity-dot mt-1.5 ${actColors[a.action] || 'bg-gray-300'} shrink-0"></div>
+      <div class="min-w-0 flex-1">
+        <div class="text-sm text-gray-800 leading-snug">${escapeHtml(a.details || a.action)}</div>
+        <div class="text-xs text-gray-400 mt-0.5">${actionLabel(a.action)}</div>
       </div>
-      <span class="text-xs text-gray-400 whitespace-nowrap">${timeAgo(a.createdAt)}</span>
+      <span class="text-xs text-gray-400 whitespace-nowrap shrink-0">${timeAgo(a.createdAt)}</span>
     </div>
-  `).join('') : `<p class="text-sm text-gray-400">No activity recorded yet.</p>`;
+  `).join('') : `<div class="text-center py-6"><i class="fa-solid fa-clock-rotate-left text-gray-200 text-3xl mb-2"></i><p class="text-sm text-gray-400">No activity recorded yet.</p></div>`;
 }
 
 
