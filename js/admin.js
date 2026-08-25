@@ -79,7 +79,7 @@ function showGate(opts) {
 
 
 function bindShell() {
-  document.querySelectorAll('#sidebarNav .sidebar-link').forEach(btn => {
+  document.querySelectorAll('#sidebarNav .nav-link').forEach(btn => {
     btn.addEventListener('click', () => switchTab(btn.dataset.tab));
   });
 
@@ -147,10 +147,21 @@ function bindShell() {
 function switchTab(tabId) {
   state.tab = tabId;
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.sidebar-link').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.nav-link').forEach(b => {
+    b.classList.remove('active');
+    const ind = b.querySelector('.nav-indicator');
+    if (ind) ind.remove();
+  });
   document.getElementById(tabId).classList.add('active');
-  document.querySelector(`.sidebar-link[data-tab="${tabId}"]`).classList.add('active');
-
+  const activeBtn = document.querySelector(`.nav-link[data-tab="${tabId}"]`);
+  if (activeBtn) {
+    activeBtn.classList.add('active');
+    if (!activeBtn.querySelector('.nav-indicator')) {
+      const ind = document.createElement('span');
+      ind.className = 'nav-indicator';
+      activeBtn.prepend(ind);
+    }
+  }
   const titles = {
     'tab-dashboard': 'Dashboard',
     'tab-users': 'Users',
@@ -158,7 +169,16 @@ function switchTab(tabId) {
     'tab-requests': 'Join Requests',
     'tab-activity': 'Activity Log'
   };
+  const subtitles = {
+    'tab-dashboard': 'Overview of your Kibi platform',
+    'tab-users': 'Manage registered users',
+    'tab-trips': 'Manage all trips',
+    'tab-requests': 'Review trip join requests',
+    'tab-activity': 'Audit trail of admin actions'
+  };
   document.getElementById('pageTitle').textContent = titles[tabId] || 'Dashboard';
+  const sub = document.getElementById('pageSubtitle');
+  if (sub) { sub.textContent = subtitles[tabId] || ''; sub.classList.remove('hidden'); }
 }
 
 function renderAll() {
@@ -174,15 +194,13 @@ function renderAll() {
 
 function renderSidebarUser() {
   const u = state.currentAdmin;
-  document.getElementById('sidebarUser').innerHTML = `
-    <div class="w-9 h-9 rounded-full bg-accent text-white flex items-center justify-center text-sm font-semibold shrink-0 ring-2 ring-white/10">
-      ${(u.name || u.email || 'A').charAt(0).toUpperCase()}
-    </div>
-    <div class="min-w-0">
-      <div class="text-sm font-medium text-white truncate">${escapeHtml(u.name || 'Admin')}</div>
-      <div class="text-xs truncate" style="color:#7690b0;">${escapeHtml(u.email || '')}</div>
-    </div>
-  `;
+  const avatarEl = document.getElementById('sidebarUserAvatar');
+  const infoEl = document.getElementById('sidebarUserInfo');
+  if (avatarEl) avatarEl.textContent = (u.name || u.email || 'A').charAt(0).toUpperCase();
+  if (infoEl) {
+    infoEl.querySelector('div:first-child').textContent = u.name || 'Admin';
+    infoEl.querySelector('div:last-child').textContent = u.email || '';
+  }
 }
 
 function renderNavCounts() {
