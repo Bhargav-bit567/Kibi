@@ -393,5 +393,62 @@
 
 <script src="js/storage.js"></script>
 <script src="js/admin.js"></script>
+<script>
+function renderGrowthChart() {
+  const chart = document.getElementById('growthChart');
+  const labels = document.getElementById('growthLabels');
+  if (!chart || !labels) return;
+  const users = getUsers();
+  const trips = getTrips();
+  const now = new Date();
+  const buckets = [];
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    buckets.push({ label: d.toLocaleDateString('en-IN', { month: 'short' }), users: 0, trips: 0, start: d.getTime(), end: new Date(d.getFullYear(), d.getMonth() + 1, 0).getTime() });
+  }
+  users.forEach(u => { const t = new Date(u.createdAt || 0).getTime(); buckets.forEach(b => { if (t >= b.start && t <= b.end) b.users++; }); });
+  trips.forEach(t => { const ts = new Date(t.createdAt || 0).getTime(); buckets.forEach(b => { if (ts >= b.start && ts <= b.end) b.trips++; }); });
+  const maxVal = Math.max(...buckets.map(b => Math.max(b.users, b.trips)), 1);
+  const H = 96;
+  chart.innerHTML = buckets.map(b => {
+    const uh = Math.round((b.users / maxVal) * H);
+    const th = Math.round((b.trips / maxVal) * H);
+    return `<div class="flex-1 flex items-end gap-1 justify-center group cursor-default relative">
+      <div class="chart-bar bg-blue-400 w-full" style="height:${uh}px;" title="${b.users} users in ${b.label}"></div>
+      <div class="chart-bar bg-emerald-400 w-full" style="height:${th}px;" title="${b.trips} trips in ${b.label}"></div>
+      <div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[10px] px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">${b.users}u / ${b.trips}t</div>
+    </div>`;
+  }).join('');
+  labels.innerHTML = buckets.map(b => `<div class="flex-1 text-center text-[10px] text-gray-400 font-medium">${b.label}</div>`).join('');
+}
+
+function renderRolesDonut() {
+  const el = document.getElementById('rolesDonut');
+  if (!el) return;
+  const users = getUsers();
+  const total = users.length || 1;
+  const counts = { admin: 0, moderator: 0, user: 0 };
+  users.forEach(u => { const r = u.role || 'user'; counts[r] = (counts[r] || 0) + 1; });
+  const rows = [
+    { label: 'Admins', count: counts.admin, color: 'bg-blue-500', text: 'text-blue-600' },
+    { label: 'Moderators', count: counts.moderator, color: 'bg-amber-400', text: 'text-amber-600' },
+    { label: 'Users', count: counts.user, color: 'bg-emerald-400', text: 'text-emerald-600' }
+  ];
+  el.innerHTML = rows.map(r => `
+    <div>
+      <div class="flex items-center justify-between text-xs mb-1">
+        <span class="flex items-center gap-1.5 font-medium text-gray-600"><span class="w-2 h-2 rounded-full ${r.color}"></span>${r.label}</span>
+        <span class="${r.text} font-semibold">${r.count}</span>
+      </div>
+      <div class="mini-bar"><div class="mini-bar-fill ${r.color}" style="width:${Math.round((r.count/total)*100)}%"></div></div>
+    </div>`).join('');
+}
+
+const _origRenderAll = typeof renderAll === 'function' ? renderAll : null;
+if (_origRenderAll) {
+  window.renderAll = function() { _origRenderAll(); renderGrowthChart(); renderRolesDonut(); };
+}
+document.addEventListener('DOMContentLoaded', () => { setTimeout(() => { renderGrowthChart(); renderRolesDonut(); }, 100); });
+</script>
 </body>
 </html>
