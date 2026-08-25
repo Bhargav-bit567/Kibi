@@ -22,7 +22,7 @@ function init() {
     showGate({
       title: 'Sign in required',
       message: 'You need to be signed in to view the admin dashboard.',
-      actionsHtml: `<a href="login.html" class="block w-full py-2.5 rounded-lg btn-primary text-sm font-medium">Go to Login</a>`
+      actionsHtml: `<a href="login.html" class="block w-full py-2.5 rounded-xl btn-blue text-sm font-semibold text-center">Go to Login</a>`
     });
     return;
   }
@@ -32,7 +32,7 @@ function init() {
       showGate({
         title: 'Claim admin access',
         message: `No admin account exists yet. As ${escapeHtml(user.name || user.email || 'the first user')}, you can claim the admin role to set up this dashboard.`,
-        actionsHtml: `<button id="claimAdminBtn" class="w-full py-2.5 rounded-lg btn-primary text-sm font-medium">Claim Admin Access</button>`
+        actionsHtml: `<button id="claimAdminBtn" class="w-full py-2.5 rounded-xl btn-blue text-sm font-semibold">Claim Admin Access</button>`
       });
       document.getElementById('claimAdminBtn').addEventListener('click', () => {
         setUserRole(user.id, USER_ROLES.ADMIN);
@@ -301,17 +301,18 @@ function renderUsers() {
   }
 
   container.innerHTML = `
-    <table class="min-w-full divide-y divide-gray-200">
-      <thead class="bg-gray-50/80 border-b border-gray-200">
+    <table class="min-w-full">
+      <thead>
         <tr>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
-          <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+          <th>User</th>
+          <th>Role</th>
+          <th>Status</th>
+          <th>Trips</th>
+          <th>Joined</th>
+          <th class="text-right">Actions</th>
         </tr>
       </thead>
-      <tbody class="divide-y divide-gray-200">
+      <tbody>
         ${pageItems.map(u => userRow(u)).join('')}
       </tbody>
     </table>
@@ -334,27 +335,28 @@ function userRow(u) {
   const role = u.role || 'user';
   const status = u.status || 'active';
   const isSelf = state.currentAdmin && u.id === state.currentAdmin.id;
+  const avatarColors = ['bg-blue-100 text-blue-600','bg-violet-100 text-violet-600','bg-emerald-100 text-emerald-600','bg-amber-100 text-amber-600','bg-rose-100 text-rose-600'];
+  const initial = (u.name || u.email || '?').charAt(0).toUpperCase();
+  const color = avatarColors[initial.charCodeAt(0) % avatarColors.length];
+  const trips = getTrips().filter(t => t.createdBy === u.id).length;
   return `
-    <tr class="hover:bg-gray-50">
-      <td class="px-6 py-4 whitespace-nowrap">
+    <tr>
+      <td>
         <div class="flex items-center gap-3">
-          <div class="w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-sm font-semibold text-gray-500 shrink-0">${(u.name || u.email || '?').charAt(0).toUpperCase()}</div>
+          <div class="avatar w-9 h-9 ${color} text-sm shrink-0">${initial}</div>
           <div class="min-w-0">
-            <div class="text-sm font-medium text-gray-900 truncate">${escapeHtml(u.name || 'N/A')} ${isSelf ? '<span class="text-xs text-gray-400">(you)</span>' : ''}</div>
-            <div class="text-xs text-gray-500 truncate">${escapeHtml(u.email || '')}</div>
+            <div class="text-sm font-semibold text-gray-900 truncate">${escapeHtml(u.name || 'N/A')} ${isSelf ? '<span class="text-xs text-gray-400 font-normal">(you)</span>' : ''}</div>
+            <div class="text-xs text-gray-400 truncate">${escapeHtml(u.email || '')}</div>
           </div>
         </div>
       </td>
-      <td class="px-6 py-4 whitespace-nowrap">
-        <span class="text-xs font-medium px-2.5 py-1 rounded-full role-badge-${role}">${capitalize(role)}</span>
-      </td>
-      <td class="px-6 py-4 whitespace-nowrap">
-        <span class="text-xs font-medium px-2.5 py-1 rounded-full status-badge-${status}">${capitalize(status)}</span>
-      </td>
-      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${u.createdAt ? new Date(u.createdAt).toLocaleDateString() : 'N/A'}</td>
-      <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
-        <button data-edit-user="${u.id}" class="text-primary hover:text-accent hover:underline font-medium transition-colors mr-4">Edit</button>
-        <button data-delete-user="${u.id}" class="text-error hover:underline font-medium" ${isSelf ? 'disabled title="You can\'t delete your own account"' : ''} style="${isSelf ? 'opacity:.4;cursor:not-allowed' : ''}">Delete</button>
+      <td><span class="badge badge-${role}">${capitalize(role)}</span></td>
+      <td><span class="badge badge-${status}">${capitalize(status)}</span></td>
+      <td><span class="text-xs text-gray-500">${trips} trip${trips !== 1 ? 's' : ''}</span></td>
+      <td><span class="text-xs text-gray-500">${u.createdAt ? new Date(u.createdAt).toLocaleDateString('en-IN') : 'N/A'}</span></td>
+      <td class="text-right">
+        <button data-edit-user="${u.id}" class="btn-ghost mr-2">Edit</button>
+        <button data-delete-user="${u.id}" class="btn-danger" ${isSelf ? 'disabled title="Can\'t delete your own account"' : ''} style="${isSelf ? 'opacity:.35;cursor:not-allowed' : ''}">Delete</button>
       </td>
     </tr>
   `;
@@ -369,15 +371,15 @@ function openUserModal(userId) {
 
   document.getElementById('userModalBody').innerHTML = `
     <div class="flex items-center gap-3 mb-2">
-      <div class="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center text-lg font-semibold text-gray-500">${(u.name || u.email || '?').charAt(0).toUpperCase()}</div>
+      <div class="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-lg font-bold text-blue-600">${(u.name || u.email || '?').charAt(0).toUpperCase()}</div>
       <div class="min-w-0">
-        <div class="font-medium text-gray-900 truncate">${escapeHtml(u.name || 'N/A')}</div>
-        <div class="text-xs text-gray-500 truncate">${escapeHtml(u.email || '')}</div>
+        <div class="font-semibold text-gray-900 truncate">${escapeHtml(u.name || 'N/A')}</div>
+        <div class="text-xs text-gray-400 truncate">${escapeHtml(u.email || '')}</div>
       </div>
     </div>
     <div>
       <label class="block text-xs font-medium text-gray-500 mb-1">Role</label>
-      <select id="modalRoleSelect" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm" ${isSelf ? 'disabled' : ''}>
+      <select id="modalRoleSelect" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none" ${isSelf ? 'disabled' : ''}>
         <option value="user" ${role === 'user' ? 'selected' : ''}>User</option>
         <option value="moderator" ${role === 'moderator' ? 'selected' : ''}>Moderator</option>
         <option value="admin" ${role === 'admin' ? 'selected' : ''}>Admin</option>
@@ -386,7 +388,7 @@ function openUserModal(userId) {
     </div>
     <div>
       <label class="block text-xs font-medium text-gray-500 mb-1">Status</label>
-      <select id="modalStatusSelect" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm" ${isSelf ? 'disabled' : ''}>
+      <select id="modalStatusSelect" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none" ${isSelf ? 'disabled' : ''}>
         <option value="active" ${status === 'active' ? 'selected' : ''}>Active</option>
         <option value="suspended" ${status === 'suspended' ? 'selected' : ''}>Suspended</option>
         <option value="banned" ${status === 'banned' ? 'selected' : ''}>Banned</option>
@@ -394,11 +396,11 @@ function openUserModal(userId) {
     </div>
     <div>
       <label class="block text-xs font-medium text-gray-500 mb-1">Reason (optional, shown in audit log)</label>
-      <input id="modalReasonInput" type="text" placeholder="e.g. spam reports" class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm" value="${escapeHtml(u.statusReason || '')}">
+      <input id="modalReasonInput" type="text" placeholder="e.g. spam reports" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none" value="${escapeHtml(u.statusReason || '')}">
     </div>
     <div class="flex gap-3 pt-2">
-      <button id="modalCancelBtn" class="flex-1 py-2.5 rounded-lg border border-gray-200 text-gray-600 text-sm font-medium hover:bg-gray-50">Cancel</button>
-      <button id="modalSaveBtn" class="flex-1 py-2.5 rounded-lg btn-primary text-sm font-medium">Save Changes</button>
+      <button id="modalCancelBtn" class="flex-1 py-2.5 rounded-xl border border-gray-200 text-gray-600 text-sm font-semibold hover:bg-gray-50">Cancel</button>
+      <button id="modalSaveBtn" class="flex-1 py-2.5 rounded-xl btn-blue text-sm">Save Changes</button>
     </div>
   `;
 
@@ -482,18 +484,18 @@ function renderTrips() {
   }
 
   container.innerHTML = `
-    <table class="min-w-full divide-y divide-gray-200">
-      <thead class="bg-gray-50/80 border-b border-gray-200">
+    <table class="min-w-full">
+      <thead>
         <tr>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trip</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Destination</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dates</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Members</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-          <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+          <th>Trip</th>
+          <th>Destination</th>
+          <th>Dates</th>
+          <th>Members</th>
+          <th>Status</th>
+          <th class="text-right">Actions</th>
         </tr>
       </thead>
-      <tbody class="divide-y divide-gray-200">
+      <tbody>
         ${pageItems.map(t => tripRow(t)).join('')}
       </tbody>
     </table>
@@ -534,23 +536,24 @@ function renderTrips() {
 
 function tripRow(t) {
   const status = t.status || 'open';
-  const statusColors = { open: 'bg-green-100 text-green-700', closed: 'bg-gray-100 text-gray-600', full: 'bg-amber-100 text-amber-700' };
+  const creator = t.createdBy ? getUserById(t.createdBy) : null;
   return `
-    <tr class="hover:bg-gray-50">
-      <td class="px-6 py-4 whitespace-nowrap text-sm">
-        <div class="font-medium text-gray-900">${escapeHtml(t.title || 'Untitled')} ${t.featured ? '<span title="Featured">⭐</span>' : ''}</div>
-        <div class="text-xs text-gray-500">${t.id}</div>
+    <tr>
+      <td>
+        <div class="font-semibold text-gray-900 text-sm">${escapeHtml(t.title || 'Untitled')} ${t.featured ? '<span title="Featured" class="ml-1">⭐</span>' : ''}</div>
+        <div class="text-xs text-gray-400">${escapeHtml(t.id)}</div>
       </td>
-      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${escapeHtml(t.destination || 'N/A')}</td>
-      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${t.startDate || 'N/A'} – ${t.endDate || 'N/A'}</td>
-      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${t.members ? t.members.length : 0}${t.maxMembers ? '/' + t.maxMembers : ''}</td>
-      <td class="px-6 py-4 whitespace-nowrap">
-        <span class="text-xs font-medium px-2.5 py-1 rounded-full ${statusColors[status] || statusColors.open}">${capitalize(status)}</span>
+      <td>
+        <div class="text-sm text-gray-700">${escapeHtml(t.destination || 'N/A')}</div>
+        ${creator ? `<div class="text-xs text-gray-400">by ${escapeHtml(creator.name || creator.email)}</div>` : ''}
       </td>
-      <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
-        <button data-view-trip="${t.id}" class="text-primary hover:text-accent hover:underline font-medium transition-colors mr-3">View</button>
-        <button data-feature-trip="${t.id}" class="text-gray-500 hover:underline font-medium mr-3">${t.featured ? 'Unfeature' : 'Feature'}</button>
-        <button data-delete-trip="${t.id}" class="text-error hover:underline font-medium">Delete</button>
+      <td><span class="text-xs text-gray-500">${t.startDate || 'N/A'} – ${t.endDate || 'N/A'}</span></td>
+      <td><span class="text-sm text-gray-600 font-medium">${t.members ? t.members.length : 0}${t.maxMembers ? '<span class="text-gray-400">/' + t.maxMembers + '</span>' : ''}</span></td>
+      <td><span class="badge badge-${status}">${capitalize(status)}</span></td>
+      <td class="text-right">
+        <button data-view-trip="${t.id}" class="btn-ghost mr-2">View</button>
+        <button data-feature-trip="${t.id}" class="text-xs text-gray-500 hover:text-purple-600 font-semibold mr-2 transition-colors">${t.featured ? 'Unfeature' : 'Feature'}</button>
+        <button data-delete-trip="${t.id}" class="btn-danger">Delete</button>
       </td>
     </tr>
   `;
@@ -607,17 +610,17 @@ function renderRequests() {
   }
 
   container.innerHTML = `
-    <table class="min-w-full divide-y divide-gray-200">
-      <thead class="bg-gray-50/80 border-b border-gray-200">
+    <table class="min-w-full">
+      <thead>
         <tr>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Requester</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Trip</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Requested</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-          <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+          <th>Requester</th>
+          <th>Trip</th>
+          <th>Requested</th>
+          <th>Status</th>
+          <th class="text-right">Actions</th>
         </tr>
       </thead>
-      <tbody class="divide-y divide-gray-200">
+      <tbody>
         ${requests.map(r => requestRow(r)).join('')}
       </tbody>
     </table>
@@ -651,21 +654,30 @@ function renderRequests() {
 function requestRow(r) {
   const requester = getUserById(r.userId);
   const trip = getTripById(r.tripId);
-  const statusColors = { pending: 'bg-amber-100 text-amber-700', approved: 'bg-green-100 text-green-700', rejected: 'bg-red-100 text-red-700' };
+  const initial = requester ? (requester.name || requester.email || '?').charAt(0).toUpperCase() : '?';
   return `
-    <tr class="hover:bg-gray-50">
-      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${requester ? escapeHtml(requester.name || requester.email) : (r.userId || 'N/A')}</td>
-      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${trip ? escapeHtml(trip.title || trip.destination) : (r.tripId || 'N/A')}</td>
-      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${r.createdAt ? new Date(r.createdAt).toLocaleDateString() : 'N/A'}</td>
-      <td class="px-6 py-4 whitespace-nowrap">
-        <span class="text-xs font-medium px-2.5 py-1 rounded-full ${statusColors[r.status] || statusColors.pending}">${capitalize(r.status || 'pending')}</span>
+    <tr>
+      <td>
+        <div class="flex items-center gap-2.5">
+          <div class="avatar w-8 h-8 bg-blue-100 text-blue-600 text-xs shrink-0">${initial}</div>
+          <div class="min-w-0">
+            <div class="text-sm font-semibold text-gray-800 truncate">${requester ? escapeHtml(requester.name || requester.email) : (r.userId || 'N/A')}</div>
+            ${requester ? `<div class="text-xs text-gray-400 truncate">${escapeHtml(requester.email || '')}</div>` : ''}
+          </div>
+        </div>
       </td>
-      <td class="px-6 py-4 whitespace-nowrap text-right text-sm">
+      <td>
+        <div class="text-sm text-gray-700">${trip ? escapeHtml(trip.title || trip.destination) : (r.tripId || 'N/A')}</div>
+        ${trip ? `<div class="text-xs text-gray-400">${escapeHtml(trip.destination || '')}</div>` : ''}
+      </td>
+      <td><span class="text-xs text-gray-500">${r.createdAt ? new Date(r.createdAt).toLocaleDateString('en-IN') : 'N/A'}</span></td>
+      <td><span class="badge badge-${r.status || 'pending'}">${capitalize(r.status || 'pending')}</span></td>
+      <td class="text-right">
         ${r.status === 'pending' ? `
-          <button data-approve-req="${r.id}" class="text-green-600 hover:underline font-medium mr-3">Approve</button>
-          <button data-reject-req="${r.id}" class="text-amber-600 hover:underline font-medium mr-3">Reject</button>
+          <button data-approve-req="${r.id}" class="text-xs text-emerald-600 hover:text-emerald-700 font-semibold mr-2 hover:underline transition-colors">Approve</button>
+          <button data-reject-req="${r.id}" class="text-xs text-amber-600 hover:text-amber-700 font-semibold mr-2 hover:underline transition-colors">Reject</button>
         ` : ''}
-        <button data-delete-req="${r.id}" class="text-error hover:underline font-medium">Delete</button>
+        <button data-delete-req="${r.id}" class="btn-danger">Delete</button>
       </td>
     </tr>
   `;
@@ -682,24 +694,25 @@ function renderActivity() {
   }
 
   container.innerHTML = `
-    <table class="min-w-full divide-y divide-gray-200">
-      <thead class="bg-gray-50/80 border-b border-gray-200">
+    <table class="min-w-full">
+      <thead>
         <tr>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Details</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actor</th>
-          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">When</th>
+          <th>Action</th>
+          <th>Details</th>
+          <th>Actor</th>
+          <th>When</th>
         </tr>
       </thead>
-      <tbody class="divide-y divide-gray-200">
+      <tbody>
         ${log.slice(0, 200).map(a => {
           const actor = getUserById(a.actorId);
+          const actColors = { role_change: 'text-blue-500', status_change: 'text-amber-500', user_deleted: 'text-red-500', trip_featured: 'text-purple-500', trip_deleted: 'text-red-500', join_approved: 'text-emerald-500', join_rejected: 'text-orange-500' };
           return `
-            <tr class="hover:bg-gray-50">
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${actionLabel(a.action)}</td>
-              <td class="px-6 py-4 text-sm text-gray-500">${escapeHtml(a.details || '')}</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${actor ? escapeHtml(actor.name || actor.email) : (a.actorId || 'system')}</td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-400">${timeAgo(a.createdAt)}</td>
+            <tr>
+              <td><span class="text-xs font-semibold ${actColors[a.action] || 'text-gray-600'}">${actionLabel(a.action)}</span></td>
+              <td><span class="text-sm text-gray-700">${escapeHtml(a.details || '')}</span></td>
+              <td><span class="text-xs text-gray-500">${actor ? escapeHtml(actor.name || actor.email) : (a.actorId || 'system')}</span></td>
+              <td><span class="text-xs text-gray-400">${timeAgo(a.createdAt)}</span></td>
             </tr>
           `;
         }).join('')}
