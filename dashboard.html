@@ -296,7 +296,7 @@
           </a>
         </div>
 
-        <div id="profileTripsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div id="profileTripsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-6 auto-rows-fr">
           <!-- Trip cards rendered dynamically by JS -->
         </div>
       </section>
@@ -554,8 +554,10 @@
     const displayTrips = trips.length ? trips.slice(0, 4) : [];
 
     if (displayTrips.length === 0) {
+      grid.style.display = 'flex';
+      grid.style.minHeight = '400px';
       grid.innerHTML = `
-        <div class="col-span-full glass-panel rounded-3xl p-8 text-center border border-slate-200/80 dark:border-slate-800">
+        <div class="col-span-full glass-panel rounded-3xl p-8 text-center border border-slate-200/80 dark:border-slate-800 flex flex-col items-center justify-center flex-1">
           <div class="w-16 h-16 rounded-full bg-primary/10 text-primary flex items-center justify-center mx-auto mb-4">
             <span class="material-symbols-outlined text-3xl">flight_takeoff</span>
           </div>
