@@ -13,3 +13,4 @@ backup.zip
 # Local runtime config with real OAuth credentials
 config.json
 .env
+*.txt
