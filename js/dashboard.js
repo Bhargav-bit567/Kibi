@@ -113,7 +113,7 @@ async function renderUpcomingTrips(user) {
   container.innerHTML = tripCardsHtml;
 
   upcoming.slice(0, 2).forEach((trip, idx) => {
-    if (!trip.image && typeof getDestinationImage === 'function') {
+    if (typeof getDestinationImage === 'function') {
       getDestinationImage(trip.destination).then(url => {
         const img = document.getElementById(`tripImg-${idx}`);
         if (img && url) img.src = url;
@@ -171,10 +171,10 @@ function renderRecommendedTrips(user) {
     return;
   }
 
-  container.innerHTML = recommended.map(trip => `
+  container.innerHTML = recommended.map((trip, idx) => `
     <div class="trip-card reveal bg-white rounded-2xl shadow-soft overflow-hidden cursor-pointer hover:-translate-y-1 hover:shadow-card transition-all duration-300" onclick="window.location.href='itinerary.html?id=${trip.id}'">
       <div class="card-image-container aspect-[16/10] overflow-hidden relative">
-        <img src="${trip.image || 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80'}" alt="${trip.destination}" class="card-image w-full h-full object-cover" loading="lazy">
+        <img id="recTripImg-${idx}" src="${trip.image || 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80'}" alt="${trip.destination}" class="card-image w-full h-full object-cover" loading="lazy">
         <div class="absolute top-3 right-3">
           <span class="match-score inline-flex items-center px-2.5 py-1 rounded-full bg-sage/10 text-sage text-xs font-semibold">${trip.matchScore}% match</span>
         </div>
@@ -189,6 +189,15 @@ function renderRecommendedTrips(user) {
       </div>
     </div>
   `).join('');
+
+  recommended.forEach((trip, idx) => {
+    if (typeof getDestinationImage === 'function') {
+      getDestinationImage(trip.destination).then(url => {
+        const img = document.getElementById(`recTripImg-${idx}`);
+        if (img && url) img.src = url;
+      }).catch(() => {});
+    }
+  });
 }
 
 function renderCompatibleTravelers(user) {

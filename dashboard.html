@@ -596,13 +596,13 @@
         `;
       }).join('');
 
-      // Load place-specific images if available
+      // Load place-specific images
       displayTrips.forEach((trip, idx) => {
-        if (!trip.image && typeof getDestinationImage === 'function') {
+        if (typeof getDestinationImage === 'function') {
           getDestinationImage(trip.destination).then(url => {
             const img = document.getElementById(`tripImg-${idx}`);
             if (img && url) img.src = url;
-          });
+          }).catch(() => {});
         }
       });
     }

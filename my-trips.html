@@ -256,7 +256,7 @@
       const card = div.firstElementChild;
       grid.insertBefore(card, cta);
 
-      if (!trip.image && typeof getDestinationImage === 'function') {
+      if (typeof getDestinationImage === 'function') {
         getDestinationImage(trip.destination).then(url => {
           const img = document.getElementById(`tripImg-upcoming-${idx}`);
           if (img && url) img.src = url;
@@ -296,7 +296,7 @@
         `).join('');
 
         past.forEach((trip, idx) => {
-          if (!trip.image && typeof getDestinationImage === 'function') {
+          if (typeof getDestinationImage === 'function') {
             getDestinationImage(trip.destination).then(url => {
               const img = document.getElementById(`tripImg-past-${idx}`);
               if (img && url) img.src = url;
