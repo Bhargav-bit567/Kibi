@@ -525,7 +525,7 @@ function renderLoadedItinerary(itinerary) {
       );
       const saveBtnText = alreadySaved ? 'Already Saved' : 'Save Trip';
       heroEl.innerHTML = `
-        <div id="itinHeroBg" class="absolute inset-0 bg-cover bg-center transition-all duration-700" style="background-image: url('${imageUrl}')"></div>
+        <div id="itinHeroBg" class="absolute inset-0 bg-cover bg-center ${imageUrl ? '' : 'bg-brand-blue/40'}" style="${imageUrl ? `background-image: url('${imageUrl}')` : ''}"></div>
         <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent"></div>
         <div class="relative z-10 w-full flex flex-col md:flex-row justify-between items-end gap-6">
             <div class="text-white max-w-2xl">
@@ -604,33 +604,23 @@ function renderLoadedItinerary(itinerary) {
       }
     }
 
-    const fallbackUrl = deterministicFallbackImage(itinerary.destination);
-    renderHero(fallbackUrl, null);
+    // Render hero without any hardcoded fallback image; API image will load directly.
+    renderHero(null, null);
 
     if (typeof getDestinationImage === 'function') {
       getDestinationImage(itinerary.destination)
         .then(url => {
           if (!url) {
-            console.log('[renderLoadedItinerary] no API image returned; keeping fallback');
+            console.log('[renderLoadedItinerary] no API image returned; hero stays placeholder');
             return;
           }
-          console.log('[renderLoadedItinerary] API image received, preloading:', url);
-          const img = new Image();
-          img.onload = () => {
-            console.log('[renderLoadedItinerary] API image loaded, updating hero');
-            const bg = document.getElementById('itinHeroBg');
-            if (bg) {
-              bg.style.backgroundImage = `url('${url}')`;
-              bg.classList.add('opacity-0');
-              requestAnimationFrame(() => bg.classList.remove('opacity-0'));
-            } else {
-              renderHero(url, null);
-            }
-          };
-          img.onerror = () => {
-            console.warn('[renderLoadedItinerary] API image failed to load, keeping fallback:', url);
-          };
-          img.src = url;
+          console.log('[renderLoadedItinerary] API image received:', url);
+          const bg = document.getElementById('itinHeroBg');
+          if (bg) {
+            bg.style.backgroundImage = `url('${url}')`;
+          } else {
+            renderHero(url, null);
+          }
         })
         .catch(() => {});
     }
