@@ -222,7 +222,7 @@
 
     empty.classList.add('hidden');
 
-    function cardHTML(trip, status) {
+    function cardHTML(trip, status, idx) {
       const statusBadge = status === 'upcoming'
         ? `<span class="bg-secondary-fixed/90 backdrop-blur-md text-on-secondary-fixed text-xs px-3 py-1.5 rounded-full flex items-center gap-1 shadow-sm font-semibold"><span class="material-symbols-outlined text-[14px]">flight</span> Upcoming</span>`
         : `<span class="bg-surface-container/90 backdrop-blur-md text-slate-600 font-semibold text-xs px-2.5 py-1 rounded-full flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">check_circle</span> Completed</span>`;
@@ -230,7 +230,7 @@
       return `
         <div class="glass-card rounded-[16px] overflow-hidden group hover:-translate-y-1 transition-transform duration-300 cursor-pointer" data-trip-id="${trip.id}" onclick="if(event.target.closest('.delete-trip-btn')) return; window.location.href='itinerary.html?id=${trip.id}'">
           <div class="relative h-48 w-full">
-            <img alt="${trip.destination || 'Trip'}" class="w-full h-full object-cover" src="${trip.image || 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80'}"/>
+            <img id="tripImg-upcoming-${idx}" alt="${trip.destination || 'Trip'}" class="w-full h-full object-cover" src="${trip.image || 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80'}"/>
             <div class="absolute top-4 right-4">${statusBadge}</div>
           </div>
           <div class="p-[24px]">
@@ -250,11 +250,18 @@
       `;
     }
 
-    upcoming.forEach(trip => {
+    upcoming.forEach((trip, idx) => {
       const div = document.createElement('div');
-      div.innerHTML = cardHTML(trip, 'upcoming');
+      div.innerHTML = cardHTML(trip, 'upcoming', idx);
       const card = div.firstElementChild;
       grid.insertBefore(card, cta);
+
+      if (!trip.image && typeof getDestinationImage === 'function') {
+        getDestinationImage(trip.destination).then(url => {
+          const img = document.getElementById(`tripImg-upcoming-${idx}`);
+          if (img && url) img.src = url;
+        }).catch(() => {});
+      }
 
       const deleteBtn = card.querySelector('.delete-trip-btn');
       if (deleteBtn) {
@@ -276,10 +283,10 @@
     if (pastSection && pastGrid) {
       if (past.length > 0) {
         pastSection.classList.remove('hidden');
-        pastGrid.innerHTML = past.map(trip => `
+        pastGrid.innerHTML = past.map((trip, idx) => `
           <div class="min-w-[280px] md:min-w-0 glass-card rounded-[16px] overflow-hidden opacity-90 hover:opacity-100 transition-opacity snap-start cursor-pointer" onclick="window.location.href='itinerary.html?id=${trip.id}'">
             <div class="relative h-40 w-full">
-              <img alt="${trip.destination || 'Trip'}" class="w-full h-full object-cover grayscale-[30%]" src="${trip.image || 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80'}"/>
+              <img id="tripImg-past-${idx}" alt="${trip.destination || 'Trip'}" class="w-full h-full object-cover grayscale-[30%]" src="${trip.image || 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80'}"/>
             </div>
             <div class="p-4">
               <h3 class="text-md font-bold text-slate-800 mb-1">${trip.title || trip.destination || 'Trip'}</h3>
@@ -287,6 +294,15 @@
             </div>
           </div>
         `).join('');
+
+        past.forEach((trip, idx) => {
+          if (!trip.image && typeof getDestinationImage === 'function') {
+            getDestinationImage(trip.destination).then(url => {
+              const img = document.getElementById(`tripImg-past-${idx}`);
+              if (img && url) img.src = url;
+            }).catch(() => {});
+          }
+        });
       } else {
         pastSection.classList.add('hidden');
       }
