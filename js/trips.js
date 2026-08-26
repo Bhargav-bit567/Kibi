@@ -92,7 +92,7 @@ function initTripDetails() {
 
   const headerEl = document.getElementById('tripHeader');
   if (headerEl) {
-    headerEl.style.backgroundImage = `url(${trip.image || 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80'})`;
+    headerEl.style.backgroundImage = `url(${deterministicFallbackImage(trip.destination)})`;
     headerEl.innerHTML = `
       <div class="absolute inset-0 bg-gradient-to-t from-charcoal/80 via-charcoal/40 to-transparent flex items-end">
         <div class="max-w-7xl mx-auto px-6 pb-12 w-full">
@@ -101,6 +101,12 @@ function initTripDetails() {
         </div>
       </div>
     `;
+
+    if (typeof getDestinationImage === 'function') {
+      getDestinationImage(trip.destination)
+        .then(url => { if (url) headerEl.style.backgroundImage = `url(${url})`; })
+        .catch(() => {});
+    }
   }
 
   const descEl = document.getElementById('tripDescription');
@@ -495,8 +501,6 @@ function renderLoadedItinerary(itinerary) {
 
   const heroEl = document.getElementById('itinHero');
   if (heroEl) {
-    const fallbackBg = `https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1600&q=80`;
-
     function renderHero(imageUrl, description) {
       const currentUser = getCurrentUser();
       const alreadySaved = currentUser && getUserTrips(currentUser.id).some(t =>
@@ -504,7 +508,7 @@ function renderLoadedItinerary(itinerary) {
       );
       const saveBtnText = alreadySaved ? 'Already Saved' : 'Save Trip';
       heroEl.innerHTML = `
-        <div id="itinHeroBg" class="absolute inset-0 bg-cover bg-center transition-all duration-700" style="background-image: url('${imageUrl || fallbackBg}')"></div>
+        <div id="itinHeroBg" class="absolute inset-0 bg-cover bg-center transition-all duration-700" style="background-image: url('${imageUrl}')"></div>
         <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent"></div>
         <div class="relative z-10 w-full flex flex-col md:flex-row justify-between items-end gap-6">
             <div class="text-white max-w-2xl">
@@ -583,9 +587,14 @@ function renderLoadedItinerary(itinerary) {
       }
     }
 
-    getDestinationImage(itinerary.destination).then(url => {
-      if (url) renderHero(url, null);
-    });
+    const fallbackUrl = deterministicFallbackImage(itinerary.destination);
+    renderHero(fallbackUrl, null);
+
+    if (typeof getDestinationImage === 'function') {
+      getDestinationImage(itinerary.destination)
+        .then(url => { if (url) renderHero(url, null); })
+        .catch(() => {});
+    }
   }
 
   const timelineEl = document.getElementById('itinTimeline');

@@ -134,14 +134,12 @@
   hero.style.backgroundPosition = 'center';
 
   // Use trip image if present, otherwise fetch a place-specific image.
-  if (trip.image) {
-    hero.style.backgroundImage = 'url(' + trip.image + ')';
-  } else if (typeof getDestinationImage === 'function') {
-    getDestinationImage(trip.destination).then(url => {
-      if (url) hero.style.backgroundImage = 'url(' + url + ')';
-    });
-  } else {
-    hero.style.backgroundImage = 'url(https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1600&q=80)';
+  function setHeroImage(url) {
+    if (url) hero.style.backgroundImage = 'url(' + url + ')';
+  }
+
+  if (typeof getDestinationImage === 'function') {
+    getDestinationImage(trip.destination).then(setHeroImage).catch(() => {});
   }
   hero.innerHTML = `
     <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent"></div>
