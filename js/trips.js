@@ -51,13 +51,6 @@ async function getDestinationImage(destination) {
 document.addEventListener('DOMContentLoaded', () => {
   const page = document.body.dataset.page;
 
-  if (page === 'my-trips') {
-    const user = requireAuth();
-    if (!user) return;
-    initNav('my-trips');
-    initMyTrips(user);
-  }
-
   if (page === 'trip-details') {
     initNav('discover', true);
     initTripDetails();
@@ -73,166 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initNav('itinerary');
     initItineraryPage();
   }
-
-  if (page === 'discover') {
-    initNav('discover');
-    initDiscover();
-  }
-
-  if (page === 'profile') {
-    const user = requireAuth();
-    if (!user) return;
-    initNav('profile');
-    initProfile(user);
-  }
 });
-
-function initMyTrips(user) {
-  const tabs = document.querySelectorAll('.tab');
-  const tabContents = document.querySelectorAll('.tab-content');
-
-  tabs.forEach(tab => {
-    tab.addEventListener('click', () => {
-      tabs.forEach(t => t.classList.remove('active'));
-      tabContents.forEach(c => c.classList.remove('active'));
-
-      tab.classList.add('active');
-      const target = document.getElementById(tab.dataset.tab);
-      if (target) target.classList.add('active');
-    });
-  });
-
-  renderPlannedTrips(user);
-  renderJoinedTrips(user);
-  renderSavedTripsTab(user);
-}
-
-function renderEmptyState(heading, message, actionHtml) {
-  return `
-    <div class="empty-state">
-      <h3 class="heading-4 font-serif text-charcoal mb-1">${heading}</h3>
-      <p class="text-text-secondary">${message}</p>
-      ${actionHtml}
-    </div>
-  `;
-}
-
-function renderPlannedTrips(user) {
-  const container = document.getElementById('plannedTrips');
-  if (!container) return;
-
-  const trips = getUserTrips(user.id);
-
-  if (trips.length === 0) {
-    container.innerHTML = renderEmptyState(
-      'No planned trips yet',
-      'Start by planning your first adventure!',
-      '<a href="plan-trip.html" class="btn btn-accent mt-4 shadow-soft hover:shadow-card transition-shadow">Plan a Trip</a>'
-    );
-    return;
-  }
-
-  container.innerHTML = `<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-    ${trips.map(trip => renderTripCard(trip, true)).join('')}
-  </div>`;
-
-  container.querySelectorAll('.delete-trip').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      confirmModal('This trip will be permanently removed.', () => {
-        deleteTrip(btn.dataset.id);
-        renderPlannedTrips(user);
-        showToast('Trip deleted', 'default');
-      });
-    });
-  });
-}
-
-function renderJoinedTrips(user) {
-  const container = document.getElementById('joinedTrips');
-  if (!container) return;
-
-  const requests = getUserJoinRequests(user.id);
-  const trips = getTrips();
-
-  const joinedTripIds = requests.map(r => r.tripId);
-  const joinedTrips = trips.filter(t => joinedTripIds.includes(t.id));
-
-  if (joinedTrips.length === 0) {
-    container.innerHTML = renderEmptyState(
-      'No joined trips',
-      'Browse trips and request to join!',
-      '<a href="discover.html" class="btn btn-accent mt-4 shadow-soft hover:shadow-card transition-shadow">Discover Trips</a>'
-    );
-    return;
-  }
-
-  container.innerHTML = `<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-    ${joinedTrips.map(trip => {
-      const request = requests.find(r => r.tripId === trip.id);
-      return renderTripCard(trip, false, request?.status);
-    }).join('')}
-  </div>`;
-}
-
-function renderSavedTripsTab(user) {
-  const container = document.getElementById('savedTrips');
-  if (!container) return;
-
-  const trips = getSavedTrips(user.id);
-
-  if (trips.length === 0) {
-    container.innerHTML = renderEmptyState(
-      'No saved trips',
-      'Save trips you\'re interested in!',
-      '<a href="discover.html" class="btn btn-accent mt-4 shadow-soft hover:shadow-card transition-shadow">Discover Trips</a>'
-    );
-    return;
-  }
-
-  container.innerHTML = `<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-    ${trips.map(trip => renderTripCard(trip, true, null, true)).join('')}
-  </div>`;
-
-  container.querySelectorAll('.delete-trip').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      confirmModal('This saved trip will be permanently removed.', () => {
-        removeSavedItinerary(btn.dataset.id);
-        renderSavedTripsTab(user);
-        showToast('Saved trip deleted', 'default');
-      });
-    });
-  });
-}
-
-function renderTripCard(trip, showDelete = false, status = null, savedView = false) {
-  const detailUrl = savedView ? 'saved-itinerary.html' : 'itinerary.html';
-  return `
-    <div class="trip-card bg-white rounded-2xl shadow-soft overflow-hidden cursor-pointer hover:-translate-y-1 hover:shadow-card transition-all duration-300" onclick="window.location.href='${detailUrl}?id=${trip.id}'">
-      <div class="card-image-container aspect-[16/10] overflow-hidden relative">
-        <img src="${trip.image || 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1200&q=80'}" alt="${trip.destination}" class="card-image w-full h-full object-cover" loading="lazy">
-        ${status ? `<div class="absolute top-3 right-3">
-          <span class="tag ${status === 'pending' ? '' : 'tag-sage'}">${status === 'pending' ? 'Request Sent' : 'Joined'}</span>
-        </div>` : ''}
-      </div>
-      <div class="card-body p-5">
-        <div class="card-title font-serif text-lg text-charcoal">${trip.title || trip.destination}</div>
-        <div class="card-subtitle text-sm text-text-secondary mt-1">${formatDateRange(trip.startDate, trip.endDate)}</div>
-        <div class="trip-card-meta flex items-center justify-between text-sm text-text-secondary mt-3">
-          <span>${formatBudget(trip.budget || trip.totalBudget || 0)}</span>
-          ${trip.maxMembers ? `<span>${(trip.members || []).length}/${trip.maxMembers} travelers</span>` : ''}
-        </div>
-      </div>
-      ${showDelete ? `
-        <div class="card-footer flex items-center justify-between px-5 pb-5">
-          <a href="${detailUrl}?id=${trip.id}" class="btn btn-ghost btn-sm">View</a>
-          <button class="btn btn-ghost btn-sm delete-trip text-error font-semibold" data-id="${trip.id}">Delete</button>
-        </div>
-      ` : ''}
-    </div>
-  `;
-}
 
 function initTripDetails() {
   const tripId = getQueryParam('id');
@@ -1070,11 +904,7 @@ function initMapModal(itinerary) {
     mapContainer.style.height = '100%';
 
     const rect = mapContainer.getBoundingClientRect();
-    console.log('[Kibi Map] initMap called with lat/lon:', lat, lon);
-    console.log('[Kibi Map] container dimensions:', rect);
-    console.log('[Kibi Map] modal position:', modal.getBoundingClientRect());
     if (rect.width === 0 || rect.height === 0) {
-      console.warn('[Kibi Map] container has zero size; delaying init.');
       setTimeout(() => initMap(), 300);
       return;
     }
@@ -1082,7 +912,7 @@ function initMapModal(itinerary) {
     map = L.map('tripMap', { zoomControl: false }).setView([lat, lon], 13);
     L.control.zoom({ position: 'bottomright' }).addTo(map);
 
-    const tileLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors',
       maxZoom: 19
     }).addTo(map);
@@ -1090,9 +920,6 @@ function initMapModal(itinerary) {
     requestAnimationFrame(() => {
       setTimeout(() => { if (map) map.invalidateSize(); }, 200);
     });
-
-    tileLayer.on('load', () => console.log('[Kibi Map] tiles loaded'));
-    tileLayer.on('tileerror', (e) => console.warn('[Kibi Map] tile error', e));
 
     if (typeof ResizeObserver !== 'undefined') {
       const ro = new ResizeObserver(() => { if (map) map.invalidateSize(); });
