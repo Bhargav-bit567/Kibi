@@ -15,10 +15,17 @@ const TripMateAPI = {
     const lower = url.toLowerCase();
     const bad = ['map', 'locator', 'flag', 'coat_of_arms', 'coa_', 'logo', 'icon',
       'symbol', 'seal', 'emblem', 'svg', 'diagram', 'chart', 'location', 'position',
-      'outline', 'sign', 'wikimedia', 'commons-logo', 'stub', 'red_dot', 'blue_dot',
-      'arrow', 'blank', 'silhouette', 'placeholder'];
-    if (bad.some(kw => lower.includes(kw))) return false;
-    if (!/\.(jpg|jpeg|png)/i.test(lower)) return false;
+      'outline', 'sign', 'commons-logo', 'wikimedia-logo', 'wikimedia_commons_logo',
+      'stub', 'red_dot', 'blue_dot', 'arrow', 'blank', 'silhouette', 'placeholder'];
+    const rejected = bad.find(kw => lower.includes(kw));
+    if (rejected) {
+      console.log('[TripMateAPI._isGoodImage] rejected by keyword:', rejected, url);
+      return false;
+    }
+    if (!/\.(jpg|jpeg|png)/i.test(lower)) {
+      console.log('[TripMateAPI._isGoodImage] rejected by extension:', url);
+      return false;
+    }
     return true;
   },
 
