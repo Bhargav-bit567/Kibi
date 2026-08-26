@@ -52,13 +52,30 @@
     .filter-pill.active { background: #005da7; color: #fff; border-color: #005da7; box-shadow: 0 4px 14px rgba(0,93,167,0.25); }
 
     .search-input {
-      width: 100%; border: 1.5px solid #c1c7d3; border-radius: 12px;
-      padding: 12px 48px 12px 16px; font-size: 15px; background: #fff;
+      width: 100%; border: 1.5px solid #c1c7d3; border-radius: 14px;
+      padding: 13px 48px 13px 46px; font-size: 15px; background: #fff;
       outline: none; transition: border-color 0.2s, box-shadow 0.2s, background 0.3s, color 0.3s;
       font-family: 'Inter', sans-serif; color: #1a1c1e;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
-    .search-input:focus { border-color: #005da7; box-shadow: 0 0 0 3px rgba(0,93,167,0.12); }
-    .search-input::placeholder { color: #9aa0a6; }
+    .search-input:focus { border-color: #005da7; box-shadow: 0 0 0 3px rgba(0,93,167,0.12), 0 2px 8px rgba(0,0,0,0.04); }
+    .search-input::placeholder { color: #adb3bb; }
+    .search-icon {
+      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+      color: #9aa0a6; pointer-events: none; transition: color 0.2s;
+      display: flex; align-items: center;
+    }
+    .search-wrap:focus-within .search-icon { color: #005da7; }
+    .filter-group {
+      background: rgba(0,93,167,0.03); border-radius: 14px;
+      padding: 14px 16px; border: 1px solid rgba(0,93,167,0.07);
+    }
+    .filter-group-label {
+      display: flex; align-items: center; gap-6px;
+      font-size: 11px; font-weight: 700; letter-spacing: 0.07em;
+      text-transform: uppercase; color: #717783; margin-bottom: 10px;
+      gap: 6px;
+    }
 
     .discover-btn {
       background: linear-gradient(135deg, #005da7, #2976c7); color: #fff;
@@ -210,12 +227,20 @@
       background: #1F2630 !important;
       border-color: rgba(255,255,255,0.12) !important;
       color: #E8EAED !important;
+      box-shadow: none !important;
     }
     html.dark .search-input::placeholder { color: #5f6b7a !important; }
     html.dark .search-input:focus {
       border-color: #7EB8FF !important;
       box-shadow: 0 0 0 3px rgba(126,184,255,0.12) !important;
     }
+    html.dark .search-icon { color: #5f6b7a !important; }
+    html.dark .search-wrap:focus-within .search-icon { color: #7EB8FF !important; }
+    html.dark .filter-group {
+      background: rgba(255,255,255,0.03) !important;
+      border-color: rgba(255,255,255,0.06) !important;
+    }
+    html.dark .filter-group-label { color: #5f6b7a !important; }
 
     /* Clear search button */
     html.dark #clearSearch { color: #9AA0A6 !important; }
@@ -389,18 +414,21 @@
     <section class="w-full max-w-4xl mx-auto">
       <div class="glass-panel rounded-2xl p-6 md:p-8 flex flex-col gap-6">
 
-        <div class="relative">
+        <div class="relative search-wrap">
+          <span class="search-icon">
+            <span class="material-symbols-outlined" style="font-size:20px">search</span>
+          </span>
           <input id="searchInput" type="text" class="search-input" placeholder="Search a place… e.g. Manali, Goa, Kashmir"/>
           <button id="clearSearch" class="hidden absolute right-3.5 top-1/2 -translate-y-1/2 text-[#717783] hover:text-[#1a1c1e] transition-colors" onclick="clearSearchInput()">
             <span class="material-symbols-outlined" style="font-size:20px">close</span>
           </button>
         </div>
 
-        <div class="flex flex-col gap-2">
-          <span class="text-xs font-bold text-[#414751] uppercase tracking-wider flex items-center gap-1.5">
-            <span class="material-symbols-outlined text-[#005da7]" style="font-size:16px">calendar_month</span>
+        <div class="filter-group">
+          <div class="filter-group-label">
+            <span class="material-symbols-outlined text-[#005da7]" style="font-size:15px;font-variation-settings:'FILL' 1">calendar_month</span>
             When are you travelling?
-          </span>
+          </div>
           <div class="pill-row">
             <button class="filter-pill active" data-type="month" data-value="">✨ Any Month</button>
             <button class="filter-pill" data-type="month" data-value="Jan">❄️ Jan</button>
@@ -418,11 +446,11 @@
           </div>
         </div>
 
-        <div class="flex flex-col gap-2">
-          <span class="text-xs font-bold text-[#414751] uppercase tracking-wider flex items-center gap-1.5">
-            <span class="material-symbols-outlined text-[#005da7]" style="font-size:16px">mood</span>
+        <div class="filter-group">
+          <div class="filter-group-label">
+            <span class="material-symbols-outlined text-[#005da7]" style="font-size:15px;font-variation-settings:'FILL' 1">mood</span>
             What's your vibe?
-          </span>
+          </div>
           <div class="pill-row">
             <button class="filter-pill active" data-type="mood" data-value="">All Moods</button>
             <button class="filter-pill" data-type="mood" data-value="Adventure">🧗 Adventure</button>
@@ -434,11 +462,11 @@
           </div>
         </div>
 
-        <div class="flex flex-col gap-2">
-          <span class="text-xs font-bold text-[#414751] uppercase tracking-wider flex items-center gap-1.5">
-            <span class="material-symbols-outlined text-[#005da7]" style="font-size:16px">landscape</span>
+        <div class="filter-group">
+          <div class="filter-group-label">
+            <span class="material-symbols-outlined text-[#005da7]" style="font-size:15px;font-variation-settings:'FILL' 1">landscape</span>
             What kind of place?
-          </span>
+          </div>
           <div class="pill-row">
             <button class="filter-pill active" data-type="genre" data-value="">All Types</button>
             <button class="filter-pill" data-type="genre" data-value="Mountains">🏔️ Mountains</button>
