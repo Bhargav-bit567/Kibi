@@ -51,6 +51,12 @@ async function getDestinationImage(destination) {
 document.addEventListener('DOMContentLoaded', () => {
   const page = document.body.dataset.page;
 
+  if (page === 'my-trips') {
+    const user = requireAuth();
+    if (!user) return;
+    initNav('my-trips');
+  }
+
   if (page === 'trip-details') {
     initNav('discover', true);
     initTripDetails();
