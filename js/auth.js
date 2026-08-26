@@ -83,7 +83,7 @@ function initLoginForm(form) {
     e.preventDefault();
     clearErrors(form);
 
-    const email = form.querySelector('#email').value.trim();
+    const email = form.querySelector('#email').value.trim().toLowerCase();
     const password = form.querySelector('#password').value;
 
     if (!email) return showFieldError('email', 'Email is required');
@@ -122,7 +122,7 @@ function initSignupForm(form) {
     clearErrors(form);
 
     const name = form.querySelector('#name').value.trim();
-    const email = form.querySelector('#email').value.trim();
+    const email = form.querySelector('#email').value.trim().toLowerCase();
     const password = form.querySelector('#password').value;
     const confirmPassword = form.querySelector('#confirmPassword').value;
     const terms = form.querySelector('#terms');
