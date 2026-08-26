@@ -207,3 +207,4 @@ function renderCompatibleTravelers(user) {
     </div>
   `).join('');
 }
+
