@@ -44,21 +44,23 @@
 
   <style>
     .filter-pill {
-      padding: 8px 16px; border: 1.5px solid #c1c7d3; border-radius: 9999px; background: #fff; color: #414751;
-      font-size: 13px; font-weight: 600; transition: all 0.2s ease;
-      white-space: nowrap; display: inline-flex; align-items: center; gap: 6px;
+      padding: 7px 15px; border: 1.5px solid #e2e5ea; border-radius: 9999px;
+      background: #fff; color: #414751;
+      font-size: 13px; font-weight: 600; transition: all 0.18s ease;
+      white-space: nowrap; display: inline-flex; align-items: center; gap: 5px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.06);
     }
-    .filter-pill:hover { border-color: #005da7; color: #005da7; }
-    .filter-pill.active { background: #005da7; color: #fff; border-color: #005da7; box-shadow: 0 4px 14px rgba(0,93,167,0.25); }
+    .filter-pill:hover { border-color: #005da7; color: #005da7; background: #f0f6ff; box-shadow: 0 2px 8px rgba(0,93,167,0.1); }
+    .filter-pill.active { background: linear-gradient(135deg,#005da7,#2976c7); color: #fff; border-color: transparent; box-shadow: 0 4px 12px rgba(0,93,167,0.3); }
 
     .search-input {
-      width: 100%; border: 1.5px solid #c1c7d3; border-radius: 14px;
-      padding: 13px 48px 13px 46px; font-size: 15px; background: #fff;
-      outline: none; transition: border-color 0.2s, box-shadow 0.2s, background 0.3s, color 0.3s;
+      width: 100%; border: none; border-radius: 12px;
+      padding: 14px 48px 14px 48px; font-size: 15px;
+      background: #f3f6fb;
+      outline: none; transition: background 0.2s, box-shadow 0.2s, color 0.3s;
       font-family: 'Inter', sans-serif; color: #1a1c1e;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
     }
-    .search-input:focus { border-color: #005da7; box-shadow: 0 0 0 3px rgba(0,93,167,0.12), 0 2px 8px rgba(0,0,0,0.04); }
+    .search-input:focus { background: #fff; box-shadow: 0 0 0 2px #005da7, 0 4px 16px rgba(0,93,167,0.1); }
     .search-input::placeholder { color: #adb3bb; }
     .search-icon {
       position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
@@ -66,34 +68,59 @@
       display: flex; align-items: center;
     }
     .search-wrap:focus-within .search-icon { color: #005da7; }
-    .filter-group {
-      background: rgba(0,93,167,0.03); border-radius: 14px;
-      padding: 14px 16px; border: 1px solid rgba(0,93,167,0.07);
+
+    .filter-panel {
+      background: #fff;
+      border-radius: 24px;
+      border: 1px solid #e8eaed;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.07), 0 2px 8px rgba(0,0,0,0.04);
+      overflow: hidden;
     }
-    .filter-group-label {
-      display: flex; align-items: center; gap-6px;
-      font-size: 11px; font-weight: 700; letter-spacing: 0.07em;
-      text-transform: uppercase; color: #717783; margin-bottom: 10px;
-      gap: 6px;
+    .filter-panel-header {
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid #f0f2f5;
+    }
+    .filter-section {
+      padding: 16px 24px;
+      border-bottom: 1px solid #f0f2f5;
+    }
+    .filter-section:last-child { border-bottom: none; }
+    .filter-section-label {
+      display: flex; align-items: center; gap: 8px;
+      font-size: 11.5px; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; margin-bottom: 12px;
+    }
+    .filter-section-label .label-icon {
+      width: 26px; height: 26px; border-radius: 8px;
+      background: linear-gradient(135deg,#e8f0fe,#d4e3ff);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .filter-section-label .label-text { color: #414751; }
+    .filter-panel-footer {
+      padding: 14px 24px;
+      background: #f8fafd;
+      border-top: 1px solid #f0f2f5;
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      flex-wrap: wrap;
     }
 
     .discover-btn {
       background: linear-gradient(135deg, #005da7, #2976c7); color: #fff;
-      border: none; border-radius: 12px; padding: 13px 28px;
+      border: none; border-radius: 12px; padding: 12px 26px;
       font-size: 14px; font-weight: 700; cursor: pointer;
       display: inline-flex; align-items: center; gap: 8px;
       transition: all 0.2s; box-shadow: 0 4px 16px rgba(0,93,167,0.3); white-space: nowrap;
     }
-    .discover-btn:hover { background: linear-gradient(135deg, #004883, #005da7); transform: translateY(-1px); }
+    .discover-btn:hover { background: linear-gradient(135deg, #004883, #005da7); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(0,93,167,0.35); }
     .discover-btn:active { transform: scale(0.98); }
 
     .filter-bar { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font-size: 13px; }
     .active-tag {
       display: inline-flex; align-items: center; gap: 5px;
-      background: #d4e3ff; color: #004883; border-radius: 9999px;
-      padding: 4px 12px; font-size: 12px; font-weight: 600;
+      background: #e8f0fe; color: #004883; border-radius: 9999px;
+      padding: 4px 12px; font-size: 12px; font-weight: 600; border: 1px solid #c5d8f8;
     }
-    .active-tag button { background: none; border: none; cursor: pointer; color: #004883; font-size: 14px; }
+    .active-tag button { background: none; border: none; cursor: pointer; color: #004883; font-size: 14px; line-height: 1; }
 
     .place-card {
       border-radius: 20px; overflow: hidden; position: relative;
@@ -195,52 +222,54 @@
     html.dark .text-\[\#414751\] { color: #BDC1C6 !important; }
     html.dark .text-\[\#1a1c1e\] { color: #F1F3F4 !important; }
 
-    /* Glass filter panel */
-    html.dark .glass-panel {
-      background: rgba(22, 27, 34, 0.80) !important;
+    /* Filter panel */
+    html.dark .filter-panel {
+      background: #161B22 !important;
       border-color: rgba(255,255,255,0.08) !important;
-      box-shadow: 0 20px 40px -10px rgba(0,0,0,0.35) !important;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.4) !important;
     }
+    html.dark .filter-panel-header,
+    html.dark .filter-section { border-color: rgba(255,255,255,0.06) !important; }
+    html.dark .filter-panel-footer {
+      background: #0f1419 !important;
+      border-color: rgba(255,255,255,0.06) !important;
+    }
+    html.dark .filter-section-label .label-icon {
+      background: linear-gradient(135deg, rgba(164,201,255,0.12), rgba(164,201,255,0.08)) !important;
+    }
+    html.dark .filter-section-label .label-text { color: #9AA0A6 !important; }
 
-    /* Filter section labels */
-    html.dark .glass-panel .text-xs.font-bold { color: #9AA0A6 !important; }
+    /* Search input */
+    html.dark .search-input {
+      background: #1a2030 !important;
+      color: #E8EAED !important;
+    }
+    html.dark .search-input::placeholder { color: #5f6b7a !important; }
+    html.dark .search-input:focus {
+      background: #1F2630 !important;
+      box-shadow: 0 0 0 2px #7EB8FF, 0 4px 16px rgba(126,184,255,0.1) !important;
+    }
+    html.dark .search-icon { color: #5f6b7a !important; }
+    html.dark .search-wrap:focus-within .search-icon { color: #7EB8FF !important; }
 
-    /* Filter pills — default state */
+    /* Filter pills */
     html.dark .filter-pill {
       background: #1F2630 !important;
       border-color: rgba(255,255,255,0.1) !important;
       color: #BDC1C6 !important;
+      box-shadow: none !important;
     }
     html.dark .filter-pill:hover {
       border-color: #7EB8FF !important;
       color: #7EB8FF !important;
+      background: rgba(126,184,255,0.08) !important;
     }
     html.dark .filter-pill.active {
-      background: #005da7 !important;
+      background: linear-gradient(135deg,#005da7,#2976c7) !important;
       color: #fff !important;
-      border-color: #005da7 !important;
-      box-shadow: 0 4px 14px rgba(0,93,167,0.35) !important;
+      border-color: transparent !important;
+      box-shadow: 0 4px 12px rgba(0,93,167,0.35) !important;
     }
-
-    /* Search input */
-    html.dark .search-input {
-      background: #1F2630 !important;
-      border-color: rgba(255,255,255,0.12) !important;
-      color: #E8EAED !important;
-      box-shadow: none !important;
-    }
-    html.dark .search-input::placeholder { color: #5f6b7a !important; }
-    html.dark .search-input:focus {
-      border-color: #7EB8FF !important;
-      box-shadow: 0 0 0 3px rgba(126,184,255,0.12) !important;
-    }
-    html.dark .search-icon { color: #5f6b7a !important; }
-    html.dark .search-wrap:focus-within .search-icon { color: #7EB8FF !important; }
-    html.dark .filter-group {
-      background: rgba(255,255,255,0.03) !important;
-      border-color: rgba(255,255,255,0.06) !important;
-    }
-    html.dark .filter-group-label { color: #5f6b7a !important; }
 
     /* Clear search button */
     html.dark #clearSearch { color: #9AA0A6 !important; }
@@ -412,22 +441,25 @@
 
     <!-- FILTER PANEL -->
     <section class="w-full max-w-4xl mx-auto">
-      <div class="glass-panel rounded-2xl p-6 md:p-8 flex flex-col gap-6">
+      <div class="filter-panel">
 
-        <div class="relative search-wrap">
-          <span class="search-icon">
-            <span class="material-symbols-outlined" style="font-size:20px">search</span>
-          </span>
-          <input id="searchInput" type="text" class="search-input" placeholder="Search a place… e.g. Manali, Goa, Kashmir"/>
-          <button id="clearSearch" class="hidden absolute right-3.5 top-1/2 -translate-y-1/2 text-[#717783] hover:text-[#1a1c1e] transition-colors" onclick="clearSearchInput()">
-            <span class="material-symbols-outlined" style="font-size:20px">close</span>
-          </button>
+        <!-- Search -->
+        <div class="filter-panel-header">
+          <div class="relative search-wrap">
+            <input id="searchInput" type="text" class="search-input" style="padding-left:16px;" placeholder="Search a place… e.g. Manali, Goa, Kashmir"/>
+            <button id="clearSearch" class="hidden absolute right-3.5 top-1/2 -translate-y-1/2 text-[#9aa0a6] hover:text-[#1a1c1e] transition-colors" onclick="clearSearchInput()">
+              <span class="material-symbols-outlined" style="font-size:20px">close</span>
+            </button>
+          </div>
         </div>
 
-        <div class="filter-group">
-          <div class="filter-group-label">
-            <span class="material-symbols-outlined text-[#005da7]" style="font-size:15px;font-variation-settings:'FILL' 1">calendar_month</span>
-            When are you travelling?
+        <!-- Month -->
+        <div class="filter-section">
+          <div class="filter-section-label">
+            <span class="label-icon">
+              <span class="material-symbols-outlined text-[#005da7]" style="font-size:14px;font-variation-settings:'FILL' 1">calendar_month</span>
+            </span>
+            <span class="label-text">When are you travelling?</span>
           </div>
           <div class="pill-row">
             <button class="filter-pill active" data-type="month" data-value="">✨ Any Month</button>
@@ -446,10 +478,13 @@
           </div>
         </div>
 
-        <div class="filter-group">
-          <div class="filter-group-label">
-            <span class="material-symbols-outlined text-[#005da7]" style="font-size:15px;font-variation-settings:'FILL' 1">mood</span>
-            What's your vibe?
+        <!-- Mood -->
+        <div class="filter-section">
+          <div class="filter-section-label">
+            <span class="label-icon">
+              <span class="material-symbols-outlined text-[#005da7]" style="font-size:14px;font-variation-settings:'FILL' 1">mood</span>
+            </span>
+            <span class="label-text">What's your vibe?</span>
           </div>
           <div class="pill-row">
             <button class="filter-pill active" data-type="mood" data-value="">All Moods</button>
@@ -462,10 +497,13 @@
           </div>
         </div>
 
-        <div class="filter-group">
-          <div class="filter-group-label">
-            <span class="material-symbols-outlined text-[#005da7]" style="font-size:15px;font-variation-settings:'FILL' 1">landscape</span>
-            What kind of place?
+        <!-- Genre -->
+        <div class="filter-section">
+          <div class="filter-section-label">
+            <span class="label-icon">
+              <span class="material-symbols-outlined text-[#005da7]" style="font-size:14px;font-variation-settings:'FILL' 1">landscape</span>
+            </span>
+            <span class="label-text">What kind of place?</span>
           </div>
           <div class="pill-row">
             <button class="filter-pill active" data-type="genre" data-value="">All Types</button>
@@ -482,7 +520,8 @@
           </div>
         </div>
 
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-2 border-t border-[#c1c7d3]/40">
+        <!-- Footer -->
+        <div class="filter-panel-footer">
           <div id="activeFilterBar" class="filter-bar hidden"></div>
           <button class="discover-btn ml-auto" onclick="applyFilters()">
             <span class="material-symbols-outlined" style="font-size:18px">travel_explore</span>
