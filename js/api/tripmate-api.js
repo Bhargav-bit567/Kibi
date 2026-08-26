@@ -24,8 +24,13 @@ const TripMateAPI = {
 
   /* ---------- 1. PLACE INFO (description + hero image) ---------- */
   async getPlaceInfo(placeName) {
-    // Try multiple search terms for better results
     const variants = [
+      placeName + ', Himachal Pradesh',
+      placeName + ', Uttarakhand',
+      placeName + ', Rajasthan',
+      placeName + ', Kerala',
+      placeName + ', Goa',
+      placeName + ', India',
       placeName + ' India',
       placeName,
       placeName + ' tourism',
@@ -39,7 +44,6 @@ const TripMateAPI = {
         if (!response.ok) continue;
         const data = await response.json();
 
-        // Prefer originalimage (full-res) over thumbnail
         const img = (data.originalimage?.source) || (data.thumbnail?.source) || null;
         const goodImg = this._isGoodImage(img) ? img : null;
 
@@ -54,7 +58,6 @@ const TripMateAPI = {
       } catch (_) {}
     }
 
-    // All variants failed — try image search only
     const fallbackImage = await this.searchForImage(placeName);
     return { title: placeName, description: "No details available for this place.", image: fallbackImage, coordinates: null };
   },
@@ -205,6 +208,8 @@ const TripMateAPI = {
 
   /* ---------- Fallback image search (multi-strategy) ---------- */
   async searchForImage(placeName) {
+    const normalized = placeName.toLowerCase().replace(/[^a-z0-9]/g, '');
+
     // Strategy 1: Wikipedia search API — scans multiple related pages
     const queries = [
       placeName + ' India tourism',
@@ -214,12 +219,21 @@ const TripMateAPI = {
 
     for (const q of queries) {
       try {
-        const url = `https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(q)}&gsrlimit=8&prop=pageimages&piprop=original|thumbnail&format=json&origin=*`;
+        const url = `https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(q)}&gsrlimit=15&prop=pageimages&piprop=original|thumbnail&format=json&origin=*`;
         const res = await fetch(url);
         const data = await res.json();
         if (!data.query?.pages) continue;
 
         const pages = Object.values(data.query.pages);
+        const exactMatch = pages.find(p => {
+          const title = (p.title || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+          return title.includes(normalized) && title.length <= normalized.length + 8;
+        });
+        if (exactMatch) {
+          const src = exactMatch.original?.source || exactMatch.thumbnail?.source;
+          if (this._isGoodImage(src)) return src;
+        }
+
         for (const page of pages) {
           const src = page.original?.source || page.thumbnail?.source;
           if (this._isGoodImage(src)) return src;
