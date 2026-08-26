@@ -1,0 +1,337 @@
+EXPLANATION OF js/trips.js — FUNCTION BY FUNCTION
+====================================================
+
+OVERALL PURPOSE
+---------------
+js/trips.js is the main controller for three user-facing flows in the Kibi app:
+1. My Trips page — lists the user's planned, joined, and saved trips.
+2. Plan Trip page — handles the destination search, form, and itinerary generation.
+3. Itinerary page — displays a generated or saved itinerary with timeline, accommodations, budget, weather, gallery, and an interactive map.
+
+It runs after the page loads, checks which page it is on via `document.body.dataset.page`, and starts only the relevant module.
+
+---
+
+TOP-LEVEL HELPERS
+-----------------
+
+DESTINATION_FALLBACK_IMAGES
+  An array of Unsplash image URLs used when no destination-specific image can be found.
+  Why: External APIs (TripMate, image search) can fail or be slow. Having fallback images keeps the UI from breaking.
+
+hashString(str)
+  Converts a destination name into a numeric hash.
+  Why: We want the same destination to always map to the same fallback image, so the UI feels consistent.
+
+deterministicFallbackImage(destination)
+  Uses hashString to pick one image from DESTINATION_FALLBACK_IMAGES.
+  Why: Random images would make the page look different on every reload. Deterministic mapping gives stability.
+
+getDestinationImage(destination)
+  Tries to get a real image in this order:
+    1. TripMate place-info image
+    2. TripMate image search
+    3. Deterministic fallback image
+  Why: Layered fallbacks. Real images are best, but if they fail we still show something decent.
+
+---
+
+PAGE ROUTER: DOMContentLoaded listener
+--------------------------------------
+What it does:
+  Reads `document.body.dataset.page` to know which page is open.
+  Calls `requireAuth()` for protected pages (my-trips, plan-trip, profile).
+  Calls `initNav(...)` to highlight the correct nav item.
+  Starts the correct initializer:
+    my-trips     → initMyTrips(user)
+    trip-details → initTripDetails()
+    plan-trip    → initPlanTrip()
+    itinerary    → initItineraryPage()
+    discover     → initDiscover()
+    profile      → initProfile(user)
+
+Why this approach:
+  One JS file is loaded by all pages. Instead of loading separate scripts per page, we use a single entry point that branches based on a data attribute. This reduces HTTP requests and keeps related trip logic together.
+
+---
+
+initMyTrips(user)
+-----------------
+What it does:
+  1. Finds all tab buttons and tab content panels.
+  2. Adds click handlers so clicking a tab shows the matching panel and hides the others.
+  3. Calls renderPlannedTrips, renderJoinedTrips, and renderSavedTripsTab.
+
+Why this approach:
+  Tab switching is a purely client-side UI concern. We don't reload the page; we just toggle CSS classes. This is faster and smoother than server-side tabs.
+
+renderEmptyState(heading, message, actionHtml)
+---------------------------------------------
+What it does:
+  Returns a small HTML string for an empty tab with a heading, message, and optional action button.
+
+Why this approach:
+  Instead of writing the same empty-state markup in three places, this helper centralizes it. If the design changes, we edit one function.
+
+renderPlannedTrips(user)
+------------------------
+What it does:
+  Loads trips created by the user via `getUserTrips(user.id)`.
+  If none exist, shows the empty state with a "Plan a Trip" button.
+  Otherwise, renders a grid of trip cards and attaches delete handlers.
+
+Why this approach:
+  Trips are stored locally (localStorage-based storage module). We read from storage, transform into HTML, and inject into the DOM. Delete is handled in-place so the list updates without a page reload.
+
+renderJoinedTrips(user)
+-----------------------
+What it does:
+  Loads the user's join requests via `getUserJoinRequests(user.id)`.
+  Matches those request IDs against all public trips from `getTrips()`.
+  Shows either an empty state or cards for trips the user has joined/requested to join.
+
+Why this approach:
+  Join requests are separate from trip objects. We need to correlate the two datasets to display meaningful cards. Filtering in JS is simpler than restructuring the storage schema.
+
+renderSavedTripsTab(user)
+-----------------------
+What it does:
+  Loads saved itineraries via `getSavedTrips(user.id)`.
+  Shows empty state or grid of cards with delete handlers.
+
+Why this approach:
+  Saved trips are a different storage bucket from planned trips. Keeping the rendering separate makes it clear which data source each tab uses.
+
+renderTripCard(trip, showDelete, status, savedView)
+---------------------------------------------------
+What it does:
+  Builds the HTML for one trip card.
+  Computes the correct detail URL (`saved-itinerary.html` for saved trips, `itinerary.html` for others).
+  Shows:
+    - destination image
+    - title or destination name
+    - date range
+    - budget
+    - member count (if applicable)
+    - join status badge (if applicable)
+    - delete/view footer (if applicable)
+  The whole card is clickable and navigates to the detail page.
+
+Why this approach:
+  One function produces every card in My Trips. Parameters control small differences (delete button, status badge, saved-view link). This keeps markup consistent and avoids duplication.
+
+---
+
+initTripDetails()
+-----------------
+What it does:
+  Powers the public "Discover trip details" page.
+  1. Reads the `id` query parameter.
+  2. Loads the matching trip from storage.
+  3. Renders:
+     - Hero header with background image, title, dates, budget
+     - Description and interest tags
+     - Compatibility score for the logged-in user
+     - Day-by-day itinerary
+     - Member list
+     - Join/Save button
+
+Why this approach:
+  Discover trip details are read-only for visitors. The page builds itself from the stored trip object. The compatibility score is calculated client-side from user profile data.
+
+---
+
+initPlanTrip()
+--------------
+What it does:
+  Powers the Plan Trip form.
+
+1. Destination autocomplete
+   - Listens for input on `#destSearch`.
+   - Uses a 250ms debounce so we don't call the API on every keystroke.
+   - Uses an AbortController to cancel the previous request if the user keeps typing.
+   - Calls `GeocodingAPI.searchDestination(query, abortController.signal)`.
+   - Renders clickable suggestions that fill hidden fields: `#destId`, `#destLat`, `#destLon`.
+   - Clicking outside closes the suggestion list.
+
+   Why this approach:
+     Debouncing + aborting prevents unnecessary network traffic and race conditions. Without abort, slow responses could overwrite newer results.
+
+2. Budget prefill
+   - If the logged-in user has a budget range stored in their profile, it sets the budget input to the midpoint.
+
+   Why this approach:
+     Reduces friction. The user already told us their budget during onboarding, so we prefill it.
+
+3. Style and interest chips
+   - Toggles an `.active` class on chips when clicked.
+   - Later, all `.active` chips are collected as form values.
+
+   Why this approach:
+     Tailwind chips are simple divs. Using CSS classes as state avoids managing complex checkbox arrays manually.
+
+4. Form submit handler
+   - Gathers values: destination, dates, budget, styles, interests, social preference, pace.
+   - Validates:
+       destination is filled
+       dates are filled
+       end date is after start date
+       budget is at least ₹1,000
+   - Shows a spinner on the submit button.
+   - Calls `generateItinerary(...)` from `planner.js`.
+   - Stores the result in `sessionStorage` as `wm_generated_itinerary`.
+   - Redirects to `itinerary.html#overview` after a short delay.
+   - Shows error toasts if anything fails.
+
+   Why this approach:
+     The heavy work (API calls, AI, routing) lives in `planner.js`. This function only collects input and coordinates the flow. sessionStorage is used because the itinerary object can be large and we don't want to pass it through the URL.
+
+---
+
+initItineraryPage() and runInitItineraryPage()
+-----------------------------------------------
+What they do:
+  `initItineraryPage` wraps the real loader in a try/catch and shows a friendly error page if rendering crashes.
+  `runInitItineraryPage` decides how to load the itinerary:
+    - If URL has `?id=<tripId>`, try to load a saved trip from storage.
+    - Otherwise, read the generated itinerary from `sessionStorage`.
+    - If neither exists, redirect to Plan Trip.
+
+Why this approach:
+  The same `itinerary.html` page is used for:
+    - freshly generated trips (data in sessionStorage)
+    - saved trips (data in localStorage)
+  A single renderer handles both sources.
+
+loadSavedTrip(tripId)
+---------------------
+What it does:
+  Tries three places to find a saved trip:
+    1. `getSavedItineraries()`
+    2. Isolated localStorage key `wm_saved_itinerary_${tripId}`
+    3. `getTripById(tripId)`
+
+Why this approach:
+  Saved itineraries may have been stored in different formats over time. Checking all three ensures older saves still load.
+
+deepClone(obj)
+--------------
+What it does:
+  Returns a deep copy via `JSON.parse(JSON.stringify(obj))`.
+
+Why this approach:
+  Itinerary objects are mutated during rendering (e.g., adding lat/lon for the map). Cloning prevents corrupting the stored version. JSON round-trip is simple and sufficient because the data is plain objects/arrays/primitives.
+
+---
+
+renderLoadedItinerary(itinerary)
+--------------------------------
+This is the largest function. It fills every section of the Itinerary page.
+
+1. Defensive normalization
+   - Ensures destination, dates, itinerary array, accommodations array, budget breakdown, and weather exist.
+   - Sets the "About [Destination]" heading.
+
+   Why this approach:
+     Data can come from different sources (generated, saved, older versions). Normalizing prevents crashes from missing fields.
+
+2. Hero section
+   - Fetches a destination image asynchronously.
+   - Renders a hero with background image, title, dates, Share button, and Save Trip button.
+   - Save Trip button checks if the trip is already saved, prevents duplicates, and stores the trip.
+
+   Why this approach:
+     The image fetch is async because we don't want to block rendering. The hero is rendered first with a fallback, then updated when the real image arrives.
+
+3. Timeline
+   - Renders each day as a card.
+   - Each activity shows time, name, description, and cost.
+   - Uses a rotating color palette for visual variety.
+
+   Why this approach:
+     A vertical timeline is the most readable way to show a multi-day schedule. Colors help distinguish activities at a glance.
+
+4. Accommodations
+   - Renders up to 3 accommodation cards.
+   - Shows placeholder icon first, then fetches real hotel images via TripMate and replaces the placeholder.
+
+   Why this approach:
+     Accommodation images are non-critical. Showing the card immediately and loading images afterwards keeps the page fast.
+
+5. Budget estimate
+   - Renders a stacked bar chart and a legend for stay, food, transport, and activities.
+
+   Why this approach:
+     A stacked bar gives an instant visual sense of budget distribution, while the legend shows exact numbers.
+
+6. Weather
+   - Renders current weather from stored data.
+   - If coordinates exist, refreshes weather and adds sunrise/sunset times.
+
+   Why this approach:
+     Stored weather is shown immediately. Refreshing in the background keeps the display current without blocking the page.
+
+7. Gallery
+   - Fetches up to 6 destination images and appends a gallery section.
+
+   Why this approach:
+     Images enhance the page but are not essential. Loading them lazily and appending the section avoids blocking core content.
+
+8. Map modal
+   - Calls `initMapModal(itinerary)` to set up the interactive map.
+
+---
+
+initMapModal(itinerary)
+-----------------------
+What it does:
+  Sets up a Leaflet map inside a modal.
+
+- Open/close logic:
+    - Opens on "View Map" button click or panel click.
+    - Closes on close button, backdrop click, or Escape key.
+    - Locks body scroll while open.
+
+- ensureCoords()
+    - If the itinerary lacks coordinates, tries to geocode the destination name using GeocodingAPI or TripMate.
+
+- initMap()
+    - Creates a Leaflet map centered on the destination.
+    - Adds OpenStreetMap tiles.
+    - Adds markers for:
+        - destination
+        - each accommodation
+        - each activity with coordinates, colored by day
+    - Draws routes between same-day activities using RoutingAPI.
+    - Fits the map bounds to include all markers.
+
+Why this approach:
+  The map is inside a modal, so it is not created until opened. This saves resources. `invalidateSize()` is called after the modal is visible so Leaflet renders correctly inside a hidden container. Routes are fetched per day so users can see how activities connect geographically.
+
+drawRoute(coords, color)
+------------------------
+What it does:
+  Asks `RoutingAPI.getRoute` for a road route between coordinates.
+  If a polyline geometry is returned, draws it on the map.
+  Falls back to straight dashed lines if routing fails.
+
+Why this approach:
+  Road routes look more realistic, but routing services can fail or be unavailable. The fallback ensures something is always drawn.
+
+renderWeatherCard(el, weather, sun)
+-----------------------------------
+What it does:
+  Builds a small weather widget with icon, temperature, condition, rain probability, wind, and optional sunrise/sunset.
+
+Why this approach:
+  A self-contained helper keeps the weather markup consistent whether it is rendered from stored data or refreshed data.
+
+---
+
+WHY THIS FILE IS STRUCTURED THIS WAY
+------------------------------------
+- Single responsibility per function: each function does one thing (render tabs, render cards, render itinerary, render map).
+- Reusable helpers: `renderTripCard`, `renderEmptyState`, `renderWeatherCard`, and `getDestinationImage` are used in multiple places.
+- Progressive enhancement: images, weather, and map routes load asynchronously after the core content is visible.
+- Defensive coding: missing fields are filled with defaults so the page never crashes on partial data.
+- Client-side storage: because this is a static HTML/JS app, all trip data lives in localStorage/sessionStorage, and rendering happens in the browser.

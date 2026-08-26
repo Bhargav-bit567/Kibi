@@ -28,23 +28,40 @@ function deterministicFallbackImage(destination) {
 }
 
 async function getDestinationImage(destination) {
-  if (!destination) return deterministicFallbackImage('unknown');
-  if (typeof TripMateAPI === 'undefined') return deterministicFallbackImage(destination);
+  console.log('[getDestinationImage] destination:', destination);
+  if (!destination) {
+    console.log('[getDestinationImage] no destination -> fallback');
+    return deterministicFallbackImage('unknown');
+  }
+  if (typeof TripMateAPI === 'undefined') {
+    console.log('[getDestinationImage] TripMateAPI missing -> fallback');
+    return deterministicFallbackImage(destination);
+  }
 
   try {
     const place = await TripMateAPI.getPlaceInfo(destination);
-    if (place && place.image) return place.image;
+    console.log('[getDestinationImage] getPlaceInfo result:', place);
+    if (place && place.image) {
+      console.log('[getDestinationImage] using place image:', place.image);
+      return place.image;
+    }
+    console.log('[getDestinationImage] getPlaceInfo returned no image');
   } catch (e) {
     console.warn('[getDestinationImage] getPlaceInfo failed:', e);
   }
 
   try {
     const img = await TripMateAPI.searchForImage(destination);
-    if (img) return img;
+    console.log('[getDestinationImage] searchForImage result:', img);
+    if (img) {
+      console.log('[getDestinationImage] using search image:', img);
+      return img;
+    }
   } catch (e) {
     console.warn('[getDestinationImage] searchForImage failed:', e);
   }
 
+  console.log('[getDestinationImage] using deterministic fallback for:', destination);
   return deterministicFallbackImage(destination);
 }
 

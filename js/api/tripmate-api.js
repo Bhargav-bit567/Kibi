@@ -24,6 +24,7 @@ const TripMateAPI = {
 
   /* ---------- 1. PLACE INFO (description + hero image) ---------- */
   async getPlaceInfo(placeName) {
+    console.log('[TripMateAPI.getPlaceInfo] placeName:', placeName);
     const variants = [
       placeName + ', Himachal Pradesh',
       placeName + ', Uttarakhand',
@@ -40,25 +41,35 @@ const TripMateAPI = {
     for (const term of variants) {
       try {
         const url = `https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(term)}`;
+        console.log('[TripMateAPI.getPlaceInfo] trying variant:', term, '->', url);
         const response = await fetch(url);
-        if (!response.ok) continue;
+        if (!response.ok) {
+          console.log('[TripMateAPI.getPlaceInfo] variant failed HTTP', response.status, term);
+          continue;
+        }
         const data = await response.json();
 
         const img = (data.originalimage?.source) || (data.thumbnail?.source) || null;
         const goodImg = this._isGoodImage(img) ? img : null;
+        console.log('[TripMateAPI.getPlaceInfo] variant succeeded:', term, 'image=', goodImg || img);
 
         if (data.extract && data.extract.length > 30) {
-          return {
+          const result = {
             title: data.title,
             description: data.extract,
             image: goodImg || await this.searchForImage(placeName),
             coordinates: data.coordinates || null
           };
+          console.log('[TripMateAPI.getPlaceInfo] returning:', result);
+          return result;
         }
-      } catch (_) {}
+      } catch (err) {
+        console.log('[TripMateAPI.getPlaceInfo] variant error:', term, err && err.message);
+      }
     }
 
     const fallbackImage = await this.searchForImage(placeName);
+    console.log('[TripMateAPI.getPlaceInfo] falling back to search image:', fallbackImage);
     return { title: placeName, description: "No details available for this place.", image: fallbackImage, coordinates: null };
   },
 
@@ -208,6 +219,7 @@ const TripMateAPI = {
 
   /* ---------- Fallback image search (multi-strategy) ---------- */
   async searchForImage(placeName) {
+    console.log('[TripMateAPI.searchForImage] placeName:', placeName);
     const normalized = placeName.toLowerCase().replace(/[^a-z0-9]/g, '');
 
     // Strategy 1: Wikipedia search API — scans multiple related pages
@@ -220,30 +232,45 @@ const TripMateAPI = {
     for (const q of queries) {
       try {
         const url = `https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch=${encodeURIComponent(q)}&gsrlimit=15&prop=pageimages&piprop=original|thumbnail&format=json&origin=*`;
+        console.log('[TripMateAPI.searchForImage] trying query:', q);
         const res = await fetch(url);
         const data = await res.json();
-        if (!data.query?.pages) continue;
+        if (!data.query?.pages) {
+          console.log('[TripMateAPI.searchForImage] no pages for query:', q);
+          continue;
+        }
 
         const pages = Object.values(data.query.pages);
+        console.log('[TripMateAPI.searchForImage] query pages count:', pages.length, 'for:', q);
         const exactMatch = pages.find(p => {
           const title = (p.title || '').toLowerCase().replace(/[^a-z0-9]/g, '');
           return title.includes(normalized) && title.length <= normalized.length + 8;
         });
         if (exactMatch) {
           const src = exactMatch.original?.source || exactMatch.thumbnail?.source;
-          if (this._isGoodImage(src)) return src;
+          console.log('[TripMateAPI.searchForImage] exact match:', exactMatch.title, 'src:', src);
+          if (this._isGoodImage(src)) {
+            console.log('[TripMateAPI.searchForImage] using exact match image:', src);
+            return src;
+          }
         }
 
         for (const page of pages) {
           const src = page.original?.source || page.thumbnail?.source;
-          if (this._isGoodImage(src)) return src;
+          if (this._isGoodImage(src)) {
+            console.log('[TripMateAPI.searchForImage] using query image:', src);
+            return src;
+          }
         }
-      } catch (_) {}
+      } catch (err) {
+        console.log('[TripMateAPI.searchForImage] query error:', q, err && err.message);
+      }
     }
 
     // Strategy 2: Wikimedia Commons image search
     try {
       const url = `https://en.wikipedia.org/w/api.php?action=query&generator=images&titles=${encodeURIComponent(placeName)}&prop=imageinfo&iiprop=url|size&format=json&origin=*&gimlimit=20`;
+      console.log('[TripMateAPI.searchForImage] trying commons images for:', placeName);
       const res = await fetch(url);
       const data = await res.json();
       if (data.query?.pages) {
@@ -251,10 +278,17 @@ const TripMateAPI = {
           .map(p => p.imageinfo?.[0])
           .filter(info => info?.url && this._isGoodImage(info.url) && (info.width || 0) >= 400)
           .sort((a, b) => (b.width * b.height) - (a.width * a.height));
-        if (imgs.length > 0) return imgs[0].url;
+        if (imgs.length > 0) {
+          console.log('[TripMateAPI.searchForImage] using commons image:', imgs[0].url);
+          return imgs[0].url;
+        }
       }
-    } catch (_) {}
+      console.log('[TripMateAPI.searchForImage] no commons images for:', placeName);
+    } catch (err) {
+      console.log('[TripMateAPI.searchForImage] commons error:', err && err.message);
+    }
 
+    console.log('[TripMateAPI.searchForImage] no image found for:', placeName);
     return null;
   },
 

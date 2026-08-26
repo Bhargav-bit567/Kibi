@@ -1,0 +1,247 @@
+# Analysis of Cleaned JavaScript Files
+
+This document explains what each of the three cleaned JS files does, section by section, in plain language. It is for reading only and is not committed to the repository.
+
+---
+
+## 1. `js/planner.js`
+
+**Purpose:** Builds a complete day-by-day itinerary from the user's destination, dates, budget, and preferences. It fetches real-world data when possible and falls back to generated data when APIs fail or time out.
+
+### `generateItinerary(params)`
+The main entry point. It takes the trip details entered on the Plan Trip page and returns a full itinerary object.
+
+1. **Destination setup**
+   - Looks up the destination in the local data store (`getDestinationById`).
+   - If the destination is not preloaded, it creates a fallback destination object using the form values and sample activities.
+   - If latitude/longitude were provided, it updates the destination coordinates.
+
+2. **Calculate trip length**
+   - `calculateDays(startDate, endDate)` returns the number of days between the start and end dates, with a minimum of 1.
+
+3. **Fetch external data in parallel**
+   - Uses a helper `withTimeout` to cancel slow API calls.
+   - Calls `TripMateAPI.getPlaceInfo` and `TripMateAPI.getAttractions` at the same time.
+   - If coordinates exist, also fetches weather and real hotels in parallel.
+
+4. **Process weather data**
+   - Converts raw weather API output into a normalized object with current conditions and a daily forecast.
+   - `getWeatherIcon(code)` maps weather codes to emoji icons.
+
+5. **Choose a hero image**
+   - Prefers the TripMate image, then the destination's stored image, then asks Gemini for an image.
+
+6. **Prepare activities**
+   - Combines real attractions from TripMate with local sample activities.
+   - `selectActivities(destination, prefs)` scores every activity and returns a sorted list.
+   - Scoring rules:
+     - Real places get a big bonus.
+     - Matching travel style and interests add points.
+     - Affordability adds or subtracts points.
+     - Outdoor activities lose points if rain/snow/thunderstorms are expected and gain points otherwise.
+   - Removes duplicate activity names.
+
+7. **Build the day plan**
+   - `buildDayPlan(scoredActivities, numDays, pace)` creates each day's schedule.
+   - Pace controls how many activities fit in a day: Slow = 3, Moderate = 4, Fast = 5.
+   - The first day starts with an "Arrive" entry and the last day ends with a "Departure" entry.
+   - Activities are placed into time slots in order.
+
+8. **Pick accommodation**
+   - `selectStay(destination, budget, numDays)` chooses a stay within about 30% of the daily budget.
+   - If real hotels were found, the top 3 are kept.
+
+9. **AI enhancement (optional)**
+   - If GeminiAPI is available, sends all gathered data to `GeminiAPI.generateItinerary`.
+   - If Gemini returns a valid itinerary, it replaces the day plan and updates accommodation suggestions.
+   - Flags the result as `aiEnhanced` / `aiPlanned`.
+
+10. **Route optimization**
+    - `enhanceItineraryWithRoutes(itineraryDays)` asks `RoutingAPI.getRoute` for each day that has at least two activities with coordinates, storing distance, duration, and route geometry.
+
+11. **Budget breakdown**
+    - `calculateBudgetBreakdown(...)` estimates transport, stay, food, and activity costs, then scales them to match the user's total budget.
+
+12. **Return value**
+    - Returns a large object containing destination, dates, itinerary, stay, accommodations, budget, image, weather, and AI flags.
+
+### `searchRealHotels(lat, lon)`
+Queries OpenStreetMap's Overpass API for hotels, hostels, guest houses, apartments, and resorts near the destination. Filters and deduplicates results, assigns cost categories, and returns up to 6 options.
+
+### `getLocalSampleActivities()`
+Returns a small fallback list of generic activities used when no destination-specific data is available.
+
+---
+
+## 2. `js/trips.js`
+
+**Purpose:** Handles the My Trips page, trip discovery details, the Plan Trip form, the generated itinerary display, and the map modal.
+
+### Page router (`DOMContentLoaded`)
+Checks `document.body.dataset.page` and initializes the correct module:
+- `my-trips` → `initMyTrips`
+- `trip-details` → `initTripDetails`
+- `plan-trip` → `initPlanTrip`
+- `itinerary` → `initItineraryPage`
+- `discover` / `profile` → other modules (out of scope for the cleanup)
+
+### Image helpers
+- `hashString(str)` / `deterministicFallbackImage(destination)` pick a consistent fallback Unsplash image based on the destination name.
+- `getDestinationImage(destination)` tries TripMate for a place image, then an image search, then the deterministic fallback.
+
+### `initMyTrips(user)`
+Sets up tab switching and renders three tabs:
+- **Planned trips** from `getUserTrips`
+- **Joined trips** from `getUserJoinRequests` matched against all trips
+- **Saved trips** from `getSavedTrips`
+
+`renderEmptyState(...)` builds the "no items yet" card with a call-to-action button.
+
+`renderTripCard(trip, showDelete, status, savedView)` builds the HTML for a trip card showing image, title, dates, budget, and member count. Clicking the card navigates to the itinerary or saved-itinerary page.
+
+### `initTripDetails()`
+Renders a public trip detail page for trips shared on the Discover page. It shows:
+- Hero image with title, dates, and budget
+- Description and interest tags
+- Compatibility score for the logged-in user
+- Day-by-day itinerary
+- Member list
+- Join / Save buttons
+
+### `initPlanTrip()`
+Powers the Plan Trip form.
+
+1. **Destination autocomplete**
+   - Listens to input on `#destSearch`.
+   - Debounces typing by 250ms.
+   - Calls `GeocodingAPI.searchDestination` and shows suggestion items.
+   - Clicking a suggestion fills hidden fields for ID, latitude, and longitude.
+   - Clicking outside closes the suggestion list.
+
+2. **Budget prefill**
+   - If the logged-in user has a budget range, sets the budget input to the midpoint.
+
+3. **Chips**
+   - Toggles `.active` on style and interest chips when clicked.
+
+4. **Form submit**
+   - Validates destination, dates, budget (minimum ₹1,000), and date order.
+   - Shows a loading spinner on the submit button.
+   - Calls `generateItinerary` from `planner.js`.
+   - Stores the result in `sessionStorage` as `wm_generated_itinerary`.
+   - Redirects to `itinerary.html#overview` after a short delay.
+   - Shows error toasts if anything fails.
+
+### `initItineraryPage()` / `runInitItineraryPage()`
+Loads an itinerary in two ways:
+- If the URL has `?id=...`, it tries to load a saved trip from storage.
+- Otherwise, it reads the generated itinerary from `sessionStorage`.
+- If neither is found, it redirects to Plan Trip.
+- Calls `renderLoadedItinerary` to display the page.
+
+### `renderLoadedItinerary(itinerary)`
+The largest rendering function. It fills every section of the Itinerary page:
+
+1. **Hero**
+   - Sets a background image.
+   - Shows destination, dates, and a short description.
+   - Adds Share and Save Trip buttons.
+   - Save button checks if the trip is already saved, prevents duplicates, and stores the trip.
+
+2. **Day-by-day timeline**
+   - Renders each day as a card with numbered activities.
+   - Activities show time, name, description, and cost.
+   - Uses color cycles for visual variety.
+
+3. **Accommodations**
+   - Rounds up to 3 accommodation cards.
+   - Tries to fetch real hotel images via TripMate image search.
+   - Shows name, type, cost per night, description, and source (real / AI).
+
+4. **Budget estimate**
+   - Shows total budget and a stacked bar chart for stay, food, transport, and activities.
+
+5. **Weather**
+   - Renders current conditions from the stored weather data.
+   - If coordinates exist, refreshes weather and adds sunrise/sunset times.
+
+6. **Gallery**
+   - Fetches up to 6 destination images and appends a gallery section.
+
+7. **Map modal**
+   - Calls `initMapModal` to set up the interactive map.
+
+### `initMapModal(itinerary)`
+Creates a Leaflet map inside a modal.
+
+- Opens when the user clicks "View Map".
+- Geocodes the destination if coordinates are missing.
+- Initializes the map centered on the destination.
+- Adds markers for:
+  - The destination itself
+  - Each accommodation
+  - Each activity with coordinates, colored by day
+- Draws routes between same-day activities using `RoutingAPI`.
+- Closes on close button click, backdrop click, or Escape key.
+
+### `renderWeatherCard(el, weather, sun)`
+Builds a small weather widget showing temperature, condition, rain probability, wind, and optional sunrise/sunset times.
+
+---
+
+## 3. `js/overview.js`
+
+**Purpose:** Adds the "Overview" and "Accommodations" tabs to the Itinerary page. It wraps the existing itinerary renderer from `trips.js` and enriches it with destination information and accommodation details.
+
+### Destination knowledge base
+`DESTINATION_INFO` holds hand-written facts for 10 popular destinations: Paris, Tokyo, New York, Rome, Bali, Manali, Goa, Dubai, London, Sydney.
+
+`getDestinationInfo(destination)` returns the matching entry if the destination name contains one of the known keys.
+
+### `extractJson(text)`
+Strips markdown code fences from AI responses and extracts the first JSON object or array. Used to safely parse Gemini output.
+
+### `askGeminiForOverview(destination)`
+Asks Gemini for a structured JSON overview of the destination: description, best time, cuisine, tips, and attractions.
+
+### `fetchAttractions(destination)`
+Tries TripMate for attractions first. If fewer than 4 are returned, falls back to Gemini for a JSON array of attraction names.
+
+### `showLoadingState()`
+Displays spinner placeholders in the overview fields while data loads.
+
+### `renderAccommodations(itinerary)`
+Renders the Accommodations tab.
+
+- Uses existing accommodations if available.
+- If none exist, asks Gemini for suggestions.
+- Calculates nights, total stay cost, average per night, and number of options.
+- Builds a card for each accommodation with a placeholder image.
+- Fetches real images via TripMate and replaces the placeholder.
+- Updates a summary sidebar with nights, options, average price, and estimated total.
+
+### `renderOverview(itinerary)`
+Renders the Overview tab.
+
+1. **Load data**
+   - Starts with hardcoded destination info.
+   - Fills gaps from TripMate place info.
+   - Fills gaps from Gemini overview.
+   - Fetches attractions if still missing.
+
+2. **Fill sections**
+   - Description and "About [Destination]" heading.
+   - Stats cards: duration, number of activities, interests count, total budget.
+   - Highlights: picks up to 4 activities matching categories like culture, food, nature, or shopping.
+   - Attractions: combines known attractions with actual itinerary activities.
+   - Timeline preview: first 3 days with start/end times.
+   - Quick info: dates, duration, budget, travel style, group preference.
+   - Best time, cuisine list, and travel tips.
+
+### Tab switching
+`switchItinTab(tabName)` updates the active tab button and shows/hides the matching tab panel. It also updates the URL hash and scrolls the tab content into view.
+
+`initOverviewTabs()` attaches click handlers and selects the initial tab based on the URL hash.
+
+### `wrapRender()`
+Wraps the original `renderLoadedItinerary` from `trips.js`. After the original renderer finishes, it automatically calls `renderOverview` and `renderAccommodations` so the new tabs are populated. This lets `overview.js` extend the itinerary page without changing `trips.js`.
