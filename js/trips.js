@@ -609,7 +609,29 @@ function renderLoadedItinerary(itinerary) {
 
     if (typeof getDestinationImage === 'function') {
       getDestinationImage(itinerary.destination)
-        .then(url => { if (url) renderHero(url, null); })
+        .then(url => {
+          if (!url) {
+            console.log('[renderLoadedItinerary] no API image returned; keeping fallback');
+            return;
+          }
+          console.log('[renderLoadedItinerary] API image received, preloading:', url);
+          const img = new Image();
+          img.onload = () => {
+            console.log('[renderLoadedItinerary] API image loaded, updating hero');
+            const bg = document.getElementById('itinHeroBg');
+            if (bg) {
+              bg.style.backgroundImage = `url('${url}')`;
+              bg.classList.add('opacity-0');
+              requestAnimationFrame(() => bg.classList.remove('opacity-0'));
+            } else {
+              renderHero(url, null);
+            }
+          };
+          img.onerror = () => {
+            console.warn('[renderLoadedItinerary] API image failed to load, keeping fallback:', url);
+          };
+          img.src = url;
+        })
         .catch(() => {});
     }
   }
