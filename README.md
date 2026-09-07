@@ -15,7 +15,7 @@
 <br>
 
 <a href="https://kibi-mu.vercel.app/">
-  <img src="hero.png" alt="Kibi Travel Planner" width="900"/>
+  <img src="assets/images/home-page.png" alt="Kibi Travel Planner" width="900"/>
 </a>
 
 <br><br>
@@ -170,7 +170,7 @@ Explore destinations and start building travel inspiration.
 
 <div align="center">
 
-<img src="hero.png" width="850" alt="Kibi Discover Page"/>
+<img src="assets/images/home-page.png" width="850" alt="Kibi Discover Page"/>
 
 </div>
 
@@ -182,7 +182,7 @@ Visualize destinations and places that can become part of your trip.
 
 <div align="center">
 
-<img src="map.png" width="850" alt="Kibi Map"/>
+<img src="assets/images/explore-page.png" width="850" alt="Kibi Map"/>
 
 </div>
 
@@ -194,7 +194,7 @@ Create the details of your trip and organize the journey.
 
 <div align="center">
 
-<img src="plan.png" width="850" alt="Kibi Trip Planner"/>
+<img src="assets/images/plan-page.png" width="850" alt="Kibi Trip Planner"/>
 
 </div>
 
