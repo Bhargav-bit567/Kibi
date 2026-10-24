@@ -592,6 +592,7 @@
 
   <script src="js/api/api-config.js?v=15"></script>
   <script src="js/api/api-cache.js?v=15"></script>
+  <script src="js/api/apiClient.js?v=15"></script>
   <script src="js/api/geocoding-api.js?v=15"></script>
   <script src="js/api/weather-api.js?v=15"></script>
   <script src="js/api/places-api.js?v=15"></script>
@@ -653,11 +654,11 @@
       manali:     'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=800&q=80',
       jibhi:      'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
       kashmir:    'https://images.unsplash.com/photo-1566837945700-30057527ade0?w=800&q=80',
-      rishikesh:  'https://images.unsplash.com/photo-1591780512803-b054238e8ec4?w=800&q=80',
+      rishikesh:  'https://upload.wikimedia.org/wikipedia/commons/c/c7/Ganga_River_%2C_Rishikesh%2C_March_2019.jpg',
       leh:        'https://images.unsplash.com/photo-1581793745862-99fde7fa73d2?w=800&q=80',
       goa:        'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=800&q=80',
-      munnar:     'https://images.unsplash.com/photo-1590176296553-18b8d66f7e06?w=800&q=80',
-      udaipur:    'https://images.unsplash.com/photo-1615836245337-f5b9b2303f1c?w=800&q=80',
+      munnar:     'https://upload.wikimedia.org/wikipedia/commons/2/27/Landscape_view_of_Echo_Point_Munnar%2C_Kerela%2C_India.jpg',
+      udaipur:    'https://upload.wikimedia.org/wikipedia/commons/9/9f/Aravalli_Range_l_Udaipur_l_Rajasthan.jpg',
       andaman:    'https://images.unsplash.com/photo-1589308078059-be1415eab4c3?w=800&q=80',
       meghalaya:  'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80',
       coorg:      'https://images.unsplash.com/photo-1571401835393-8c5f35328320?w=800&q=80',
@@ -688,6 +689,14 @@
     const curMonth = () => MONTHS_SHORT[new Date().getMonth()];
 
     async function fetchImg(name) {
+      // Use apiClient.getImages (Wikimedia Commons) for scenic photos
+      if (typeof getImages === 'function') {
+        try {
+          const urls = await getImages(name);
+          if (urls && urls.length > 0) return urls[0];
+        } catch (_) {}
+      }
+      // Fallback: TripMateAPI Wikipedia search
       try {
         if (window.TripMateAPI) {
           const info = await TripMateAPI.getPlaceInfo(name);

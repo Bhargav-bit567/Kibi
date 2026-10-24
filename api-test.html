@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <meta name="description" content="Kibi API Tester — Test and debug all destination data APIs">
+  <title>API Tester — Kibi</title>
+
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Be+Vietnam+Pro:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/animations.css"/>
+
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary":    "#005da7",
+            "secondary":  "#01658c",
+            "sage":       "#6B8E6E",
+            "charcoal":   "#0F1419",
+            "cream":      "#F7F5F0",
+            "cream-dark": "#EDEAE3",
+            "sand":       "#C4B8A5"
+          },
+          fontFamily: {
+            sans:    ["Inter", "sans-serif"],
+            serif:   ["Outfit", "sans-serif"],
+            heading: ["Plus Jakarta Sans", "sans-serif"],
+          },
+          boxShadow: {
+            soft: "0 2px 12px rgba(0,0,0,0.07)",
+            card: "0 4px 24px rgba(0,0,0,0.10)",
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    body { background-color: #F7F5F0; }
+    html.dark body { background-color: #07090E !important; color: #E2E8F0; }
+
+    .hero-banner {
+      background: linear-gradient(135deg, #005da7 0%, #01658c 50%, #6B8E6E 100%);
+      position: relative; overflow: hidden;
+    }
+    .hero-banner::before {
+      content: ''; position: absolute; inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+
+    .api-card {
+      background: #fff; border: 1px solid #EDE9E0; border-radius: 1.25rem;
+      transition: box-shadow 0.25s ease, transform 0.25s ease;
+    }
+    .api-card:hover { box-shadow: 0 8px 32px rgba(0,93,167,0.09); transform: translateY(-2px); }
+    html.dark .api-card { background: rgba(15,23,42,0.85); border-color: rgba(255,255,255,0.08); }
+
+    .tab-pill-row { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .tab-pill {
+      display: inline-flex; align-items: center; gap: 0.45rem;
+      padding: 0.55rem 1.15rem; border-radius: 9999px;
+      font-size: 0.85rem; font-weight: 600; cursor: pointer;
+      background: #EDEAE3; color: #6B6B6B; border: 2px solid transparent;
+      transition: all 0.2s ease; white-space: nowrap;
+    }
+    .tab-pill:hover { background: #ddd9d0; color: #2D2D2D; }
+    .tab-pill.active { background: #005da7; color: #fff; border-color: #005da7; box-shadow: 0 4px 12px rgba(0,93,167,0.25); }
+    html.dark .tab-pill { background: rgba(255,255,255,0.07); color: #94a3b8; }
+    html.dark .tab-pill:hover { background: rgba(255,255,255,0.12); color: #e2e8f0; }
+    html.dark .tab-pill.active { background: #005da7; color: #fff; }
+
+    .tab-pane { display: none; animation: fadeSlide 0.22s ease; }
+    .tab-pane.active { display: grid; }
+    @keyframes fadeSlide { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+
+    .api-input {
+      width: 100%; padding: 0.65rem 1rem; border: 1.5px solid #E5E2DA;
+      border-radius: 0.6rem; font-size: 0.9rem; background: #faf9f7;
+      color: #2D2D2D; transition: border-color 0.2s; outline: none;
+    }
+    .api-input:focus { border-color: #005da7; background: #fff; }
+    html.dark .api-input { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.12); color: #e2e8f0; }
+    html.dark .api-input:focus { border-color: #3b82f6; }
+
+    .btn-test {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.65rem 1.5rem; border-radius: 9999px;
+      font-weight: 600; font-size: 0.9rem; background: #005da7; color: #fff;
+      cursor: pointer; transition: background 0.2s, box-shadow 0.2s, transform 0.15s;
+      box-shadow: 0 4px 12px rgba(0,93,167,0.2);
+    }
+    .btn-test:hover { background: #004a8a; transform: translateY(-1px); box-shadow: 0 6px 16px rgba(0,93,167,0.3); }
+    .btn-test:active { transform: translateY(0); }
+    .btn-test:disabled { opacity: 0.6; pointer-events: none; }
+
+    .code-block {
+      font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+      background: #1e293b; color: #93c5fd; border-radius: 0.65rem;
+      padding: 0.9rem 1rem; overflow-x: auto; overflow-y: auto;
+      max-height: 260px; font-size: 0.78rem; line-height: 1.6;
+      word-break: break-all; white-space: pre-wrap;
+    }
+    .code-block.response { color: #86efac; }
+
+    .copy-btn {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      padding: 0.28rem 0.7rem; border-radius: 0.4rem;
+      font-size: 0.73rem; font-weight: 600;
+      background: rgba(0,0,0,0.06); color: #64748b;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .copy-btn:hover { background: rgba(0,0,0,0.12); color: #1e293b; }
+    html.dark .copy-btn { background: rgba(255,255,255,0.08); color: #94a3b8; }
+    html.dark .copy-btn:hover { background: rgba(255,255,255,0.15); color: #fff; }
+
+    .status-badge {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.4rem 0.9rem; border-radius: 9999px;
+      font-size: 0.8rem; font-weight: 700;
+    }
+    .status-idle    { background:#f1f5f9; color:#64748b; }
+    .status-testing { background:#ede9fe; color:#7c3aed; }
+    .status-success { background:#dcfce7; color:#15803d; }
+    .status-error   { background:#fee2e2; color:#dc2626; }
+    .status-dot { width:8px; height:8px; border-radius:50%; background:currentColor; flex-shrink:0; }
+    .status-testing .status-dot { animation: pulse 1s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+
+    .img-preview-strip { display:flex; gap:0.75rem; flex-wrap:wrap; }
+    .img-preview-strip img {
+      width: 140px; height: 96px; object-fit: cover;
+      border-radius: 0.6rem; border: 2px solid #E5E2DA; transition: transform 0.2s;
+    }
+    .img-preview-strip img:hover { transform: scale(1.04); }
+    html.dark .img-preview-strip img { border-color: rgba(255,255,255,0.12); }
+
+    .section-label {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; color: #9A9A9A; margin-bottom: 0.35rem; display: block;
+    }
+    .api-chip {
+      display: inline-flex; align-items: center; gap: 0.3rem;
+      padding: 0.22rem 0.65rem; border-radius: 9999px;
+      font-size: 0.68rem; font-weight: 700;
+      background: #e8f0fe; color: #1a73e8;
+    }
+    html.dark .api-chip { background: rgba(59,130,246,0.15); color:#93c5fd; }
+
+    .stat-strip {
+      display: grid; grid-template-columns: repeat(5, 1fr);
+      gap: 1px; background: #E5E2DA; border-radius: 1rem; overflow: hidden;
+    }
+    html.dark .stat-strip { background: rgba(255,255,255,0.08); }
+    .stat-item { background: #fff; padding: 1rem 0.5rem; text-align: center; transition: background 0.2s; }
+    .stat-item:hover { background: #f0f4ff; }
+    html.dark .stat-item { background: rgba(15,23,42,0.9); }
+    html.dark .stat-item:hover { background: rgba(59,130,246,0.08); }
+    .stat-emoji { font-size: 1.5rem; line-height: 1; margin-bottom: 0.3rem; }
+    .stat-name { font-size: 0.68rem; font-weight: 700; color: #6B6B6B; }
+    html.dark .stat-name { color: #94a3b8; }
+    .stat-free {
+      display: inline-block; margin-top: 0.25rem;
+      font-size: 0.6rem; font-weight: 700;
+      padding: 0.1rem 0.4rem; border-radius: 9999px;
+      background: #dcfce7; color: #15803d;
+    }
+
+    .postman-hint {
+      display: flex; align-items: flex-start; gap: 0.65rem;
+      padding: 0.85rem 1rem; background: #fffbeb;
+      border: 1px solid #fde68a; border-radius: 0.65rem;
+      font-size: 0.8rem; color: #92400e;
+    }
+    html.dark .postman-hint { background: rgba(253,230,138,0.06); border-color: rgba(253,230,138,0.2); color: #fcd34d; }
+
+    .card-icon {
+      width: 2.5rem; height: 2.5rem; border-radius: 0.75rem;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.2rem; flex-shrink: 0;
+    }
+
+    @media (max-width: 640px) {
+      .stat-strip { grid-template-columns: repeat(3,1fr); }
+    }
+  </style>
+</head>
+
+<body class="min-h-screen" data-page="api-test">
+
+<nav id="navbar" class="sticky top-0 z-50"></nav>
+
+<!-- HERO -->
+<section class="hero-banner py-14 px-4">
+  <div class="relative z-10 max-w-4xl mx-auto text-center">
+    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-white/80 text-xs font-semibold mb-5 backdrop-blur-sm">
+      &#x1F9EA; Developer Tools
+    </div>
+    <h1 class="text-4xl md:text-5xl font-serif font-bold text-white mb-3 leading-tight">API Tester</h1>
+    <p class="text-white/70 text-lg max-w-xl mx-auto">
+      Test every Kibi API live. Copy request URLs into Postman or Thunderclient for deeper inspection.
+    </p>
+  </div>
+</section>
+
+<!-- MAIN -->
+<main class="max-w-6xl mx-auto px-4 py-10 space-y-8">
+
+  <!-- Stat strip -->
+  <div class="stat-strip">
+    <div class="stat-item">
+      <div class="stat-emoji">&#x1F30D;</div>
+      <div class="stat-name">Geocoding</div>
+      <span class="stat-free">FREE</span>
+    </div>
+    <div class="stat-item">
+      <div class="stat-emoji">&#x1F5BC;</div>
+      <div class="stat-name">Images</div>
+      <span class="stat-free">FREE</span>
+    </div>
+    <div class="stat-item">
+      <div class="stat-emoji">&#x26C5;</div>
+      <div class="stat-name">Weather</div>
+      <span class="stat-free">FREE</span>
+    </div>
+    <div class="stat-item">
+      <div class="stat-emoji">&#x1F4CD;</div>
+      <div class="stat-name">POIs</div>
+      <span class="stat-free">FREE</span>
+    </div>
+    <div class="stat-item">
+      <div class="stat-emoji">&#x1F4D6;</div>
+      <div class="stat-name">Descriptions</div>
+      <span class="stat-free">FREE</span>
+    </div>
+  </div>
+
+  <!-- Tab pills -->
+  <div class="tab-pill-row" role="tablist">
+    <button class="tab-pill active" data-tab="geocoding">&#x1F30D; Geocoding</button>
+    <button class="tab-pill" data-tab="images">&#x1F5BC; Images</button>
+    <button class="tab-pill" data-tab="weather">&#x26C5; Weather</button>
+    <button class="tab-pill" data-tab="pois">&#x1F4CD; POIs</button>
+    <button class="tab-pill" data-tab="descriptions">&#x1F4D6; Descriptions</button>
+  </div>
+
+  <!-- ═══ GEOCODING ═══ -->
+  <div class="tab-pane active grid-cols-1 lg:grid-cols-2 gap-6" id="tab-geocoding">
+    <div class="api-card p-6 space-y-4">
+      <div class="flex items-center gap-3">
+        <div class="card-icon bg-blue-50 dark:bg-blue-900/30">&#x1F30D;</div>
+        <div>
+          <h2 class="font-serif font-semibold text-lg text-charcoal dark:text-white">Geocoding</h2>
+          <span class="api-chip">Nominatim &middot; OpenStreetMap</span>
+        </div>
+      </div>
+      <p class="text-sm text-gray-500 dark:text-slate-400">Convert a place name into latitude &amp; longitude coordinates.</p>
+      <div>
+        <label class="section-label" for="geocoding-place">Place Name</label>
+        <input id="geocoding-place" type="text" placeholder="e.g., Manali, Himachal Pradesh" class="api-input" autocomplete="off"/>
+      </div>
+      <button id="geocoding-test" class="btn-test w-full justify-center">&#x1F50D; Test Geocoding</button>
+      <div id="geocoding-status" class="hidden">
+        <div class="status-badge status-idle" id="geocoding-status-badge"><div class="status-dot"></div><span></span></div>
+      </div>
+      <div id="geocoding-url" class="hidden space-y-1">
+        <div class="flex items-center justify-between">
+          <span class="section-label">Request URL</span>
+          <button class="copy-btn" onclick="copyText('geocoding-url-text',this)">&#x1F4CB; Copy</button>
+        </div>
+        <div class="code-block" id="geocoding-url-text"></div>
+      </div>
+    </div>
+    <div class="api-card p-6 space-y-4">
+      <span class="section-label">Response</span>
+      <div id="geocoding-response" class="hidden">
+        <div class="code-block response" id="geocoding-response-text"></div>
+      </div>
+      <div id="geocoding-empty" class="flex flex-col items-center justify-center py-12 text-gray-400 dark:text-slate-500">
+        <div class="text-5xl mb-3 opacity-30">&#x1F30D;</div>
+        <p class="text-sm">Results will appear here</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ IMAGES ═══ -->
+  <div class="tab-pane grid-cols-1 gap-6" id="tab-images">
+    <div class="api-card p-6 space-y-5">
+      <div class="flex items-center gap-3">
+        <div class="card-icon bg-purple-50 dark:bg-purple-900/30">&#x1F5BC;</div>
+        <div>
+          <h2 class="font-serif font-semibold text-lg text-charcoal dark:text-white">Images</h2>
+          <span class="api-chip">Wikimedia Commons &rarr; Wikipedia</span>
+        </div>
+      </div>
+      <p class="text-sm text-gray-500 dark:text-slate-400">Fetch scenic landscape photos. Maps and flags are auto-filtered.</p>
+      <div class="postman-hint">
+        <span>&#x2139;&#xFE0F;</span>
+        <span>This is a <strong>2-step call</strong>: first search Wikimedia for filenames, then imageinfo to get direct URLs. Both shown below.</span>
+      </div>
+      <div class="flex gap-3 items-end">
+        <div class="flex-1">
+          <label class="section-label" for="images-place">Place Name</label>
+          <input id="images-place" type="text" placeholder="e.g., Kashmir" class="api-input" autocomplete="off"/>
+        </div>
+        <button id="images-test" class="btn-test shrink-0">&#x1F50D; Fetch Images</button>
+      </div>
+      <div id="images-status" class="hidden">
+        <div class="status-badge status-idle" id="images-status-badge"><div class="status-dot"></div><span></span></div>
+      </div>
+      <div id="images-url" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="section-label">Step 1 &mdash; Search URL</span>
+            <button class="copy-btn" onclick="copyText('images-url-text',this)">&#x1F4CB; Copy</button>
+          </div>
+          <div class="code-block" id="images-url-text"></div>
+        </div>
+        <div class="space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="section-label">Step 2 &mdash; ImageInfo URL</span>
+            <button class="copy-btn" onclick="copyText('images-url-text2',this)">&#x1F4CB; Copy</button>
+          </div>
+          <div class="code-block" id="images-url-text2">Run the test to see this URL</div>
+        </div>
+      </div>
+      <div id="images-empty" class="hidden text-center py-2 text-sm text-gray-400"></div>
+      <div id="images-preview" class="hidden space-y-2">
+        <span class="section-label">Preview</span>
+        <div class="img-preview-strip" id="images-preview-strip"></div>
+      </div>
+      <div id="images-response" class="hidden space-y-1">
+        <div class="flex items-center justify-between">
+          <span class="section-label">Response (Image URLs)</span>
+          <button class="copy-btn" onclick="copyText('images-response-text',this)">&#x1F4CB; Copy</button>
+        </div>
+        <div class="code-block response" id="images-response-text"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ WEATHER ═══ -->
+  <div class="tab-pane grid-cols-1 lg:grid-cols-2 gap-6" id="tab-weather">
+    <div class="api-card p-6 space-y-4">
+      <div class="flex items-center gap-3">
+        <div class="card-icon bg-sky-50 dark:bg-sky-900/30">&#x26C5;</div>
+        <div>
+          <h2 class="font-serif font-semibold text-lg text-charcoal dark:text-white">Weather</h2>
+          <span class="api-chip">Open-Meteo &middot; No auth</span>
+        </div>
+      </div>
+      <p class="text-sm text-gray-500 dark:text-slate-400">Get current conditions for any coordinates. No API key required.</p>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="section-label" for="weather-lat">Latitude</label>
+          <input id="weather-lat" type="number" placeholder="32.24" step="0.001" class="api-input"/>
+        </div>
+        <div>
+          <label class="section-label" for="weather-lon">Longitude</label>
+          <input id="weather-lon" type="number" placeholder="77.18" step="0.001" class="api-input"/>
+        </div>
+      </div>
+      <p class="text-xs text-gray-400 -mt-1">Quick fills:
+        <button class="text-primary underline text-xs ml-1" onclick="fillCoords(32.24,77.18)">Manali</button>
+        <button class="text-primary underline text-xs ml-1" onclick="fillCoords(15.29,74.12)">Goa</button>
+        <button class="text-primary underline text-xs ml-1" onclick="fillCoords(30.08,78.26)">Rishikesh</button>
+        <button class="text-primary underline text-xs ml-1" onclick="fillCoords(34.08,74.79)">Kashmir</button>
+      </p>
+      <button id="weather-test" class="btn-test w-full justify-center">&#x26C5; Get Weather</button>
+      <div id="weather-status" class="hidden">
+        <div class="status-badge status-idle" id="weather-status-badge"><div class="status-dot"></div><span></span></div>
+      </div>
+      <div id="weather-url" class="hidden space-y-1">
+        <div class="flex items-center justify-between">
+          <span class="section-label">Request URL</span>
+          <button class="copy-btn" onclick="copyText('weather-url-text',this)">&#x1F4CB; Copy</button>
+        </div>
+        <div class="code-block" id="weather-url-text"></div>
+      </div>
+    </div>
+    <div class="api-card p-6 space-y-4">
+      <div id="weather-widget" class="hidden">
+        <div class="rounded-xl bg-gradient-to-br from-sky-500 to-blue-700 p-5 text-white mb-4">
+          <div class="flex items-center justify-between">
+            <div>
+              <div id="ww-condition" class="text-sm font-semibold opacity-80"></div>
+              <div id="ww-temp" class="text-5xl font-bold mt-1"></div>
+            </div>
+            <div id="ww-icon" class="text-6xl"></div>
+          </div>
+          <div id="ww-wind" class="text-xs opacity-70 pt-2"></div>
+        </div>
+      </div>
+      <div id="weather-response" class="hidden space-y-1">
+        <span class="section-label">Raw Response</span>
+        <div class="code-block response" id="weather-response-text"></div>
+      </div>
+      <div id="weather-empty" class="flex flex-col items-center justify-center py-12 text-gray-400 dark:text-slate-500">
+        <div class="text-5xl mb-3 opacity-30">&#x26C5;</div>
+        <p class="text-sm">Enter coordinates to see weather</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ POIs ═══ -->
+  <div class="tab-pane grid-cols-1 lg:grid-cols-2 gap-6" id="tab-pois">
+    <div class="api-card p-6 space-y-4">
+      <div class="flex items-center gap-3">
+        <div class="card-icon bg-green-50 dark:bg-green-900/30">&#x1F4CD;</div>
+        <div>
+          <h2 class="font-serif font-semibold text-lg text-charcoal dark:text-white">Points of Interest</h2>
+          <span class="api-chip">Overpass &middot; OpenStreetMap</span>
+        </div>
+      </div>
+      <p class="text-sm text-gray-500 dark:text-slate-400">Find nearby hotels, restaurants and attractions. POST request.</p>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="section-label" for="pois-lat">Latitude</label>
+          <input id="pois-lat" type="number" placeholder="32.24" step="0.001" class="api-input"/>
+        </div>
+        <div>
+          <label class="section-label" for="pois-lon">Longitude</label>
+          <input id="pois-lon" type="number" placeholder="77.18" step="0.001" class="api-input"/>
+        </div>
+      </div>
+      <p class="text-xs text-gray-400 -mt-1">Quick fills:
+        <button class="text-primary underline text-xs ml-1" onclick="fillPOICoords(32.24,77.18)">Manali</button>
+        <button class="text-primary underline text-xs ml-1" onclick="fillPOICoords(15.29,74.12)">Goa</button>
+        <button class="text-primary underline text-xs ml-1" onclick="fillPOICoords(30.08,78.26)">Rishikesh</button>
+      </p>
+      <div>
+        <label class="section-label" for="pois-radius">Search Radius (metres)</label>
+        <input id="pois-radius" type="number" placeholder="1000" value="1000" class="api-input"/>
+      </div>
+      <button id="pois-test" class="btn-test w-full justify-center">&#x1F4CD; Find POIs</button>
+      <div id="pois-status" class="hidden">
+        <div class="status-badge status-idle" id="pois-status-badge"><div class="status-dot"></div><span></span></div>
+      </div>
+      <div id="pois-url" class="hidden space-y-1">
+        <div class="flex items-center justify-between">
+          <span class="section-label">Endpoint (POST)</span>
+          <button class="copy-btn" onclick="copyText('pois-url-text',this)">&#x1F4CB; Copy</button>
+        </div>
+        <div class="code-block" id="pois-url-text"></div>
+      </div>
+    </div>
+    <div class="api-card p-6 space-y-3">
+      <div id="pois-list" class="hidden space-y-2"></div>
+      <div id="pois-response" class="hidden space-y-1">
+        <div class="flex items-center justify-between">
+          <span class="section-label">Raw Response</span>
+          <button class="copy-btn" onclick="copyText('pois-response-text',this)">&#x1F4CB; Copy</button>
+        </div>
+        <div class="code-block response" id="pois-response-text"></div>
+      </div>
+      <div id="pois-empty" class="flex flex-col items-center justify-center py-12 text-gray-400 dark:text-slate-500">
+        <div class="text-5xl mb-3 opacity-30">&#x1F4CD;</div>
+        <p class="text-sm">Enter coordinates to find nearby places</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ DESCRIPTIONS ═══ -->
+  <div class="tab-pane grid-cols-1 lg:grid-cols-2 gap-6" id="tab-descriptions">
+    <div class="api-card p-6 space-y-4">
+      <div class="flex items-center gap-3">
+        <div class="card-icon bg-amber-50 dark:bg-amber-900/30">&#x1F4D6;</div>
+        <div>
+          <h2 class="font-serif font-semibold text-lg text-charcoal dark:text-white">Descriptions</h2>
+          <span class="api-chip">Wikipedia REST API</span>
+        </div>
+      </div>
+      <p class="text-sm text-gray-500 dark:text-slate-400">Fetch a destination's summary and hero image from Wikipedia.</p>
+      <div>
+        <label class="section-label" for="desc-place">Place Name</label>
+        <input id="desc-place" type="text" placeholder="e.g., Rishikesh" class="api-input" autocomplete="off"/>
+      </div>
+      <button id="desc-test" class="btn-test w-full justify-center">&#x1F4D6; Get Description</button>
+      <div id="desc-status" class="hidden">
+        <div class="status-badge status-idle" id="desc-status-badge"><div class="status-dot"></div><span></span></div>
+      </div>
+      <div id="desc-url" class="hidden space-y-1">
+        <div class="flex items-center justify-between">
+          <span class="section-label">Request URL</span>
+          <button class="copy-btn" onclick="copyText('desc-url-text',this)">&#x1F4CB; Copy</button>
+        </div>
+        <div class="code-block" id="desc-url-text"></div>
+      </div>
+    </div>
+    <div class="api-card p-6 space-y-4">
+      <div id="desc-widget" class="hidden space-y-3">
+        <img id="desc-img" src="" alt="" class="w-full h-44 object-cover rounded-xl bg-gray-100 dark:bg-slate-700"/>
+        <div>
+          <h3 id="desc-title" class="font-serif font-bold text-xl text-charcoal dark:text-white"></h3>
+          <p id="desc-text" class="text-sm text-gray-600 dark:text-slate-300 mt-2 leading-relaxed"></p>
+        </div>
+      </div>
+      <div id="desc-response" class="hidden space-y-1">
+        <div class="flex items-center justify-between">
+          <span class="section-label">Raw Response</span>
+          <button class="copy-btn" onclick="copyText('desc-response-text',this)">&#x1F4CB; Copy</button>
+        </div>
+        <div class="code-block response" id="desc-response-text"></div>
+      </div>
+      <div id="desc-empty" class="flex flex-col items-center justify-center py-12 text-gray-400 dark:text-slate-500">
+        <div class="text-5xl mb-3 opacity-30">&#x1F4D6;</div>
+        <p class="text-sm">Results will appear here</p>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer id="footer" class="mt-16"></footer>
+
+<script src="js/api/api-cache.js"></script>
+<script src="js/api/apiClient.js"></script>
+<script src="js/app.js"></script>
+<script src="js/api-test.js"></script>
+</body>
+</html>

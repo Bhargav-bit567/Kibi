@@ -33,32 +33,56 @@ async function getDestinationImage(destination) {
     console.log('[getDestinationImage] no destination -> fallback');
     return deterministicFallbackImage('unknown');
   }
-  if (typeof TripMateAPI === 'undefined') {
-    console.log('[getDestinationImage] TripMateAPI missing -> fallback');
-    return deterministicFallbackImage(destination);
+  
+  // Try new apiClient first if available
+  if (typeof getImages !== 'undefined' && getImages) {
+    try {
+      const images = await getImages(destination);
+      console.log('[getDestinationImage] apiClient.getImages result:', images);
+      if (images && Array.isArray(images) && images.length > 0) {
+        const imageUrl = images[0];
+        console.log('[getDestinationImage] using apiClient image:', imageUrl);
+        // Cache the image for this destination
+        try {
+          if (typeof ApiCache !== 'undefined' && ApiCache) {
+            ApiCache.set(`dest_image_${destination}`, imageUrl, 1440);
+            console.log('[getDestinationImage] cached image for:', destination);
+          }
+        } catch (e) {
+          console.warn('[getDestinationImage] cache failed:', e);
+        }
+        return imageUrl;
+      }
+      console.log('[getDestinationImage] apiClient returned empty array');
+    } catch (e) {
+      console.warn('[getDestinationImage] apiClient.getImages failed:', e);
+    }
   }
 
-  try {
-    const place = await TripMateAPI.getPlaceInfo(destination);
-    console.log('[getDestinationImage] getPlaceInfo result:', place);
-    if (place && place.image) {
-      console.log('[getDestinationImage] using place image:', place.image);
-      return place.image;
+  // Fallback to TripMateAPI if available
+  if (typeof TripMateAPI !== 'undefined') {
+    try {
+      const place = await TripMateAPI.getPlaceInfo(destination);
+      console.log('[getDestinationImage] TripMateAPI.getPlaceInfo result:', place);
+      if (place && place.image) {
+        console.log('[getDestinationImage] using TripMateAPI image:', place.image);
+        return place.image;
+      }
+      console.log('[getDestinationImage] TripMateAPI returned no image');
+    } catch (e) {
+      console.warn('[getDestinationImage] TripMateAPI.getPlaceInfo failed:', e);
     }
-    console.log('[getDestinationImage] getPlaceInfo returned no image');
-  } catch (e) {
-    console.warn('[getDestinationImage] getPlaceInfo failed:', e);
-  }
 
-  try {
-    const img = await TripMateAPI.searchForImage(destination);
-    console.log('[getDestinationImage] searchForImage result:', img);
-    if (img) {
-      console.log('[getDestinationImage] using search image:', img);
-      return img;
+    try {
+      const img = await TripMateAPI.searchForImage(destination);
+      console.log('[getDestinationImage] TripMateAPI.searchForImage result:', img);
+      if (img) {
+        console.log('[getDestinationImage] using TripMateAPI search image:', img);
+        return img;
+      }
+    } catch (e) {
+      console.warn('[getDestinationImage] TripMateAPI.searchForImage failed:', e);
     }
-  } catch (e) {
-    console.warn('[getDestinationImage] searchForImage failed:', e);
   }
 
   console.log('[getDestinationImage] using deterministic fallback for:', destination);
