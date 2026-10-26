@@ -7,7 +7,7 @@ const crypto = require('crypto');
 
 require('dotenv').config({ path: path.join(__dirname, '.env') });
 
-const isProduction = process.env.NODE_ENV === 'production' || !!process.env.VERCEL;
+const isProduction = process.env.NODE_ENV === 'production';
 
 let jwtSecret = process.env.JWT_SECRET;
 if (!jwtSecret) {

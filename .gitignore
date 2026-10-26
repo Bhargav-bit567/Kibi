@@ -14,7 +14,6 @@ config.json
 
 # ── Dependencies & build output ─────────────────────────────
 node_modules/
-.vercel/
 
 # ── Backups, notes & archives ───────────────────────────────
 *.zip

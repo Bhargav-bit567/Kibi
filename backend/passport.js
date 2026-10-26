@@ -17,7 +17,7 @@ if (googleEnabled) {
     clientID: config.googleClientId,
     clientSecret: config.googleClientSecret,
     callbackURL: config.googleCallbackUrl,
-    // Behind Render's/Vercel's proxy the callback URL must be built as https.
+    // Behind Render's proxy the callback URL must be built as https.
     proxy: true
   }, (accessToken, refreshToken, profile, done) => {
     const email = (profile.emails || []).find(e => e.verified !== false);

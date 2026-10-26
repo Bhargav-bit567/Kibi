@@ -1,7 +1,7 @@
 /* ============================================
    Kibi — MongoDB connection
-   The connection promise is cached on `global` so serverless
-   invocations (Vercel) reuse one connection per warm instance.
+   The connection promise is cached on `global` so every request
+   reuses one connection.
    ============================================ */
 
 const mongoose = require('mongoose');

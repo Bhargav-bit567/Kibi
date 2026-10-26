@@ -1,6 +1,6 @@
 /* ============================================
    Kibi — Express application
-   Serves the REST API under /api and (outside Vercel) the static site.
+   Serves the REST API under /api and the static site (../frontend).
    ============================================ */
 
 const path = require('path');
@@ -87,10 +87,8 @@ api.use((err, req, res, next) => {
 
 app.use('/api', api);
 
-/* --- Static site (Vercel serves these files itself) --- */
-if (!process.env.VERCEL) {
-  app.use(express.static(FRONTEND_DIR, { maxAge: config.isProduction ? '1h' : 0 }));
-  app.use((req, res) => res.status(404).sendFile(path.join(FRONTEND_DIR, 'index.html')));
-}
+/* --- Static site --- */
+app.use(express.static(FRONTEND_DIR, { maxAge: config.isProduction ? '1h' : 0 }));
+app.use((req, res) => res.status(404).sendFile(path.join(FRONTEND_DIR, 'index.html')));
 
 module.exports = app;

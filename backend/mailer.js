@@ -2,9 +2,8 @@
    Kibi — Account emails (welcome on sign-up, alert on sign-in)
    Sent through Brevo's HTTPS API when BREVO_API_KEY is set (works on hosts
    that block SMTP, like Render's free plan), otherwise over SMTP with
-   Nodemailer. Sending is awaited (with a timeout) so it also completes on
-   serverless hosts like Vercel, and a mail problem never blocks anyone from
-   signing in. With neither configured, emails are skipped.
+   Nodemailer. Sending is awaited (with a timeout), and a mail problem never
+   blocks anyone from signing in. With neither configured, emails are skipped.
    ============================================ */
 
 const nodemailer = require('nodemailer');
