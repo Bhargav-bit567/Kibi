@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <script src="js/page-skeleton.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Kibi — AI-powered personalized travel planning. Discover destinations, create itineraries, find compatible travel companions.">
+  <title>Kibi — AI Travel Planner</title>
+  <script src="js/tailwind-config.js"></script>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: { blue: '#5C9CE6', dark: '#0A1B29', light: '#F8F9FA' },
+            charcoal: '#0F1419', cream: '#F7F5F0', sage: '#6B8E6E', sand: '#C4B8A5',
+            'text-main': '#2D2D2D', 'text-secondary': '#6B6B6B', 'text-muted': '#9A9A9A',
+          },
+          fontFamily: {
+            sans: ['Inter','sans-serif'], script: ['Caveat','cursive'], heading: ['Outfit','sans-serif'],
+          },
+          boxShadow: { soft: '0 4px 24px rgba(0,0,0,0.05)', card: '0 8px 30px rgba(0,0,0,0.08)' }
+        }
+      }
+    };
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/gooey-nav.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <style>
+    body { background-color:#F8FAFC; color:#1E293B; overflow-x:hidden; transition:background-color 400ms ease,color 400ms ease; }
+    html.dark body { background-color:#0B0F17; color:#E8EAED; }
+    html.dark .hero-bg::before { background:linear-gradient(to bottom,rgba(0,10,25,.55) 0%,rgba(0,0,0,0) 35%,rgba(11,15,23,0) 80%,rgba(11,15,23,1) 100%); }
+    html.dark #planPreviewBorder { border-color:#FFFFFF !important; }
+    .hero-bg { background-image:url('hero.png'); background-size:cover; background-position:center bottom; background-repeat:no-repeat; position:relative; }
+    .hero-bg::before { content:''; position:absolute; inset:0; background:linear-gradient(to bottom,rgba(0,20,40,.25) 0%,rgba(0,0,0,0) 35%,rgba(248,250,252,0) 80%,rgba(248,250,252,1) 100%); z-index:1; }
+    .dotted-path { position:absolute; z-index:0; pointer-events:none; }
+    .path-svg { stroke-dasharray:4,8; stroke:rgba(255,255,255,.6); stroke-width:2; fill:none; }
+    .glass-panel { background:rgba(30,41,59,.4); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,.1); }
+    .glass-card { background:rgba(255,255,255,.1); backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,.2); }
+    .glass-nav { background:rgba(255,255,255,.25); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,.4); }
+    .glass-badge { background:rgba(255,255,255,.2); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,.35); }
+    .itinerary-preview-bg { background:linear-gradient(135deg,rgba(20,30,48,.82) 0%,rgba(36,59,85,.82) 100%),url('https://images.unsplash.com/photo-1474044159687-1ee9f3a51722?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat; backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,.15); }
+    .glass-column { background:rgba(255,255,255,.08); backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,.12); }
+    .glass-item { background:rgba(255,255,255,.12); backdrop-filter:blur(8px); border:1px solid rgba(255,255,255,.18); transition:all .25s ease; }
+    .glass-item:hover { background:rgba(255,255,255,.2); transform:translateY(-2px); }
+    .pricing-card-highlight { background:linear-gradient(180deg,#4A90E2 0%,#357ABD 100%); box-shadow:0 20px 40px -15px rgba(74,144,226,.5); }
+    /* ── Border glow on journey step cards: React Bits' BorderGlow (CSS ported as-is) ──
+       Props: edgeSensitivity 30, coneSpread 25, glowRadius 40, glowIntensity 1, fillOpacity 0.5.
+       Colours: Kibi blues instead of purple/pink, glow hsl(210 90% 72%) instead of warm 40 80 80. */
+    .border-glow-card {
+      --edge-proximity: 0; --cursor-angle: 45deg; --edge-sensitivity: 30;
+      --color-sensitivity: calc(var(--edge-sensitivity) + 20);
+      --glow-padding: 40px; --cone-spread: 25; --fill-opacity: .5;
+      --card-bg: #ffffff;
+      --glow-color: hsl(210deg 90% 72% / 100%); --glow-color-60: hsl(210deg 90% 72% / 60%); --glow-color-50: hsl(210deg 90% 72% / 50%);
+      --glow-color-40: hsl(210deg 90% 72% / 40%); --glow-color-30: hsl(210deg 90% 72% / 30%); --glow-color-20: hsl(210deg 90% 72% / 20%); --glow-color-10: hsl(210deg 90% 72% / 10%);
+      --gradient-one: radial-gradient(at 80% 55%, #4d9bea 0px, transparent 50%);
+      --gradient-two: radial-gradient(at 69% 34%, #7dd3fc 0px, transparent 50%);
+      --gradient-three: radial-gradient(at 8% 6%, #005da7 0px, transparent 50%);
+      --gradient-four: radial-gradient(at 41% 38%, #4d9bea 0px, transparent 50%);
+      --gradient-five: radial-gradient(at 86% 85%, #7dd3fc 0px, transparent 50%);
+      --gradient-six: radial-gradient(at 82% 18%, #005da7 0px, transparent 50%);
+      --gradient-seven: radial-gradient(at 51% 4%, #7dd3fc 0px, transparent 50%);
+      --gradient-base: linear-gradient(#4d9bea 0 100%);
+      position: relative; isolation: isolate; overflow: visible; display: flex; flex-direction: column;
+    }
+    html.dark .border-glow-card { --card-bg: #0F1419; }
+    .border-glow-card:not([class*="translate-y"]) { transform: translate3d(0, 0, 0.01px); }
+    .border-glow-card::before, .border-glow-card::after, .border-glow-card > .edge-light {
+      content: ""; position: absolute; inset: 0; border-radius: inherit; transition: opacity .25s ease-out; z-index: -1; }
+    .border-glow-card:not(:hover)::before, .border-glow-card:not(:hover)::after, .border-glow-card:not(:hover) > .edge-light {
+      opacity: 0; transition: opacity .75s ease-in-out; }
+    /* coloured mesh-gradient border */
+    .border-glow-card::before {
+      border: 1px solid transparent;
+      background: linear-gradient(var(--card-bg) 0 100%) padding-box, linear-gradient(rgb(255 255 255 / 0%) 0% 100%) border-box,
+        var(--gradient-one) border-box, var(--gradient-two) border-box, var(--gradient-three) border-box, var(--gradient-four) border-box,
+        var(--gradient-five) border-box, var(--gradient-six) border-box, var(--gradient-seven) border-box, var(--gradient-base) border-box;
+      opacity: calc((var(--edge-proximity) - var(--color-sensitivity)) / (100 - var(--color-sensitivity)));
+      mask-image: conic-gradient(from var(--cursor-angle) at center, black calc(var(--cone-spread) * 1%), transparent calc((var(--cone-spread) + 15) * 1%),
+        transparent calc((100 - var(--cone-spread) - 15) * 1%), black calc((100 - var(--cone-spread)) * 1%));
+    }
+    /* coloured mesh-gradient fill near the edges */
+    .border-glow-card::after {
+      border: 1px solid transparent;
+      background: var(--gradient-one) padding-box, var(--gradient-two) padding-box, var(--gradient-three) padding-box, var(--gradient-four) padding-box,
+        var(--gradient-five) padding-box, var(--gradient-six) padding-box, var(--gradient-seven) padding-box, var(--gradient-base) padding-box;
+      mask-image: linear-gradient(to bottom, black, black), radial-gradient(ellipse at 50% 50%, black 40%, transparent 65%),
+        radial-gradient(ellipse at 66% 66%, black 5%, transparent 40%), radial-gradient(ellipse at 33% 33%, black 5%, transparent 40%),
+        radial-gradient(ellipse at 66% 33%, black 5%, transparent 40%), radial-gradient(ellipse at 33% 66%, black 5%, transparent 40%),
+        conic-gradient(from var(--cursor-angle) at center, transparent 5%, black 15%, black 85%, transparent 95%);
+      mask-composite: subtract, add, add, add, add, add;
+      opacity: calc(var(--fill-opacity) * (var(--edge-proximity) - var(--color-sensitivity)) / (100 - var(--color-sensitivity)));
+      mix-blend-mode: soft-light;
+    }
+    /* outer glow */
+    .border-glow-card > .edge-light {
+      inset: calc(var(--glow-padding) * -1); pointer-events: none; z-index: 1;
+      mask-image: conic-gradient(from var(--cursor-angle) at center, black 2.5%, transparent 10%, transparent 90%, black 97.5%);
+      opacity: calc((var(--edge-proximity) - var(--edge-sensitivity)) / (100 - var(--edge-sensitivity)));
+      mix-blend-mode: plus-lighter;
+    }
+    .border-glow-card > .edge-light::before {
+      content: ""; position: absolute; inset: var(--glow-padding); border-radius: inherit;
+      box-shadow: inset 0 0 0 1px var(--glow-color), inset 0 0 1px 0 var(--glow-color-60), inset 0 0 3px 0 var(--glow-color-50),
+        inset 0 0 6px 0 var(--glow-color-40), inset 0 0 15px 0 var(--glow-color-30), inset 0 0 25px 2px var(--glow-color-20),
+        inset 0 0 50px 2px var(--glow-color-10), 0 0 1px 0 var(--glow-color-60), 0 0 3px 0 var(--glow-color-50), 0 0 6px 0 var(--glow-color-40),
+        0 0 15px 0 var(--glow-color-30), 0 0 25px 2px var(--glow-color-20), 0 0 50px 2px var(--glow-color-10);
+    }
+    /* light surfaces (the component's --light variant): no additive blending */
+    html:not(.dark) .border-glow-card::after, html:not(.dark) .border-glow-card > .edge-light { mix-blend-mode: normal; }
+    .border-glow-inner { display: flex; flex-direction: column; position: relative; z-index: 1; width: 100%; }
+    /* Glare hover on plan cards (effect from Magic UI GlareHover, in Kibi colours) */
+    .glare-card { --glare-color:rgba(0,93,167,.13); }
+    .pricing-card-highlight.glare-card { --glare-color:rgba(255,255,255,.42); }
+    html.dark .glare-card { --glare-color:rgba(255,255,255,.10); }
+    html.dark .pricing-card-highlight.glare-card { --glare-color:rgba(255,255,255,.35); }
+    .glare-layer { position:absolute; inset:0; border-radius:inherit; overflow:hidden; pointer-events:none; z-index:2; }
+    .glare-layer::before { content:''; position:absolute; inset:0; background:linear-gradient(-45deg, transparent 60%, var(--glare-color) 70%, transparent 100%); background-size:250% 250%; background-repeat:no-repeat; background-position:-100% -100%; transition:background-position 600ms ease; }
+    .glare-card:hover .glare-layer::before { background-position:100% 100%; }
+    @media (prefers-reduced-motion: reduce) { .glare-layer { display:none; } }
+    .dash-line { stroke-dasharray:8 8; animation:dash 30s linear infinite; }
+    @keyframes dash { to { stroke-dashoffset:-1000; } }
+    .filter-btn.active { background-color:#4A90E2; color:white; }
+    .filter-btn { transition:all .2s ease; }
+    /* ── Real Journeys carousel ── */
+    .story-card { position:relative; border-radius:1.75rem; background:#fff; border:1px solid rgba(15,23,42,.06); box-shadow:0 30px 60px -25px rgba(0,93,167,.35), 0 10px 25px -15px rgba(15,23,42,.2); overflow:hidden; }
+    .story-card::before { content:''; position:absolute; inset:-40% -10% auto auto; width:22rem; height:22rem; border-radius:9999px; background:radial-gradient(circle, rgba(0,93,167,.10), transparent 70%); pointer-events:none; }
+    .story-track { display:flex; transition:transform .8s cubic-bezier(.22,.8,.24,1); will-change:transform; }
+    .story-slide { flex:0 0 100%; min-width:0; display:flex; flex-direction:column; }
+    @media (min-width:768px) { .story-slide { flex-direction:row; min-height:26rem; } }
+    .story-photo { position:relative; height:16rem; overflow:hidden; }
+    @media (min-width:768px) { .story-photo { width:42%; height:auto; } }
+    .story-photo img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; transform:scale(1.02); transition:transform 7s ease; }
+    .story-slide.is-active .story-photo img { transform:scale(1.1); }
+    .story-photo::after { content:''; position:absolute; inset:0; background:linear-gradient(to top, rgba(2,12,27,.78) 0%, rgba(2,12,27,.15) 45%, rgba(2,12,27,0) 70%); }
+    .story-place { position:absolute; left:1.25rem; right:1.25rem; bottom:1.25rem; z-index:1; color:#fff; }
+    .story-place h5 { font-family:Outfit,sans-serif; font-weight:700; font-size:1.5rem; line-height:1.1; }
+    .story-chips { display:flex; flex-wrap:wrap; gap:.4rem; margin-top:.6rem; }
+    .story-chip { display:inline-flex; align-items:center; gap:.35rem; font-size:.7rem; font-weight:600; padding:.3rem .6rem; border-radius:9999px; background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.25); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); }
+    .story-body { position:relative; flex:1; padding:2rem; display:flex; flex-direction:column; }
+    @media (min-width:768px) { .story-body { padding:2.75rem 3rem; } }
+    .story-quote-mark { font-family:Georgia,serif; font-size:4.5rem; line-height:1; height:2.5rem; color:#005da7; opacity:.18; }
+    .story-quote { font-size:1.02rem; line-height:1.75; color:#334155; margin-top:.5rem; }
+    @media (min-width:768px) { .story-quote { font-size:1.12rem; } }
+    .story-quote strong { color:#0f172a; font-weight:600; }
+    .story-person { margin-top:auto; padding-top:1.5rem; border-top:1px solid #eef2f7; display:flex; align-items:center; gap:.85rem; }
+    .story-avatar { width:2.9rem; height:2.9rem; flex-shrink:0; border-radius:9999px; display:flex; align-items:center; justify-content:center; font-weight:700; color:#fff; font-size:.95rem; box-shadow:0 0 0 3px #fff, 0 0 0 5px rgba(0,93,167,.15); }
+    .story-name { font-weight:700; color:#0f172a; font-size:1rem; display:flex; align-items:center; gap:.35rem; }
+    .story-verified { font-size:.8rem; color:#16a34a; }
+    .story-meta { font-size:.78rem; color:#64748b; }
+    .story-stars { margin-left:auto; text-align:right; }
+    .story-stars i { color:#f59e0b; font-size:.8rem; }
+    .story-stars span { display:block; font-size:.7rem; color:#94a3b8; margin-top:.2rem; }
+    .story-stars { white-space:nowrap; }
+    @media (max-width:639px) {
+      .story-person { flex-wrap:wrap; }
+      .story-stars { margin-left:0; width:100%; display:flex; align-items:center; gap:.6rem; text-align:left; }
+      .story-stars span { display:inline; margin-top:0; }
+    }
+    .story-progress { position:absolute; left:0; right:0; top:0; height:3px; background:rgba(0,93,167,.08); z-index:2; }
+    .story-progress span { display:block; height:100%; width:0; background:linear-gradient(90deg,#005da7,#4d9bea); }
+    .story-progress span.is-running { animation:story-progress var(--story-ms) linear forwards; }
+    @keyframes story-progress { from { width:0; } to { width:100%; } }
+    .story-dot { height:.5rem; width:.5rem; border-radius:9999px; background:#cbd5e1; transition:width .3s, background-color .3s; }
+    .story-dot.is-active { width:1.75rem; background:#005da7; }
+    html.dark .story-card { background:#161b22; border-color:rgba(255,255,255,.08); box-shadow:0 30px 60px -25px rgba(0,0,0,.7); }
+    html.dark .story-card::before { background:radial-gradient(circle, rgba(77,155,234,.12), transparent 70%); }
+    html.dark .story-quote-mark { color:#7cb5ff; opacity:.3; }
+    html.dark .story-quote { color:#cbd5e1; }
+    html.dark .story-quote strong, html.dark .story-name { color:#f1f5f9; }
+    html.dark .story-person { border-top-color:rgba(255,255,255,.08); }
+    html.dark .story-avatar { box-shadow:0 0 0 3px #161b22, 0 0 0 5px rgba(124,181,255,.25); }
+    html.dark .story-meta { color:#94a3b8; }
+    html.dark .story-dot { background:#334155; }
+    html.dark .story-dot.is-active { background:#4d9bea; }
+    @media (prefers-reduced-motion: reduce) { .story-track, .story-photo img { transition:none; } }
+    /* ── FAQ accordion: original card look, animated open/close ── */
+    .faq-item { transition:opacity .6s ease, transform .6s cubic-bezier(.22,.8,.24,1), box-shadow .3s ease; }
+    .faq-item.faq-hidden { opacity:0; transform:translateY(16px); }
+    .faq-item.is-open { box-shadow:0 10px 30px -18px rgba(0,93,167,.35); }
+    .faq-chevron { transition:transform .4s cubic-bezier(.22,.8,.24,1), color .3s ease; }
+    .faq-item.is-open .faq-chevron { transform:rotate(180deg); }
+    .faq-panel { display:grid; grid-template-rows:0fr; transition:grid-template-rows .4s cubic-bezier(.22,.8,.24,1); }
+    .faq-item.is-open .faq-panel { grid-template-rows:1fr; }
+    .faq-panel-inner { overflow:hidden; }
+    .faq-answer { opacity:0; transform:translateY(-4px); transition:opacity .25s ease, transform .35s cubic-bezier(.22,.8,.24,1); }
+    .faq-item.is-open .faq-answer { opacity:1; transform:none; transition-delay:.1s; }
+    @media (prefers-reduced-motion: reduce) { .faq-item, .faq-panel, .faq-answer, .faq-chevron { transition:none; } }
+  </style>
+</head>
+<body class="antialiased">
+
+  <!-- Hero -->
+  <section class="relative min-h-[800px] lg:h-[900px] w-full flex flex-col overflow-hidden hero-bg">
+    <header class="relative z-50 px-6 lg:px-12 flex justify-between items-center w-full max-w-7xl mx-auto pt-6 pb-4">
+      <a href="index.html" class="logo-kibi flex items-center justify-center h-10 px-5 bg-white/90 backdrop-blur-md rounded-full font-heading font-bold text-[1.25rem] tracking-tight text-[#005da7] hover:bg-white transition-colors shadow-sm border border-white/20">Kibi</a>
+      <nav class="hidden md:flex items-center bg-white/85 backdrop-blur-md rounded-full px-2 py-1.5 border border-white/40 shadow-sm relative">
+        <div id="navActivePill" class="absolute top-1/2 -translate-y-1/2 h-[calc(100%-12px)] rounded-full bg-white shadow-sm border border-slate-50 transition-all duration-500 ease-[cubic-bezier(0.25,1,0.5,1)] pointer-events-none z-0" style="left:0;width:0;opacity:0"></div>
+        <ul class="flex items-center gap-1 lg:gap-2 text-[14px] relative z-10">
+          <li><a href="index.html" data-nav-pill-target="home" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 text-slate-700 hover:text-slate-900">Home</a></li>
+          <li><a href="discover.html" data-nav-pill-target="discover" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 text-slate-700 hover:text-slate-900">Discover</a></li>
+          <li><a href="plan-trip.html" data-nav-pill-target="plan-trip" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 text-slate-700 hover:text-slate-900">Plan Trip</a></li>
+          <li><a href="my-trips.html" data-nav-pill-target="my-trips" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 text-slate-700 hover:text-slate-900">My Trips</a></li>
+          <li><a href="about.html" data-nav-pill-target="about" class="nav-pill-link relative z-10 block px-5 py-2 rounded-full text-[14px] font-medium transition-colors duration-300 text-slate-700 hover:text-slate-900">About Us</a></li>
+        </ul>
+      </nav>
+      <div class="flex items-center gap-3">
+        <div id="auth-action-container"></div>
+        <button id="mobile-menu-btn" class="md:hidden w-10 h-10 rounded-full bg-white/90 backdrop-blur-md flex items-center justify-center text-slate-800 hover:bg-white transition-colors shadow-sm border border-white/20 relative">
+          <span class="hamburger-box"><span class="hamburger-line"></span><span class="hamburger-line"></span><span class="hamburger-line"></span></span>
+        </button>
+      </div>
+    </header>
+
+    <div id="mobileMenu" class="fixed inset-0 z-40 bg-white/95 backdrop-blur-lg opacity-0 pointer-events-none transition-opacity duration-300 md:hidden flex flex-col items-center justify-center gap-6">
+      <a href="index.html" class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">Home</a>
+      <a href="discover.html" class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">Discover</a>
+      <a href="plan-trip.html" class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">Plan Trip</a>
+      <a href="my-trips.html" class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">My Trips</a>
+      <a href="about.html" class="text-2xl font-medium text-slate-700 py-2 hover:text-brand-blue transition-colors">About Us</a>
+      <div id="mobile-auth-action-container"></div>
+    </div>
+
+    <div class="relative z-20 flex flex-col items-center justify-start pt-16 lg:pt-20 text-center px-4 w-full max-w-4xl mx-auto flex-grow">
+      <div class="relative inline-block mb-1">
+        <svg class="absolute -top-3 -left-5 w-4 h-4 text-white/90" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0l1.5 5.5L15 7l-5.5 1.5L8 14l-1.5-5.5L1 7l5.5-1.5z"/></svg>
+        <svg class="absolute -top-1 -right-4 w-3 h-3 text-white/90" fill="currentColor" viewBox="0 0 16 16"><path d="M8 0l1.5 5.5L15 7l-5.5 1.5L8 14l-1.5-5.5L1 7l5.5-1.5z"/></svg>
+        <p class="text-white text-4xl md:text-5xl font-script tracking-wide">Let AI create your</p>
+      </div>
+      <h1 class="text-6xl md:text-8xl lg:text-[8.5rem] font-bold text-white mb-2 tracking-tighter leading-none">Journey</h1>
+      <p class="text-white text-base md:text-lg max-w-2xl mb-6 leading-relaxed font-semibold">From cozy stays and iconic restaurants to hidden local spots, our AI curates a complete travel package based on your needs.</p>
+      <div class="flex flex-col sm:flex-row gap-4 items-center">
+        <a href="plan-trip.html" class="bg-white text-brand-blue font-bold py-2.5 px-6 rounded-full shadow-2xl hover:shadow-xl hover:-translate-y-0.5 transition-all flex items-center gap-2 text-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M4 11H2v3h2v-3zm5-4H7v7h2V7zm5-5v12h-2V2h2zm-2-1a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1h-2zM6 7a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v7a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7zm-5 4a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1v-3z"/></svg>
+          Start the trip
+        </a>
+        <a href="discover.html" class="bg-white/10 border-[1.5px] border-white text-white font-bold py-2.5 px-6 rounded-full hover:bg-white/20 shadow-xl transition-colors flex items-center gap-2 backdrop-blur-lg text-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M6.428 1.151C6.708.591 7.213 0 8 0s1.292.592 1.572 1.151C9.861 1.73 10 2.431 10 3v3.691l5.17 2.585a1.5 1.5 0 0 1 .83 1.342V12a.5.5 0 0 1-.582.493l-5.507-.918-.375 2.253 1.318 1.318A.5.5 0 0 1 10.5 16h-5a.5.5 0 0 1-.354-.854l1.319-1.318-.376-2.253-5.507.918A.5.5 0 0 1 0 12v-1.382a1.5 1.5 0 0 1 .83-1.342L6 6.691V3c0-.568.14-1.271.428-1.849Z"/></svg>
+          Destinations
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section id="how-it-works" class="py-24 bg-white relative overflow-hidden">
+    <svg class="hidden md:block absolute top-1/2 left-0 w-full h-32 pointer-events-none -translate-y-12 z-0" viewBox="0 0 1200 120" fill="none">
+      <path d="M 100,60 Q 300,10 500,60 T 900,60 T 1100,60" stroke="#CBD5E1" stroke-width="2" stroke-dasharray="6 6"/>
+    </svg>
+    <div class="max-w-6xl mx-auto px-6 relative z-10">
+      <div class="text-center mb-16">
+        <p class="text-brand-blue font-semibold text-xs md:text-sm uppercase tracking-wider mb-2">How Kibi Plans</p>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">Your Perfect Journey</h2>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 relative">
+        <div class="border-glow-card bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 group transition duration-300">
+          <span class="edge-light" aria-hidden="true"></span>
+          <div class="border-glow-inner items-center text-center">
+            <div class="w-16 h-16 rounded-2xl bg-red-50 text-red-500 flex items-center justify-center text-2xl mb-6 shadow-inner group-hover:scale-110 transition"><i class="fa-solid fa-list-check"></i></div>
+            <h3 class="text-xl font-bold text-slate-900 mb-3">Tell Us What You Like</h3>
+            <p class="text-slate-500 text-sm leading-relaxed">Pick your travel style, mood, interests, and answer a few questions. We'll handle the rest.</p>
+          </div>
+        </div>
+        <div class="border-glow-card bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 group transition duration-300 md:translate-y-6">
+          <span class="edge-light" aria-hidden="true"></span>
+          <div class="border-glow-inner items-center text-center">
+            <div class="w-16 h-16 rounded-2xl bg-blue-50 text-brand-blue flex items-center justify-center text-2xl mb-6 shadow-inner group-hover:scale-110 transition"><i class="fa-solid fa-microchip"></i></div>
+            <h3 class="text-xl font-bold text-slate-900 mb-3">Let AI Curate</h3>
+            <p class="text-slate-500 text-sm leading-relaxed">Our AI blends nostalgia with your taste to build a journey that feels just right.</p>
+          </div>
+        </div>
+        <div class="border-glow-card bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 group transition duration-300">
+          <span class="edge-light" aria-hidden="true"></span>
+          <div class="border-glow-inner items-center text-center">
+            <div class="w-16 h-16 rounded-2xl bg-emerald-50 text-emerald-500 flex items-center justify-center text-2xl mb-6 shadow-inner group-hover:scale-110 transition"><i class="fa-solid fa-users"></i></div>
+            <h3 class="text-xl font-bold text-slate-900 mb-3">Connect & Share</h3>
+            <p class="text-slate-500 text-sm leading-relaxed">See who's going, join groups, or invite friends for a shared adventure.</p>
+          </div>
+        </div>
+        <div class="border-glow-card bg-white p-6 sm:p-8 rounded-3xl border border-slate-100 shadow-xl shadow-slate-200/50 group transition duration-300 md:translate-y-6">
+          <span class="edge-light" aria-hidden="true"></span>
+          <div class="border-glow-inner items-center text-center">
+            <div class="w-16 h-16 rounded-2xl bg-purple-50 text-purple-500 flex items-center justify-center text-2xl mb-6 shadow-inner group-hover:scale-110 transition"><i class="fa-solid fa-plane-departure"></i></div>
+            <h3 class="text-xl font-bold text-slate-900 mb-3">Go & Feel It</h3>
+            <p class="text-slate-500 text-sm leading-relaxed">Rediscover the magic of travel: personalized, emotional, and unforgettable.</p>
+          </div>
+        </div>
+      </div>
+      <div class="text-center mt-16 md:mt-20">
+        <a href="plan-trip.html" class="inline-block bg-brand-blue hover:bg-blue-600 text-white font-semibold px-9 py-3.5 rounded-full shadow-lg shadow-blue-500/30 transition transform hover:-translate-y-0.5">Try for free</a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Border glow on the journey step cards: React Bits' BorderGlow pointer handler.
+    // --edge-proximity (0–100) is how close the cursor is to the edge; --cursor-angle points at it.
+    (function () {
+      function edgeProximity(rect, x, y) {
+        const cx = rect.width / 2, cy = rect.height / 2;
+        const dx = x - cx, dy = y - cy;
+        const kx = dx !== 0 ? cx / Math.abs(dx) : Infinity;
+        const ky = dy !== 0 ? cy / Math.abs(dy) : Infinity;
+        return Math.min(Math.max(1 / Math.min(kx, ky), 0), 1);
+      }
+      function cursorAngle(rect, x, y) {
+        const dx = x - rect.width / 2, dy = y - rect.height / 2;
+        if (dx === 0 && dy === 0) return 0;
+        let degrees = Math.atan2(dy, dx) * (180 / Math.PI) + 90;
+        if (degrees < 0) degrees += 360;
+        return degrees;
+      }
+      document.querySelectorAll('.border-glow-card').forEach(card => {
+        card.addEventListener('pointermove', e => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left, y = e.clientY - rect.top;
+          card.style.setProperty('--edge-proximity', (edgeProximity(rect, x, y) * 100).toFixed(3));
+          card.style.setProperty('--cursor-angle', `${cursorAngle(rect, x, y).toFixed(3)}deg`);
+        });
+      });
+    })();
+  </script>
+
+  <!-- Plan Preview -->
+  <section id="services" class="py-24 bg-slate-50">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <p class="text-brand-blue font-semibold text-xs md:text-sm uppercase tracking-wider mb-2">Plan Preview</p>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">A Personalized Getaway</h2>
+        <p class="text-slate-600 text-base md:text-lg max-w-2xl mx-auto">A real example of an AI-generated itinerary — tailored to your taste, budget, and travel style.</p>
+      </div>
+      <div class="relative p-3">
+        <div id="planPreviewBorder" class="absolute inset-0 rounded-[1.9rem] border-[3px] border-dashed border-[#000000] pointer-events-none"></div>
+        <div class="itinerary-preview-bg rounded-3xl p-6 md:p-10 text-white shadow-2xl relative overflow-hidden">
+
+          <!-- Top Nav -->
+          <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-8 border-b border-white/10 pb-6">
+            <div>
+              <h3 class="text-2xl md:text-3xl font-bold mb-2 text-white">Manali Mountain Escape</h3>
+              <div class="flex flex-wrap items-center gap-2 text-xs font-medium text-white/80">
+                <button class="bg-white/20 text-white px-3 py-1 rounded-full border border-white/30 backdrop-blur-md">Overview</button>
+                <button class="hover:bg-white/10 px-3 py-1 rounded-full transition">Saved Places</button>
+                <button class="hover:bg-white/10 px-3 py-1 rounded-full transition">Booking</button>
+                <button class="hover:bg-white/10 px-3 py-1 rounded-full transition">Transport</button>
+                <button class="hover:bg-white/10 px-3 py-1 rounded-full transition">Hotels</button>
+              </div>
+            </div>
+            <div class="flex flex-wrap items-center gap-2 text-xs font-medium">
+              <span class="text-white/70">Interests:</span>
+              <span class="bg-white/15 text-white px-3 py-1 rounded-full border border-white/20">Mountains</span>
+              <span class="bg-white/15 text-white px-3 py-1 rounded-full border border-white/20">Adventure</span>
+              <span class="bg-white/15 text-white px-3 py-1 rounded-full border border-white/20">Photography</span>
+              <span class="bg-emerald-500/30 text-emerald-300 border border-emerald-400/40 px-3 py-1 rounded-full">₹15,000 budget</span>
+            </div>
+          </div>
+
+          <!-- Day 1 -->
+          <div id="day1-content">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <!-- Morning -->
+              <div class="glass-column p-4 rounded-2xl flex flex-col gap-3">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="bg-amber-500/20 text-amber-300 border border-amber-400/30 text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1.5"><i class="fa-regular fa-sun"></i> Morning</span>
+                  <span class="text-xs text-white/60">3 activities</span>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl">
+                  <h4 class="font-semibold text-sm text-white mb-1">Depart from Delhi (Volvo Bus)</h4>
+                  <div class="flex justify-between items-center text-xs text-white/70">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 6:00 AM</span>
+                    <span class="font-medium text-white">₹800</span>
+                  </div>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl">
+                  <h4 class="font-semibold text-sm text-white mb-1">Breakfast at Murthal Dhaba</h4>
+                  <div class="flex justify-between items-center text-xs text-white/70">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 8:30 AM</span>
+                    <span class="font-medium text-white">₹250</span>
+                  </div>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl overflow-hidden">
+                  <div class="flex gap-3 items-center">
+                    <img src="assets/images/dest-manali.jpg" alt="Manali Scenic Drive" class="w-16 h-16 rounded-lg object-cover flex-shrink-0 border border-white/20">
+                    <div>
+                      <h4 class="font-semibold text-sm text-white mb-1">Scenic drive through Kullu Valley</h4>
+                      <div class="flex justify-between items-center text-xs text-white/70 mb-1">
+                        <span><i class="fa-regular fa-clock mr-1"></i> 11:00 AM</span>
+                        <span class="font-medium text-emerald-300">Free</span>
+                      </div>
+                      <p class="text-[11px] text-white/80 line-clamp-2 leading-tight">Drive through lush Kullu Valley with stunning Beas River views.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Afternoon -->
+              <div class="glass-column p-4 rounded-2xl flex flex-col gap-3">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="bg-blue-500/20 text-blue-300 border border-blue-400/30 text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1.5"><i class="fa-solid fa-cloud-sun"></i> Afternoon</span>
+                  <span class="text-xs text-white/60">4 activities</span>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl">
+                  <h4 class="font-semibold text-sm text-white mb-1">Arrive & Check-in at Snow Valley Resort</h4>
+                  <div class="flex justify-between items-center text-xs text-white/70">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 2:00 PM</span>
+                    <span class="font-medium text-white">₹2,500</span>
+                  </div>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl">
+                  <h4 class="font-semibold text-sm text-white mb-1">Lunch at Johnson's Cafe, Mall Road</h4>
+                  <div class="flex justify-between items-center text-xs text-white/70">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 3:00 PM</span>
+                    <span class="font-medium text-white">₹400</span>
+                  </div>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl">
+                  <h4 class="font-semibold text-sm text-white mb-1">Visit Hadimba Devi Temple</h4>
+                  <div class="flex justify-between items-center text-xs text-white/70">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 4:30 PM</span>
+                    <span class="font-medium text-emerald-300">Free</span>
+                  </div>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl">
+                  <h4 class="font-semibold text-sm text-white mb-1">Stroll on Mall Road & Shopping</h4>
+                  <div class="flex justify-between items-center text-xs text-white/70">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 5:30 PM</span>
+                    <span class="font-medium text-emerald-300">Free</span>
+                  </div>
+                </div>
+              </div>
+              <!-- Evening -->
+              <div class="glass-column p-4 rounded-2xl flex flex-col gap-3">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1.5"><i class="fa-solid fa-moon"></i> Evening</span>
+                  <span class="text-xs text-white/60">3 activities</span>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl">
+                  <h4 class="font-semibold text-sm text-white mb-1">Sunset view at Solang Valley</h4>
+                  <div class="flex justify-between items-center text-xs text-white/70">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 6:30 PM</span>
+                    <span class="font-medium text-emerald-300">Free</span>
+                  </div>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl">
+                  <h4 class="font-semibold text-sm text-white mb-1">Dinner at Drifter's Inn</h4>
+                  <div class="flex justify-between items-center text-xs text-white/70">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 8:00 PM</span>
+                    <span class="font-medium text-white">₹500</span>
+                  </div>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl">
+                  <h4 class="font-semibold text-sm text-white mb-1">Rest at resort</h4>
+                  <div class="flex justify-between items-center text-xs text-white/70">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 10:00 PM</span>
+                    <span class="font-medium text-blue-200">Already included</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Day 2 -->
+          <div id="day2-content" class="hidden">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <!-- Morning -->
+              <div class="glass-column p-4 rounded-2xl flex flex-col gap-3">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="bg-amber-500/20 text-amber-300 border border-amber-400/30 text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1.5"><i class="fa-regular fa-sun"></i> Morning</span>
+                  <span class="text-xs text-white/60">3 activities</span>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl">
+                  <h4 class="font-semibold text-sm text-white mb-1">Early morning trek to Rohtang Pass</h4>
+                  <div class="flex justify-between items-center text-xs text-white/70">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 6:00 AM</span>
+                    <span class="font-medium text-white">₹600</span>
+                  </div>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl">
+                  <h4 class="font-semibold text-sm text-white mb-1">Snow activities at Rohtang</h4>
+                  <div class="flex justify-between items-center text-xs text-white/70">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 9:00 AM</span>
+                    <span class="font-medium text-white">₹1,200</span>
+                  </div>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl overflow-hidden">
+                  <div class="flex gap-3 items-center">
+                    <img src="assets/images/dest-kasol.jpg" alt="Kasol River" class="w-16 h-16 rounded-lg object-cover flex-shrink-0 border border-white/20">
+                    <div>
+                      <h4 class="font-semibold text-sm text-white mb-1">Breakfast with Himalayan views</h4>
+                      <div class="flex justify-between items-center text-xs text-white/70 mb-1">
+                        <span><i class="fa-regular fa-clock mr-1"></i> 11:00 AM</span>
+                        <span class="font-medium text-white">₹300</span>
+                      </div>
+                      <p class="text-[11px] text-white/80 line-clamp-2 leading-tight">Enjoy hot parathas and chai with panoramic snow-peak views.</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- Afternoon -->
+              <div class="glass-column p-4 rounded-2xl flex flex-col gap-3">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="bg-blue-500/20 text-blue-300 border border-blue-400/30 text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1.5"><i class="fa-solid fa-cloud-sun"></i> Afternoon</span>
+                  <span class="text-xs text-white/60">4 activities</span>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl">
+                  <h4 class="font-semibold text-sm text-white mb-1">Visit Vashisht Hot Springs & Temple</h4>
+                  <div class="flex justify-between items-center text-xs text-white/70">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 1:00 PM</span>
+                    <span class="font-medium text-emerald-300">Free</span>
+                  </div>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl">
+                  <h4 class="font-semibold text-sm text-white mb-1">Lunch at Lazy Dog Lounge</h4>
+                  <div class="flex justify-between items-center text-xs text-white/70">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 2:30 PM</span>
+                    <span class="font-medium text-white">₹450</span>
+                  </div>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl">
+                  <h4 class="font-semibold text-sm text-white mb-1">River rafting on Beas River</h4>
+                  <div class="flex justify-between items-center text-xs text-white/70">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 3:30 PM</span>
+                    <span class="font-medium text-white">₹900</span>
+                  </div>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl">
+                  <h4 class="font-semibold text-sm text-white mb-1">Explore Old Manali Cafes</h4>
+                  <div class="flex justify-between items-center text-xs text-white/70">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 5:00 PM</span>
+                    <span class="font-medium text-emerald-300">Free</span>
+                  </div>
+                </div>
+              </div>
+              <!-- Evening -->
+              <div class="glass-column p-4 rounded-2xl flex flex-col gap-3">
+                <div class="flex items-center justify-between mb-2">
+                  <span class="bg-indigo-500/20 text-indigo-300 border border-indigo-400/30 text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1.5"><i class="fa-solid fa-moon"></i> Evening</span>
+                  <span class="text-xs text-white/60">3 activities</span>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl">
+                  <h4 class="font-semibold text-sm text-white mb-1">Bonfire & Stargazing at campsite</h4>
+                  <div class="flex justify-between items-center text-xs text-white/70">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 6:30 PM</span>
+                    <span class="font-medium text-emerald-300">Free</span>
+                  </div>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl">
+                  <h4 class="font-semibold text-sm text-white mb-1">Dinner at Himalayan Cafe</h4>
+                  <div class="flex justify-between items-center text-xs text-white/70">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 8:00 PM</span>
+                    <span class="font-medium text-white">₹500</span>
+                  </div>
+                </div>
+                <div class="glass-item p-3.5 rounded-xl">
+                  <h4 class="font-semibold text-sm text-white mb-1">Return overnight bus to Delhi</h4>
+                  <div class="flex justify-between items-center text-xs text-white/70">
+                    <span><i class="fa-regular fa-clock mr-1"></i> 10:00 PM</span>
+                    <span class="font-medium text-white">₹800</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer Bar -->
+          <div class="flex flex-col sm:flex-row justify-between items-center gap-4 bg-black/30 p-4 rounded-2xl border border-white/10 backdrop-blur-md">
+            <div class="flex items-center gap-3 text-sm text-white">
+              <div class="w-8 h-8 rounded-full bg-emerald-500/20 border border-emerald-400/30 flex items-center justify-center text-emerald-400 font-bold text-base">₹</div>
+              <span id="budget-label">Total day budget: <strong class="text-white text-base font-bold">₹4,450</strong></span>
+            </div>
+            <div class="flex items-center gap-2" id="day-switcher">
+              <button id="btn-day1" onclick="switchDay(1)" class="bg-white text-brand-blue font-semibold text-xs px-5 py-2 rounded-full shadow transition">Day 1</button>
+              <button id="btn-day2" onclick="switchDay(2)" class="bg-white/15 text-white hover:bg-white/25 font-semibold text-xs px-5 py-2 rounded-full border border-white/20 transition">Day 2</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Destinations -->
+  <section class="py-16 px-4 w-full max-w-7xl mx-auto">
+    <div class="text-center mb-10">
+      <p class="text-gray-400 font-semibold text-xs tracking-widest uppercase mb-2">EXPLORE</p>
+      <h2 class="text-3xl font-bold text-gray-900 mb-6">Handpicked Destinations</h2>
+      <div class="flex flex-wrap justify-center gap-2 mb-8">
+        <button class="px-5 py-2 rounded-full border border-gray-200 bg-white text-sm font-medium text-gray-700 hover:border-brand-blue hover:text-brand-blue transition-colors flex items-center gap-2 shadow-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M2.5 13.5A.5.5 0 0 1 3 13h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zM2 2h12s2 0 2 2v6s0 2-2 2H2s-2 0-2-2V4s0-2 2-2z"/></svg>
+          All Types
+        </button>
+        <button class="px-5 py-2 rounded-full border border-gray-200 bg-white text-sm font-medium text-gray-500 hover:border-gray-300 transition-colors">By Season</button>
+        <button class="px-5 py-2 rounded-full border border-gray-200 bg-white text-sm font-medium text-gray-500 hover:border-gray-300 transition-colors">By Interest</button>
+        <button class="px-5 py-2 rounded-full border border-gray-200 bg-white text-sm font-medium text-gray-500 hover:border-gray-300 transition-colors">Popularity</button>
+        <button class="px-5 py-2 rounded-full border border-gray-200 bg-white text-sm font-medium text-gray-500 hover:border-gray-300 transition-colors">Region Base</button>
+      </div>
+    </div>
+    <div class="max-w-2xl mx-auto mb-8 relative">
+      <input id="homeDestSearch" type="text" placeholder="Where do you want to go? e.g. Manali, Paris, Tokyo" class="w-full bg-white border border-gray-200 rounded-full py-3 pl-5 pr-24 text-sm text-gray-800 focus:outline-none focus:border-brand-blue focus:ring-2 focus:ring-brand-blue/20 shadow-sm">
+      <button id="homeDestSearchBtn" class="absolute right-1.5 top-1/2 -translate-y-1/2 bg-brand-blue text-white text-sm font-semibold px-5 py-2 rounded-full hover:bg-blue-600 transition-colors">Search</button>
+    </div>
+    <div id="destinationsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 min-h-[320px]"></div>
+  </section>
+
+  <!-- Pricing -->
+  <section id="pricing" class="py-24 bg-slate-50">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <p class="text-brand-blue font-semibold text-xs md:text-sm uppercase tracking-wider mb-2">Choose the plan</p>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">That Fits Your Journey</h2>
+        <p class="text-slate-600 text-base md:text-lg max-w-2xl mx-auto">Whether you're just exploring or planning your next group adventure, Kibi has a plan tailored to your needs.</p>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-center max-w-5xl mx-auto">
+
+        <!-- Free Explorer -->
+        <div class="glare-card relative bg-white rounded-3xl p-8 border border-slate-200/80 shadow-lg flex flex-col h-full hover:border-slate-300 transition">
+          <span class="glare-layer" aria-hidden="true"></span>
+          <div class="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-2xl mb-6">🎒</div>
+          <h3 class="text-2xl font-bold text-slate-900 mb-2">Free Explorer</h3>
+          <p class="text-slate-500 text-xs sm:text-sm mb-6 flex-grow">A perfect way to get started. Discover what Kibi can do for you all at no cost.</p>
+          <div class="mb-8">
+            <span class="text-4xl font-extrabold text-slate-900">₹0</span>
+            <span class="text-slate-500 text-sm">/ per month</span>
+          </div>
+          <ul class="space-y-4 mb-8 text-xs sm:text-sm text-slate-600">
+            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-blue"></i> A perfect way to get started</li>
+            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-blue"></i> 1 AI-generated itinerary per month</li>
+            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-blue"></i> Basic suggestions based on location</li>
+            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-blue"></i> Save & share trips</li>
+          </ul>
+          <a href="signup.html" class="w-full py-3.5 rounded-full border-2 border-brand-blue text-brand-blue font-semibold hover:bg-blue-50 transition mt-auto text-center">Try for free</a>
+          <p class="text-center text-xs text-slate-400 mt-3">No credit cards needed</p>
+        </div>
+
+        <!-- Smart Voyager -->
+        <div class="glare-card pricing-card-highlight text-white rounded-3xl p-8 shadow-2xl relative z-10 flex flex-col h-[105%] transform md:-translate-y-2">
+          <span class="glare-layer" aria-hidden="true"></span>
+          <div class="absolute -top-3.5 right-8 bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 font-extrabold text-xs px-4 py-1.5 rounded-full shadow-lg flex items-center gap-1.5">
+            <i class="fa-solid fa-fire"></i> POPULAR
+          </div>
+          <div class="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center text-2xl mb-6 backdrop-blur-md">🧭</div>
+          <h3 class="text-2xl font-bold mb-2">Smart Voyager</h3>
+          <p class="text-white/80 text-xs sm:text-sm mb-6 flex-grow">Ideal for solo travelers or couples who want tailored travel planning.</p>
+          <div class="mb-8">
+            <span class="text-4xl font-extrabold text-white">₹849</span>
+            <span class="text-white/80 text-sm">/ per month</span>
+          </div>
+          <ul class="space-y-4 mb-8 text-xs sm:text-sm text-white/95">
+            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-amber-300"></i> Unlimited personalized itineraries</li>
+            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-amber-300"></i> Fully personalized travel, powered by AI</li>
+            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-amber-300"></i> Smart calendar with full-day planning</li>
+            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-amber-300"></i> Access to top-rated accommodations</li>
+            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-amber-300"></i> Seasonal travel tips & trends</li>
+            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-amber-300"></i> 24/7 chat support</li>
+          </ul>
+          <a href="signup.html" class="w-full py-3.5 rounded-full bg-brand-blue text-white font-semibold hover:bg-brand-dark transition shadow-lg mt-auto text-center">Subscribe</a>
+          <p class="text-center text-xs text-white/80 mt-3">7-day free trial</p>
+        </div>
+
+        <!-- Group Adventurer -->
+        <div class="glare-card relative bg-white rounded-3xl p-8 border border-slate-200/80 shadow-lg flex flex-col h-full hover:border-slate-300 transition">
+          <span class="glare-layer" aria-hidden="true"></span>
+          <div class="w-12 h-12 bg-emerald-50 rounded-2xl flex items-center justify-center text-2xl mb-6">🌍</div>
+          <h3 class="text-2xl font-bold text-slate-900 mb-2">Group Adventurer</h3>
+          <p class="text-slate-500 text-xs sm:text-sm mb-6 flex-grow">Made for friends, families, or group travel organizers who want to plan together.</p>
+          <div class="mb-8">
+            <span class="text-4xl font-extrabold text-slate-900">₹1,649</span>
+            <span class="text-slate-500 text-sm">/ per month</span>
+          </div>
+          <ul class="space-y-4 mb-8 text-xs sm:text-sm text-slate-600">
+            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-blue"></i> Everything in Smart Voyager</li>
+            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-blue"></i> Multi-user itinerary collaboration</li>
+            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-blue"></i> Shared budgeting and cost split tools</li>
+            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-blue"></i> Group activity suggestions</li>
+            <li class="flex items-center gap-3"><i class="fa-solid fa-check text-brand-blue"></i> AI-powered coordination</li>
+          </ul>
+          <a href="signup.html" class="w-full py-3.5 rounded-full border border-slate-200 text-slate-700 font-semibold hover:bg-slate-50 transition mt-auto text-center">Subscribe</a>
+          <p class="text-center text-xs text-slate-400 mt-3">Cancel anytime</p>
+        </div>
+
+      </div>
+      <div class="text-center mt-16">
+        <p class="text-slate-600 text-sm mb-4">Still not sure which plan fits your journey?</p>
+        <a href="#faq" class="text-brand-blue font-semibold border border-brand-blue/50 hover:border-brand-blue px-7 py-2.5 rounded-full hover:bg-blue-50 transition text-sm inline-flex items-center gap-2">Compare All Plans</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials -->
+  <section class="py-24 bg-white overflow-hidden">
+    <div class="max-w-6xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <p class="text-brand-blue font-semibold text-xs md:text-sm uppercase tracking-wider mb-2">Real Stories</p>
+        <h2 class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 mb-4 tracking-tight">Real Journeys</h2>
+        <p class="text-slate-600 text-base md:text-lg max-w-2xl mx-auto">See how Kibi has helped people plan unforgettable trips tailored to their style and preferences.</p>
+      </div>
+      <div class="relative max-w-5xl mx-auto" id="storiesCarousel" role="region" aria-roledescription="carousel" aria-label="Traveller stories">
+        <div class="story-card">
+          <div class="story-progress" aria-hidden="true"><span id="storyProgress"></span></div>
+          <div class="story-track" id="storyTrack" aria-live="off"></div>
+        </div>
+        <div class="flex justify-center items-center gap-4 mt-10">
+          <button id="storyPrev" aria-label="Previous story" class="w-11 h-11 rounded-full border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-100 transition"><i class="fa-solid fa-chevron-left text-sm"></i></button>
+          <div id="storyDots" class="flex items-center gap-2"></div>
+          <button id="storyNext" aria-label="Next story" class="w-11 h-11 rounded-full bg-brand-blue text-white flex items-center justify-center hover:bg-blue-600 transition shadow-md"><i class="fa-solid fa-chevron-right text-sm"></i></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Real Journeys: traveller stories that rotate on their own. Clicking, tapping a dot
+    // or swiping just restarts the countdown, so rotation always resumes afterwards.
+    (function () {
+      const stories = [
+        { name: 'Ananya Sharma', from: 'Pune', place: 'Manali', state: 'Himachal Pradesh', photo: 'assets/images/dest-manali.jpg',
+          days: '5 days', budget: '₹14,500', group: 'With college friends', rating: 5, when: 'May 2026', color: '#7c3aed,#c026d3',
+          quote: 'Planned the whole trip in one evening. Kibi split the days between <strong>Solang Valley, Old Manali cafés</strong> and one lazy riverside day, so nobody got tired. We even stayed under budget, which my friends still can\'t believe.' },
+        { name: 'Rohan Mehta', from: 'Ahmedabad', place: 'South Goa', state: 'Goa', photo: 'assets/images/dest-goa.jpg',
+          days: '4 days', budget: '₹18,000', group: 'Anniversary trip', rating: 5, when: 'Feb 2026', color: '#0ea5e9,#2563eb',
+          quote: 'We wanted Goa without the party crowd. Kibi suggested <strong>Palolem and a quiet homestay</strong>, plus a spice farm visit I would never have found on my own. Honestly the best anniversary we\'ve had.' },
+        { name: 'Priya Nair', from: 'Bengaluru', place: 'Rishikesh', state: 'Uttarakhand', photo: 'assets/images/dest-rishikesh.jpg',
+          days: '3 days', budget: '₹9,200', group: 'First solo trip', rating: 5, when: 'Mar 2026', color: '#f97316,#e11d48',
+          quote: 'I was nervous about travelling alone. The plan had a <strong>safe stay near Tapovan</strong>, sunrise yoga, an early rafting slot and the Ganga aarti in the evening. I felt looked after the entire time.' },
+        { name: 'Aditya Verma', from: 'Delhi', place: 'Kasol', state: 'Himachal Pradesh', photo: 'assets/images/dest-kasol.jpg',
+          days: '4 days', budget: '₹8,500', group: 'With 3 friends', rating: 4, when: 'Apr 2026', color: '#16a34a,#0d9488',
+          quote: 'Kheerganga trek on day two with a <strong>proper rest day after</strong>, exactly what we needed. The weather card warned us about evening rain so we packed ponchos. Small thing, big help.' },
+        { name: 'Sneha & Karthik', from: 'Chennai', place: 'Udaipur', state: 'Rajasthan', photo: 'https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d2/Udaipur_Lake_India.JPG/960px-Udaipur_Lake_India.JPG',
+          days: '3 days', budget: '₹22,000', group: 'Couple getaway', rating: 5, when: 'Jan 2026', color: '#d97706,#dc2626',
+          quote: 'Boat ride on <strong>Lake Pichola at sunset</strong>, City Palace early before the crowds, and a rooftop dinner Kibi picked for us. It felt like a local friend had planned our trip.' }
+      ];
+      const AUTOPLAY_MS = 6000;
+
+      const track = document.getElementById('storyTrack');
+      const dots = document.getElementById('storyDots');
+      const progress = document.getElementById('storyProgress');
+      const carousel = document.getElementById('storiesCarousel');
+      const initials = name => name.split(/\s*&\s*|\s+/).filter(Boolean).map(w => w[0]).slice(0, 2).join('').toUpperCase();
+      const starIcons = n => '<i class="fa-solid fa-star"></i>'.repeat(n) + '<i class="fa-regular fa-star"></i>'.repeat(5 - n);
+
+      track.innerHTML = stories.map((s, i) => `
+        <article class="story-slide" role="group" aria-roledescription="slide" aria-label="${i + 1} of ${stories.length}: ${s.name}">
+          <div class="story-photo">
+            <img src="${s.photo}" alt="${s.place}, ${s.state}" ${i ? 'loading="lazy"' : ''}>
+            <div class="story-place">
+              <p class="text-xs font-semibold uppercase tracking-wider opacity-80"><i class="fa-solid fa-location-dot mr-1"></i>${s.state}</p>
+              <h5>${s.place}</h5>
+              <div class="story-chips">
+                <span class="story-chip"><i class="fa-regular fa-calendar"></i>${s.days}</span>
+                <span class="story-chip"><i class="fa-solid fa-wallet"></i>${s.budget}</span>
+                <span class="story-chip"><i class="fa-solid fa-user-group"></i>${s.group}</span>
+              </div>
+            </div>
+          </div>
+          <div class="story-body">
+            <div class="story-quote-mark" aria-hidden="true">&ldquo;</div>
+            <p class="story-quote">${s.quote}</p>
+            <div class="story-person">
+              <div class="story-avatar" style="background:linear-gradient(135deg,${s.color})">${initials(s.name)}</div>
+              <div>
+                <p class="story-name">${s.name} <i class="fa-solid fa-circle-check story-verified" title="Verified Kibi trip"></i></p>
+                <p class="story-meta">From ${s.from} · Verified trip</p>
+              </div>
+              <div class="story-stars" aria-label="${s.rating} out of 5 stars">${starIcons(s.rating)}<span>${s.when}</span></div>
+            </div>
+          </div>
+        </article>`).join('');
+      dots.innerHTML = stories.map((s, i) => `<button class="story-dot" aria-label="Show story ${i + 1}: ${s.name}"></button>`).join('');
+
+      const slides = [...track.children];
+      const dotButtons = [...dots.children];
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      let index = 0;
+      let timer = null;
+      let onScreen = false;
+      progress.style.setProperty('--story-ms', `${AUTOPLAY_MS}ms`);
+
+      function show(i) {
+        index = (i + stories.length) % stories.length;
+        track.style.transform = `translateX(-${index * 100}%)`;
+        slides.forEach((el, n) => { el.classList.toggle('is-active', n === index); el.setAttribute('aria-hidden', String(n !== index)); });
+        dotButtons.forEach((d, n) => { d.classList.toggle('is-active', n === index); d.setAttribute('aria-current', String(n === index)); });
+      }
+
+      // (Re)start the countdown to the next story; the bar on top shows it.
+      function restart() {
+        clearTimeout(timer);
+        progress.classList.remove('is-running');
+        if (reduceMotion || !onScreen || document.hidden) return;
+        void progress.offsetWidth; // restart the CSS animation
+        progress.classList.add('is-running');
+        timer = setTimeout(() => { show(index + 1); restart(); }, AUTOPLAY_MS);
+      }
+      const go = i => { show(i); restart(); };
+
+      document.getElementById('storyPrev').addEventListener('click', () => go(index - 1));
+      document.getElementById('storyNext').addEventListener('click', () => go(index + 1));
+      dotButtons.forEach((d, n) => d.addEventListener('click', () => go(n)));
+      document.addEventListener('visibilitychange', restart);
+
+      // Only rotate while the section is on screen, so visitors see it from the first story.
+      new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting === onScreen) return; // scrolling within view keeps the countdown going
+        onScreen = entry.isIntersecting;
+        restart();
+      }, { threshold: 0.35 }).observe(carousel);
+
+      // Swipe on touch screens.
+      let startX = null;
+      track.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
+      track.addEventListener('touchend', e => {
+        if (startX === null) return;
+        const dx = e.changedTouches[0].clientX - startX;
+        if (Math.abs(dx) > 40) go(index + (dx < 0 ? 1 : -1));
+        startX = null;
+      });
+
+      show(0);
+    })();
+  </script>
+
+  <!-- FAQ -->
+  <section id="faq" class="py-24 bg-slate-50">
+    <div class="max-w-3xl mx-auto px-6">
+      <div class="text-center mb-16">
+        <p class="text-brand-blue font-semibold text-xs md:text-sm uppercase tracking-wider mb-2">Got Questions?</p>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">We've Got Answers!</h2>
+      </div>
+      <div class="space-y-4" id="faq-accordion">
+        <div class="faq-item is-open bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden transition">
+          <button type="button" id="faq-btn-1" aria-expanded="true" aria-controls="faq-panel-1" class="faq-trigger w-full px-6 py-5 text-left flex justify-between items-center gap-4 text-brand-blue font-bold text-base md:text-lg focus:outline-none hover:text-brand-blue">
+            <span>How does Kibi plan my trip?</span>
+            <i class="faq-chevron fa-solid fa-chevron-down text-brand-blue" aria-hidden="true"></i>
+          </button>
+          <div class="faq-panel" id="faq-panel-1" role="region" aria-labelledby="faq-btn-1">
+            <div class="faq-panel-inner">
+              <div class="faq-answer px-6 pb-6 text-slate-600 text-sm leading-relaxed border-t border-slate-100 pt-3">Tell us where you're going, your dates, budget and travel style. Kibi builds a day-by-day itinerary around real attractions and stays near your destination, checks the weather for your trip, maps each day's route, and splits your budget into stay, food, transport and activities, all in rupees.</div>
+            </div>
+          </div>
+        </div>
+        <div class="faq-item bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden transition">
+          <button type="button" id="faq-btn-2" aria-expanded="false" aria-controls="faq-panel-2" class="faq-trigger w-full px-6 py-5 text-left flex justify-between items-center gap-4 text-slate-800 font-bold text-base md:text-lg focus:outline-none hover:text-brand-blue">
+            <span>Which destinations can I plan for?</span>
+            <i class="faq-chevron fa-solid fa-chevron-down text-slate-400" aria-hidden="true"></i>
+          </button>
+          <div class="faq-panel" id="faq-panel-2" role="region" aria-labelledby="faq-btn-2">
+            <div class="faq-panel-inner">
+              <div class="faq-answer px-6 pb-6 text-slate-600 text-sm leading-relaxed border-t border-slate-100 pt-3">Kibi is built for travel within India. Discover has 25 handpicked places, from Manali and Spiti Valley to Goa, Udaipur, Varanasi and the Andaman Islands, with the best months to visit each. You can also search for any other town or city on the Plan Trip page.</div>
+            </div>
+          </div>
+        </div>
+        <div class="faq-item bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden transition">
+          <button type="button" id="faq-btn-3" aria-expanded="false" aria-controls="faq-panel-3" class="faq-trigger w-full px-6 py-5 text-left flex justify-between items-center gap-4 text-slate-800 font-bold text-base md:text-lg focus:outline-none hover:text-brand-blue">
+            <span>Is Kibi free to use?</span>
+            <i class="faq-chevron fa-solid fa-chevron-down text-slate-400" aria-hidden="true"></i>
+          </button>
+          <div class="faq-panel" id="faq-panel-3" role="region" aria-labelledby="faq-btn-3">
+            <div class="faq-panel-inner">
+              <div class="faq-answer px-6 pb-6 text-slate-600 text-sm leading-relaxed border-t border-slate-100 pt-3">Yes. The Free Explorer plan costs ₹0 and includes one AI-generated itinerary a month, location-based suggestions, and saving and sharing trips. Smart Voyager (₹849/month) adds unlimited itineraries, and Group Adventurer (₹1,649/month) adds tools for planning with friends.</div>
+            </div>
+          </div>
+        </div>
+        <div class="faq-item bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden transition">
+          <button type="button" id="faq-btn-4" aria-expanded="false" aria-controls="faq-panel-4" class="faq-trigger w-full px-6 py-5 text-left flex justify-between items-center gap-4 text-slate-800 font-bold text-base md:text-lg focus:outline-none hover:text-brand-blue">
+            <span>Can I find people to travel with?</span>
+            <i class="faq-chevron fa-solid fa-chevron-down text-slate-400" aria-hidden="true"></i>
+          </button>
+          <div class="faq-panel" id="faq-panel-4" role="region" aria-labelledby="faq-btn-4">
+            <div class="faq-panel-inner">
+              <div class="faq-answer px-6 pb-6 text-slate-600 text-sm leading-relaxed border-t border-slate-100 pt-3">Yes. Discover lists group trips organised by other travellers. Each one shows how well it matches you, based on your interests, budget, travel style and how social you like to travel, and you can send a request to join in one tap.</div>
+            </div>
+          </div>
+        </div>
+        <div class="faq-item bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden transition">
+          <button type="button" id="faq-btn-5" aria-expanded="false" aria-controls="faq-panel-5" class="faq-trigger w-full px-6 py-5 text-left flex justify-between items-center gap-4 text-slate-800 font-bold text-base md:text-lg focus:outline-none hover:text-brand-blue">
+            <span>Are my trips saved if I switch devices?</span>
+            <i class="faq-chevron fa-solid fa-chevron-down text-slate-400" aria-hidden="true"></i>
+          </button>
+          <div class="faq-panel" id="faq-panel-5" role="region" aria-labelledby="faq-btn-5">
+            <div class="faq-panel-inner">
+              <div class="faq-answer px-6 pb-6 text-slate-600 text-sm leading-relaxed border-t border-slate-100 pt-3">Yes. Everything is saved to your Kibi account, not just your browser. Sign in with email or Google on any device and your planned, joined and saved trips are waiting in My Trips.</div>
+            </div>
+          </div>
+        </div>
+        <div class="faq-item bg-white rounded-2xl border border-slate-200/80 shadow-sm overflow-hidden transition">
+          <button type="button" id="faq-btn-6" aria-expanded="false" aria-controls="faq-panel-6" class="faq-trigger w-full px-6 py-5 text-left flex justify-between items-center gap-4 text-slate-800 font-bold text-base md:text-lg focus:outline-none hover:text-brand-blue">
+            <span>How accurate is the budget estimate?</span>
+            <i class="faq-chevron fa-solid fa-chevron-down text-slate-400" aria-hidden="true"></i>
+          </button>
+          <div class="faq-panel" id="faq-panel-6" role="region" aria-labelledby="faq-btn-6">
+            <div class="faq-panel-inner">
+              <div class="faq-answer px-6 pb-6 text-slate-600 text-sm leading-relaxed border-t border-slate-100 pt-3">It's an estimate to plan with, not a booking quote. Kibi scales stay, food, transport and activity costs to the total you enter and picks stays that fit it, so you can see where your money goes before you book anything.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div id="footerContainer"></div>
+
+  <script>
+    // FAQ accordion: one answer open at a time, smooth open/close, staggered reveal on scroll.
+    (function () {
+      const list = document.getElementById('faq-accordion');
+      if (!list) return;
+      const items = [...list.querySelectorAll('.faq-item')];
+
+      function setOpen(item, open) {
+        const trigger = item.querySelector('.faq-trigger');
+        const chevron = item.querySelector('.faq-chevron');
+        item.classList.toggle('is-open', open);
+        trigger.setAttribute('aria-expanded', String(open));
+        trigger.classList.toggle('text-brand-blue', open);
+        trigger.classList.toggle('text-slate-800', !open);
+        chevron.classList.toggle('text-brand-blue', open);
+        chevron.classList.toggle('text-slate-400', !open);
+      }
+
+      items.forEach(item => {
+        item.querySelector('.faq-trigger').addEventListener('click', () => {
+          const willOpen = !item.classList.contains('is-open');
+          items.forEach(other => { if (other !== item) setOpen(other, false); });
+          setOpen(item, willOpen);
+        });
+      });
+
+      // Cards fade up one after another the first time the section scrolls into view.
+      if ('IntersectionObserver' in window && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        items.forEach((item, i) => { item.classList.add('faq-hidden'); item.style.transitionDelay = `${i * 70}ms`; });
+        new IntersectionObserver((entries, observer) => {
+          if (!entries.some(e => e.isIntersecting)) return;
+          items.forEach(item => item.classList.remove('faq-hidden'));
+          setTimeout(() => items.forEach(item => { item.style.transitionDelay = ''; }), 900);
+          observer.disconnect();
+        }, { threshold: 0.15 }).observe(list);
+      }
+    })();
+
+    function filterDestinations(category, btn) {
+      document.querySelectorAll('#destination-filters .filter-btn').forEach(b => {
+        b.classList.remove('bg-brand-blue','text-white','shadow-sm');
+        b.classList.add('bg-white','text-gray-500');
+      });
+      btn.classList.remove('bg-white','text-gray-500');
+      btn.classList.add('bg-brand-blue','text-white','shadow-sm');
+      document.querySelectorAll('#destinations-grid .dest-card').forEach(card => {
+        card.style.display = (category === 'all' || card.dataset.category === category) ? '' : 'none';
+      });
+    }
+
+    function switchDay(dayNum) {
+      const btn1 = document.getElementById('btn-day1');
+      const btn2 = document.getElementById('btn-day2');
+      const day1 = document.getElementById('day1-content');
+      const day2 = document.getElementById('day2-content');
+      const label = document.getElementById('budget-label');
+      const active = 'bg-white text-brand-blue font-semibold text-xs px-5 py-2 rounded-full shadow transition';
+      const inactive = 'bg-white/15 text-white hover:bg-white/25 font-semibold text-xs px-5 py-2 rounded-full border border-white/20 transition';
+      if (dayNum === 1) {
+        btn1.className = active; btn2.className = inactive;
+        day1.classList.remove('hidden'); day2.classList.add('hidden');
+        label.innerHTML = 'Total day budget: <strong class="text-white text-base font-bold">₹4,450</strong>';
+      } else {
+        btn2.className = active; btn1.className = inactive;
+        day2.classList.remove('hidden'); day1.classList.add('hidden');
+        label.innerHTML = 'Total day budget: <strong class="text-white text-base font-bold">₹4,750</strong>';
+      }
+    }
+  </script>
+
+  <script src="js/api/api-config.js?v=15"></script>
+  <script src="js/api/api-cache.js?v=15"></script>
+  <script src="js/api/geocoding-api.js?v=15"></script>
+  <script src="js/api/weather-api.js?v=15"></script>
+  <script src="js/api/places-api.js?v=15"></script>
+  <script src="js/api/routing-api.js?v=15"></script>
+  <script src="js/api/tripmate-api.js?v=15"></script>
+  <script src="js/storage.js?v=15"></script>
+  <script src="js/matching.js?v=15"></script>
+  <script src="js/planner.js?v=15"></script>
+  <script src="js/app.js?v=15"></script>
+<script src="js/gooey-nav.js"></script>
+  <script src="js/animations.js?v=15"></script>
+  <script src="js/home.js?v=15"></script>
+
+  <!-- Kibi AI Chatbot Widget -->
+  <link rel="stylesheet" href="css/kibi-ai-chatbot.css">
+  <script src="js/config.js"></script>
+  <script src="js/api/gemini-api.js"></script>
+  <script src="js/kibi-ai-chatbot.js"></script>
+</body>
+</html>

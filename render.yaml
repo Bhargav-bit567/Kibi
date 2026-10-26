@@ -1,0 +1,27 @@
+# Render Blueprint: one web service runs Express, which serves the API (/api)
+# and the website (frontend/). Secrets marked "sync: false" are entered in the
+# Render dashboard when the Blueprint is created — never committed here.
+services:
+  - type: web
+    name: kibi
+    runtime: node
+    plan: free
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && npm start
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: "22"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: MONGODB_URI
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false

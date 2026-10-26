@@ -4,513 +4,311 @@
 
 ### Your journey. Smarter planned.
 
-**A modern travel planner that turns scattered travel research into one organized journey.**
-
-<br>
+**A travel planner that turns scattered travel research into one organized journey.**
 
 [![Live Demo](https://img.shields.io/badge/🌍_LIVE_DEMO-Kibi-0ea5e9?style=for-the-badge)](https://kibi-mu.vercel.app/)
 [![GitHub](https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge\&logo=github)](https://github.com/Bhargav-bit567/Kibi)
-[![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-black?style=for-the-badge\&logo=vercel)](https://vercel.com/)
 
-<br>
-
-<a href="https://kibi-mu.vercel.app/">
-  <img src="hero.png" alt="Kibi Travel Planner" width="900"/>
-</a>
-
-<br><br>
+<img src="frontend/hero.png" alt="Kibi Travel Planner" width="900"/>
 
 **Discover → Plan → Organize → Explore**
 
-<br>
-
-[🌍 **Try Kibi Live**](https://kibi-mu.vercel.app/)
-
 </div>
 
 ---
 
-# 🌍 The Problem
+## 💡 What is Kibi?
 
-Planning a trip sounds simple.
+Kibi helps you discover destinations, generate day-by-day itineraries, save trips, and join group trips with travelers who share your style. Everything is stored in MongoDB, so your trips follow your account to any device.
 
-Actually planning one usually means opening **multiple websites, maps, notes, booking platforms, and spreadsheets** just to organize a few days.
-
-Travelers have to figure out:
-
-* 📍 Where to go
-* 🗓️ What to do each day
-* 💰 How much the trip might cost
-* 🏨 Where to stay
-* 🍜 What to eat
-* 🗺️ Which places are worth visiting
-* 📝 How to keep everything organized
-
-The information exists.
-
-**The problem is that it's scattered.**
-
-> **Trip planning shouldn't feel like project management.**
-
-Kibi brings the planning experience into one place.
+| Feature | What it does |
+| --- | --- |
+| 🌍 Destination discovery | Browse destinations and group trips |
+| 🧭 Itinerary builder | Day-by-day plans using live weather, places, hotels and routes |
+| 👥 Group trips | Request to join trips; see your compatibility with other travelers |
+| 💾 My Trips | Planned, joined and saved trips stored in your account |
+| 🔐 Accounts | Email/password sign-up (hashed passwords, JWT sessions) plus Continue with Google |
+| 🛡️ Admin dashboard | Manage users, roles, trips, join requests and an activity log |
+| 🌙 Dark mode & responsive UI | Works on desktop, tablet and mobile |
 
 ---
 
-# 💡 What is Kibi?
+## 🛠️ Tech stack
 
-**Kibi is a web-based travel planner designed to help users discover destinations, create trips, organize itineraries, and manage their journeys from one interface.**
-
-Instead of jumping between different tools, users can move through a simple flow:
-
-```text
-Discover
-   ↓
-Choose a destination
-   ↓
-Plan the trip
-   ↓
-Build the itinerary
-   ↓
-Save the journey
-   ↓
-Explore
-```
-
-The goal is simple:
-
-> **Less time organizing the trip. More time experiencing it.**
+**Frontend:** HTML, Tailwind CSS and vanilla JavaScript.
+**Backend:** Node.js, Express, Mongoose, Passport (Google sign-in) and Nodemailer (emails).
+**Database:** MongoDB Atlas.
+**Hosting:** Vercel.
 
 ---
 
-# ✨ What Makes Kibi Different?
-
-Kibi isn't trying to be another booking platform.
-
-It focuses on the **planning layer between inspiration and the actual journey.**
-
-### 🔎 Discover
-
-Find destinations and explore places that could become part of your journey.
-
-### 🧳 Plan
-
-Create a trip around your destination, dates, preferences, and travel style.
-
-### 🗓️ Organize
-
-Turn a collection of places into a structured day-by-day itinerary.
-
-### 🗺️ Explore
-
-Use visual destination information to understand where places fit into your journey.
-
-### 📊 Manage
-
-Keep multiple trips organized through a dedicated trip dashboard.
-
----
-
-# 🚀 Key Features
-
-| Feature                      | What it does                                         |
-| ---------------------------- | ---------------------------------------------------- |
-| 🌍 **Destination Discovery** | Browse destinations and discover travel inspiration  |
-| 🗓️ **Trip Planner**         | Create trips based on destination and travel details |
-| 🧭 **Itinerary Builder**     | Organize activities and destinations day by day      |
-| 📍 **Destination Maps**      | Visualize destinations and places                    |
-| 📊 **Trip Dashboard**        | Manage planned and saved journeys                    |
-| 💾 **Local Persistence**     | Preserve trip data using browser local storage       |
-| 🔐 **Authentication UI**     | Login and signup experience                          |
-| 🌙 **Dark Mode**             | Switch between light and dark themes                 |
-| 📱 **Responsive UI**         | Designed for desktop, tablet, and mobile screens     |
-
----
-
-# 🧭 User Journey
-
-A typical Kibi workflow looks like this:
-
-```text
-                 ✈️ START
-                    │
-                    ▼
-            🌍 DISCOVER
-                    │
-                    ▼
-          📍 DESTINATION
-                    │
-                    ▼
-             📅 DATES
-                    │
-                    ▼
-          🎯 PREFERENCES
-                    │
-                    ▼
-             🧳 PLAN
-                    │
-                    ▼
-          🗓️ ITINERARY
-                    │
-                    ▼
-             💾 SAVE
-                    │
-                    ▼
-           🌎 EXPLORE
-```
-
-The interface is designed around keeping this journey simple and visual.
-
----
-
-# 📸 Product Preview
-
-## 🌍 Discover
-
-Explore destinations and start building travel inspiration.
-
-<div align="center">
-
-<img src="hero.png" width="850" alt="Kibi Discover Page"/>
-
-</div>
-
----
-
-## 🗺️ Explore
-
-Visualize destinations and places that can become part of your trip.
-
-<div align="center">
-
-<img src="map.png" width="850" alt="Kibi Map"/>
-
-</div>
-
----
-
-## 🧳 Plan Your Journey
-
-Create the details of your trip and organize the journey.
-
-<div align="center">
-
-<img src="plan.png" width="850" alt="Kibi Trip Planner"/>
-
-</div>
-
----
-
-# ⚙️ How Kibi Works
-
-Kibi is built as a client-side web application.
-
-```text
-                ┌─────────────────┐
-                │      User       │
-                └────────┬────────┘
-                         │
-                         ▼
-                ┌─────────────────┐
-                │   HTML Pages    │
-                │ Discover / Plan │
-                │ Itinerary / etc │
-                └────────┬────────┘
-                         │
-                         ▼
-                ┌─────────────────┐
-                │  JavaScript     │
-                │ Application      │
-                │ Logic            │
-                └────────┬────────┘
-                         │
-              ┌──────────┴──────────┐
-              ▼                     ▼
-       ┌──────────────┐      ┌──────────────┐
-       │ LocalStorage │      │   UI State   │
-       └──────────────┘      └──────────────┘
-```
-
-The application separates reusable functionality into modules for:
-
-* Authentication
-* Storage
-* Trip management
-* Destination matching
-* Shared UI components
-* Theme management
-
----
-
-# 🛠️ Tech Stack
-
-<div align="center">
-
-![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge\&logo=html5\&logoColor=white)
-![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?style=for-the-badge\&logo=tailwindcss\&logoColor=white)
-![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge\&logo=javascript\&logoColor=black)
-![Git](https://img.shields.io/badge/Git-F05032?style=for-the-badge\&logo=git\&logoColor=white)
-![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge\&logo=github\&logoColor=white)
-![Vercel](https://img.shields.io/badge/Vercel-000000?style=for-the-badge\&logo=vercel\&logoColor=white)
-
-</div>
-
-### Core Technologies
-
-**HTML5**
-Page structure and semantic markup.
-
-**Tailwind CSS**
-Responsive styling and UI design.
-
-**Vanilla JavaScript**
-Application logic, interactions, state management, and dynamic rendering.
-
-**Local Storage**
-Client-side persistence for trips and user data.
-
-**Git & GitHub**
-Version control and project management.
-
-**Vercel**
-Production deployment and hosting.
-
----
-
-# 📁 Project Structure
+## 📁 Project structure
 
 ```text
 Kibi/
+├── frontend/                  # Everything the browser loads
+│   ├── *.html                 # Pages (index, discover, plan-trip, itinerary, my-trips, …)
+│   ├── css/                   # Styles
+│   ├── js/
+│   │   ├── storage.js         # Data layer: loads data from the API and saves changes back
+│   │   ├── auth.js            # Login, signup, Continue with Google
+│   │   ├── app.js             # Navbar, footer, theme, shared helpers
+│   │   ├── trips.js           # Trip pages, itinerary rendering, map
+│   │   ├── planner.js         # Itinerary generation
+│   │   ├── matching.js        # Traveler/trip compatibility
+│   │   ├── api/               # Weather, geocoding, places, routing, Gemini clients
+│   │   └── animation/         # Landing-page scroll animation
+│   ├── assets/                # Images and the hero animation frames
 │
-├── index.html                 # Landing page
-├── discover.html              # Destination discovery
-├── plan-trip.html             # Trip planner
-├── itinerary.html             # Generated itinerary
-├── my-trips.html              # User's trips
-├── dashboard.html             # Dashboard & statistics
-├── saved-itinerary.html       # Saved itineraries
+├── backend/                   # Node.js + Express API
+│   ├── server.js              # Starts the server (serves the API and ../frontend)
+│   ├── app.js                 # Express app and routes setup
+│   ├── config.js              # Reads settings from backend/.env
+│   ├── db.js                  # MongoDB connection
+│   ├── models/                # Mongoose models
+│   ├── routes/                # API endpoints
+│   ├── middleware/            # JWT authentication
+│   ├── passport.js            # Google sign-in strategy (Passport)
+│   ├── mailer.js              # Welcome and sign-in emails (Nodemailer)
+│   ├── seed/                  # Sample destinations, travelers and group trips
+│   ├── vercel.js              # Vercel serverless entry
+│   ├── package.json
+│   └── .env.example           # Template for backend/.env
 │
-├── login.html                 # Login
-├── signup.html                # Signup
-│
-├── js/
-│   ├── app.js                 # Navbar, footer & theme
-│   ├── auth.js                # Authentication logic
-│   ├── storage.js             # Local storage management
-│   ├── trips.js               # Trip rendering & management
-│   └── matching.js            # Destination matching
-│
-├── assets/
-│   └── ...                    # Images, icons & other assets
-│
-├── server.py                  # Local development server
-│
+├── render.yaml                # Render Blueprint (one web service)
+├── vercel.json                # Vercel routing (frontend + /api)
 └── README.md
 ```
 
 ---
 
-# ⚡ Getting Started
+## ⚡ Run it locally
 
-## 1. Clone the repository
+**You need:** [Node.js 20+](https://nodejs.org) and a MongoDB database. Either use a free [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) cluster, or a local MongoDB (`brew install mongodb-community` on macOS).
+
+**1. Install**
 
 ```bash
 git clone https://github.com/Bhargav-bit567/Kibi.git
+cd Kibi/backend
+npm install
 ```
 
-## 2. Enter the project
+**2. Configure:** create `backend/.env` from the template:
 
 ```bash
-cd Kibi
+cp .env.example .env
 ```
 
-## 3. Run locally
+Then set these two values in `backend/.env`:
 
-You can open `index.html` directly in your browser.
+```env
+# Atlas: Connect → Drivers → copy the string, replace <db_password>,
+# and put the database name "kibi" after ".mongodb.net/"
+MONGODB_URI=mongodb+srv://USER:PASSWORD@CLUSTER.mongodb.net/kibi?retryWrites=true&w=majority
+# or a local database:
+# MONGODB_URI=mongodb://127.0.0.1:27017/kibi
 
-For development, using **VS Code Live Server** or another local HTTP server is recommended.
+JWT_SECRET=paste-a-long-random-string-here
+```
 
-Alternatively:
+Generate a `JWT_SECRET` with:
 
 ```bash
-python server.py
+node -e "console.log(require('crypto').randomBytes(48).toString('hex'))"
 ```
 
-Then open the local address shown by the server.
+**3. Start**
 
----
-
-# 🌐 Live Demo
-
-Kibi is currently deployed and available online:
-
-### 👉 https://kibi-mu.vercel.app/
-
-**Try the application:**
-🌍 **[Launch Kibi](https://kibi-mu.vercel.app/)**
-
----
-
-# 📌 Current Status
-
-Kibi currently provides the core travel-planning experience:
-
-* ✅ Destination discovery
-* ✅ Trip creation
-* ✅ Itinerary organization
-* ✅ Trip dashboard
-* ✅ Saved trip data
-* ✅ Responsive interface
-* ✅ Light / dark mode
-* ✅ Client-side persistence
-* ✅ Deployed production version
-
-The project is intentionally structured so additional travel intelligence and external services can be integrated later.
-
----
-
-# 🗺️ Roadmap
-
-The next stage of Kibi is focused on making the planner more intelligent and useful.
-
-### 🤖 Intelligence
-
-* [ ] AI-generated personalized itineraries
-* [ ] Preference-based destination recommendations
-* [ ] Intelligent activity scheduling
-* [ ] Automatic itinerary optimization
-
-### 🌦️ Real-world Data
-
-* [ ] Live weather information
-* [ ] Real-time maps
-* [ ] Hotel discovery
-* [ ] Flight discovery
-* [ ] Restaurant recommendations
-* [ ] Attraction recommendations
-
-### 💰 Trip Management
-
-* [ ] Advanced travel budget
-* [ ] Expense tracking
-* [ ] Cost estimation
-* [ ] Budget-aware recommendations
-
-### 👥 Collaboration
-
-* [ ] Cloud-based trip synchronization
-* [ ] Collaborative trip planning
-* [ ] Shared itineraries
-* [ ] Multi-user trips
-
-### 📱 Platform
-
-* [ ] Progressive Web App
-* [ ] Offline support
-* [ ] Expanded destination database
-
----
-
-# 🎯 Project Vision
-
-Kibi started with a simple question:
-
-> **What if planning a trip felt as exciting as taking one?**
-
-The long-term vision is to evolve Kibi from a traditional trip planner into an **intelligent travel companion**.
-
-Instead of starting with:
-
-```text
-"I want to travel somewhere."
+```bash
+npm start          # or: npm run dev  (restarts when you edit backend files)
 ```
 
-and spending hours figuring everything out...
+Open **http://localhost:3000**. On first start, the sample destinations, travelers and group trips are added to the database automatically.
 
-Kibi should eventually be able to turn that idea into:
+**4. Become admin:** sign up, then open `http://localhost:3000/admin.html` and click **Claim Admin Access**. Only the first account to do this becomes admin.
 
-```text
-"Here's your journey."
-```
+### Troubleshooting
 
-with the destination, itinerary, activities, budget, and practical information intelligently organized around the traveler.
-
----
-
-# 🧠 Why Kibi?
-
-Travel planning has plenty of information.
-
-What it lacks is **coordination**.
-
-Kibi is built around the idea that a good travel experience should connect:
-
-```text
-Inspiration
-     ↓
-Destination
-     ↓
-Preferences
-     ↓
-Itinerary
-     ↓
-Budget
-     ↓
-Journey
-```
-
-rather than forcing the traveler to coordinate everything manually.
+| Message | Fix |
+| --- | --- |
+| `Could not connect to any servers…` or `SSL alert number 80` | Atlas → **Network Access** → add your IP (or `0.0.0.0/0`) and wait until it shows **Active** |
+| `bad auth : authentication failed` | Check the user and password in Atlas → **Database Users** (a password change takes about a minute to apply) |
+| "Could not reach the Kibi server" toast | The backend isn't running. Run `npm start` inside `backend/` |
+| Port 3000 already in use | Set `PORT=3001` in `backend/.env` |
 
 ---
 
-# 📈 Future Direction
+## 🔑 Continue with Google
 
-The most important evolution of Kibi is moving from:
+"Continue with Google" uses [Passport](https://www.passportjs.org/) (`passport-google-oauth20`). Clicking the button sends you to Google, Google sends you back to `/api/auth/google/callback`, and the server finds or creates your Kibi account and signs you in. New accounts go to onboarding; returning users go to their dashboard. Accounts are matched by email, so someone who signed up with email and password gets the same account when they use Google.
 
-**Static planning → Intelligent planning**
+It works once `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` are set. Until then, the button says it isn't set up.
 
-Future versions can combine:
+### Get the client ID and secret (free, about 5 minutes)
 
-* User preferences
-* Destination data
-* Maps
-* Weather
-* Budget constraints
-* Opening hours
-* Travel time
-* Personal interests
+1. Open [Google Cloud Console](https://console.cloud.google.com/) and create a project (e.g. `Kibi`).
+2. Search for **Google Auth Platform** (older layout: **APIs & Services → OAuth consent screen**) → **Get started**.
+   * App name `Kibi`, your email as support email, **Audience: External**, your email as contact.
+   * Under **Audience → Test users**, add the Gmail accounts that may sign in while the app is in *Testing*. Click **Publish app** later to let anyone sign in.
+3. Go to **Clients → Create client** (older layout: **Credentials → Create credentials → OAuth client ID**):
+   * **Application type:** Web application
+   * **Authorized redirect URIs:** add both
+     ```
+     http://localhost:3000/api/auth/google/callback
+     https://kibi-mu.vercel.app/api/auth/google/callback
+     ```
+4. Click **Create**, then copy the **Client ID** and **Client secret**.
+5. Put them in `backend/.env`:
+   ```env
+   GOOGLE_CLIENT_ID=1234567890-abc123.apps.googleusercontent.com
+   GOOGLE_CLIENT_SECRET=GOCSPX-xxxxxxxxxxxxxxxx
+   ```
+6. Restart the server (`npm start`), open http://localhost:3000/login.html and click **Continue with Google**.
 
-to generate journeys that aren't just **possible**, but actually **practical**.
+For the live site, add the same two variables in **Vercel → Settings → Environment Variables** and redeploy.
+
+| Google error | Fix |
+| --- | --- |
+| `redirect_uri_mismatch` | The callback URL isn't listed in step 3. It must match exactly, including `http`/`https` and port `3000`. |
+| "Access blocked: app has not completed verification" | Add your Gmail under **Test users**, or publish the app |
+| "Google sign-in isn't set up yet" | One of the two variables is empty, or the server wasn't restarted |
 
 ---
 
-# 🤝 Contributing
+## 🤖 Kibi AI chatbot
 
-Contributions, ideas, and feedback are welcome.
+The chat bubble in the bottom-right corner of every page is **Kibi AI**, powered by Google Gemini. The same key also powers AI itineraries in Plan Trip.
 
-If you find a bug or have an idea for improving Kibi:
+1. Get a free key at [Google AI Studio](https://aistudio.google.com/apikey).
+2. Add it to `backend/.env` and restart the server:
+   ```env
+   GEMINI_API_KEY=your-gemini-key
+   ```
 
-1. Open an issue
-2. Describe the problem or idea
-3. Submit a pull request if you'd like to contribute
+The key stays on the server: the browser sends messages to `POST /api/chat`, and the server adds the key and forwards them to Gemini. Without the key, the chatbot replies that it isn't configured yet.
+
+**Chat memory:**
+* **Signed-in users:** every message is saved in MongoDB (`chatmessages`, the latest 500 per user). Each new question is sent to Gemini together with their recent conversation, onboarding preferences, trips and saved itineraries, so answers stay personal across pages, devices and visits. The chat restores itself on every page, and the 🗑️ button in its header clears the history.
+* **Guests:** they can chat freely, but nothing is stored; the conversation lasts only while the page is open.
 
 ---
+
+## 📧 Emails
+
+Kibi emails users when they **sign up** (a welcome email with a link to set up their travel profile) and when they **sign in** (an alert showing the time in IST, the device, and whether they used a password or Google). The server finishes sending before it responds, so this also works on Vercel. If email is slow or failing, sign-in still goes through: sending gives up after 8 seconds and the error is logged.
+
+There are two ways to send. If `BREVO_API_KEY` is set, Brevo is used; otherwise SMTP is used.
+
+### Option A: Brevo (free, recommended, works on Render's free plan)
+
+[Brevo](https://www.brevo.com/) sends over HTTPS, so it works on hosts that block email ports (Render's free plan does). The free plan allows about 300 emails a day, and you don't need your own domain.
+
+1. Sign up at https://www.brevo.com (free).
+2. Go to **Senders, Domains & Dedicated IPs → Senders → Add a sender**, enter the address emails should come from (your Gmail is fine), and click the confirmation link Brevo emails you.
+3. Go to **SMTP & API → API Keys → Generate a new API key** and copy it (it starts with `xkeysib-`).
+4. Fill in `backend/.env`:
+   ```env
+   BREVO_API_KEY=xkeysib-...
+   MAIL_FROM=Kibi <the.sender.you.verified@gmail.com>
+   SITE_URL=http://localhost:3000
+   ```
+5. Restart the server and sign up with an address you can check (look in Spam the first time).
+
+### Option B: Gmail SMTP (free; not on Render's free plan)
+
+1. Turn on **2-Step Verification** for the Gmail account that will send the emails (Google Account → Security).
+2. Open **Google Account → Security → App passwords** (or https://myaccount.google.com/apppasswords), create one named `Kibi`, and copy the 16-character password.
+3. Fill these in `backend/.env`:
+   ```env
+   SMTP_HOST=smtp.gmail.com
+   SMTP_PORT=465
+   SMTP_USER=your.address@gmail.com
+   SMTP_PASS=abcdefghijklmnop        # the app password, without spaces
+   MAIL_FROM=Kibi <your.address@gmail.com>
+   SITE_URL=http://localhost:3000     # use https://kibi-mu.vercel.app on Vercel
+   ```
+4. Restart the server, sign up with an address you can check, and look for the welcome email (check Spam the first time).
+
+For the live site, add the same variables in your host's environment settings, with `SITE_URL` set to the live address, and redeploy. Gmail allows about 500 emails a day. Any other SMTP provider works by changing the `SMTP_*` values. If neither `BREVO_API_KEY` nor the `SMTP_*` values are set, emails are simply skipped.
+
+---
+
+## 🚀 Deploy on Vercel
+
+1. **Atlas → Network Access:** add `0.0.0.0/0`, because Vercel's IP addresses change.
+2. **Vercel → Project → Settings → Environment Variables:** add `MONGODB_URI` and `JWT_SECRET`, with the same values as in `backend/.env`. Add `GEMINI_API_KEY` for Kibi AI, `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` for Continue with Google, and the `SMTP_*`, `MAIL_FROM` and `SITE_URL` values for emails.
+3. Leave the project's **Root Directory** as the repository root. `vercel.json` serves `frontend/` as the site and sends `/api/*` to the backend.
+4. Push to GitHub (or run `vercel --prod`).
+
+## 🟣 Deploy on Render
+
+Render runs Kibi as one web service: Express serves both the website and the API. The repository includes a `render.yaml` Blueprint with all the settings.
+
+1. Push the code to GitHub.
+2. Render → **New → Blueprint**, connect the repository and click **Apply**. Render reads `render.yaml` and asks for the secret values:
+   * `MONGODB_URI`: your Atlas connection string, the same as in `backend/.env`
+   * `GEMINI_API_KEY`: for the Kibi AI chatbot
+   * `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET`: for Continue with Google
+
+   `JWT_SECRET` is generated automatically and `NODE_ENV` is set to `production`.
+3. In Google Cloud → **Credentials** → your OAuth client, add:
+   * **Authorized JavaScript origins:** `https://<your-app>.onrender.com`
+   * **Authorized redirect URIs:** `https://<your-app>.onrender.com/api/auth/google/callback`
+4. Keep `0.0.0.0/0` in Atlas **Network Access** (Render has no fixed IP on the free plan).
+
+Prefer to set it up by hand? Use **New → Web Service** and leave **Root Directory** empty (the server needs both `backend/` and `frontend/`). Then set **Build Command** to `cd backend && npm install`, **Start Command** to `cd backend && npm start`, and add the variables above plus `JWT_SECRET` and `NODE_ENV=production`.
+
+On the free plan, the first visit after about 15 idle minutes takes 30–60 seconds while the service wakes up. For optional emails, use **Brevo** (`BREVO_API_KEY`, `MAIL_FROM`, `SITE_URL`); Gmail SMTP is blocked on the free plan.
+
+**Other hosts (Railway…):** use the same settings as Render. Express serves both the API and the frontend.
+
+---
+
+## 🔌 API
+
+All endpoints are under `/api`. Endpoints that change data need an `Authorization: Bearer <token>` header; you get the token from signup or login.
+
+| Endpoint | Purpose |
+| --- | --- |
+| `POST /auth/signup`, `POST /auth/login` | Create an account / sign in, returns `{ token, user }` |
+| `GET /auth/google` | Continue with Google (redirects to Google, then back to the site signed in) |
+| `POST /chat` | Kibi AI chat: `{ message }` → `{ text, saved }`. Saved to the account when signed in |
+| `GET /chat/history`, `DELETE /chat/history` | Your saved Kibi AI conversation / clear it |
+| `POST /ai/generate` | AI itineraries and overviews: sends `{ prompt }` to Gemini, returns `{ text }` |
+| `GET /bootstrap` | All data the current visitor may see (trips, destinations, own profile, notifications…) |
+| `PATCH /users/:id`, `PUT /users/:id/preferences`, `DELETE /users/:id` | Profile and preferences; role, status and delete are admin only |
+| `PUT /trips/:id`, `PATCH /trips/:id`, `DELETE /trips/:id` | Create, update or delete a trip (creator or admin) |
+| `PUT /saved-itineraries/:id`, `DELETE /saved-itineraries/:id` | Your saved itineraries |
+| `PUT /join-requests/:id`, `PATCH /join-requests/:id`, `DELETE /join-requests/:id` | Request to join a trip; approve or reject (admin) |
+| `PUT /notifications/:id`, `POST /notifications/:id/read`, `POST /notifications/read-all` | Notifications |
+| `DELETE /admin/activity-log` | Clear the activity log (admin) |
+| `GET /health` | Health check |
+
+---
+
+## 🔒 Keeping secrets out of GitHub
+
+`backend/.env` (database password, JWT secret, Google and Gemini keys) is in `.gitignore` and are never pushed. Only the `*.example` templates are committed. On Vercel, secrets go in **Environment Variables**, not in files.
+
+---
+
+## 📸 Screens
+
+<div align="center">
+<img src="frontend/map.png" width="850" alt="Kibi map"/>
+<br><br>
+<img src="frontend/plan.png" width="850" alt="Kibi trip planner"/>
+</div>
+
+---
+
+## 🤝 Contributing
+
+Issues and pull requests are welcome. Open an issue describing the bug or idea, then send a PR.
 
 <div align="center">
 
-# ✈️ KIBI
-
-### Don't just plan a trip. Build a journey.
-
-**Discover → Plan → Explore → Remember**
-
-<br>
-
-🌍 **[Try Kibi Live](https://kibi-mu.vercel.app/)**
-
-⭐ If you like the project, consider giving the repository a star.
-
-<br>
-
-Made with ☕, code, and a little bit of wanderlust.
+Made with ☕, code, and a little bit of wanderlust. ⭐ Star the repo if you like it!
 
 </div>

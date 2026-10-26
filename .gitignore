@@ -1,16 +1,34 @@
-# Backup archive
-backup.zip
-
-# macOS
-.DS_Store
-
-# Logs
-*.log
-
-# IDE
-.vscode/settings.json
-
-# Local runtime config with real OAuth credentials
-config.json
+# ── Secrets: never commit these ─────────────────────────────
+# Database URL, JWT secret, OAuth secrets (backend/.env)
 .env
+.env.*
+!.env.example
+# Runtime OAuth client config (frontend/config.json)
+config.json
+# Keys and certificates
+*.pem
+*.key
+*.p8
+*.p12
+*.crt
+
+# ── Dependencies & build output ─────────────────────────────
+node_modules/
+.vercel/
+
+# ── Backups, notes & archives ───────────────────────────────
+*.zip
+*.tar.gz
+*.bak
 *.txt
+
+# ── Logs ────────────────────────────────────────────────────
+*.log
+npm-debug.log*
+
+# ── OS & editor files ───────────────────────────────────────
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+.claude/
