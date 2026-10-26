@@ -1,0 +1,327 @@
+{
+  "clientName": "Thunder Client",
+  "collectionName": "Kibi API",
+  "collectionId": "27ff83d6-f902-4ac3-9852-6342911e6e4c",
+  "dateExported": "2026-10-26T12:19:25.976Z",
+  "version": "1.2",
+  "folders": [],
+  "requests": [
+    {
+      "_id": "d8526d17-97ed-46e7-930f-81357cfbb73c",
+      "colId": "27ff83d6-f902-4ac3-9852-6342911e6e4c",
+      "containerId": "",
+      "name": "01 Sign up (new account)",
+      "url": "{{base}}/auth/signup",
+      "method": "POST",
+      "sortNum": 10000,
+      "created": "2026-10-26T12:19:25.976Z",
+      "modified": "2026-10-26T12:19:25.976Z",
+      "headers": [],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"name\": \"Viva Demo\",\n  \"email\": \"viva.demo@kibi.com\",\n  \"password\": \"Test@1234\"\n}",
+        "form": []
+      },
+      "tests": [
+        {
+          "type": "set-env-var",
+          "custom": "json.token",
+          "action": "setto",
+          "value": "{{token}}"
+        },
+        {
+          "type": "set-env-var",
+          "custom": "json.user.id",
+          "action": "setto",
+          "value": "{{userId}}"
+        }
+      ]
+    },
+    {
+      "_id": "8563d36f-5f39-4c44-8d11-e81b9ffcc8d0",
+      "colId": "27ff83d6-f902-4ac3-9852-6342911e6e4c",
+      "containerId": "",
+      "name": "02 Login",
+      "url": "{{base}}/auth/login",
+      "method": "POST",
+      "sortNum": 20000,
+      "created": "2026-10-26T12:19:25.976Z",
+      "modified": "2026-10-26T12:19:25.976Z",
+      "headers": [],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"email\": \"viva.demo@kibi.com\",\n  \"password\": \"Test@1234\"\n}",
+        "form": []
+      },
+      "tests": [
+        {
+          "type": "set-env-var",
+          "custom": "json.token",
+          "action": "setto",
+          "value": "{{token}}"
+        },
+        {
+          "type": "set-env-var",
+          "custom": "json.user.id",
+          "action": "setto",
+          "value": "{{userId}}"
+        }
+      ]
+    },
+    {
+      "_id": "b020c6a7-0a6d-4e67-8623-c40779c95964",
+      "colId": "27ff83d6-f902-4ac3-9852-6342911e6e4c",
+      "containerId": "",
+      "name": "03 Get all users",
+      "url": "{{base}}/users",
+      "method": "GET",
+      "sortNum": 30000,
+      "created": "2026-10-26T12:19:25.976Z",
+      "modified": "2026-10-26T12:19:25.976Z",
+      "headers": [],
+      "tests": []
+    },
+    {
+      "_id": "92568454-a2b7-46bf-ba76-f4a9a3a1b827",
+      "colId": "27ff83d6-f902-4ac3-9852-6342911e6e4c",
+      "containerId": "",
+      "name": "04 Get one user by id",
+      "url": "{{base}}/users/{{userId}}",
+      "method": "GET",
+      "sortNum": 40000,
+      "created": "2026-10-26T12:19:25.976Z",
+      "modified": "2026-10-26T12:19:25.976Z",
+      "headers": [],
+      "tests": []
+    },
+    {
+      "_id": "9873ea46-375e-4497-a2f9-c29bc2592411",
+      "colId": "27ff83d6-f902-4ac3-9852-6342911e6e4c",
+      "containerId": "",
+      "name": "05 Get me (logged-in user)",
+      "url": "{{base}}/users/me",
+      "method": "GET",
+      "sortNum": 50000,
+      "created": "2026-10-26T12:19:25.976Z",
+      "modified": "2026-10-26T12:19:25.976Z",
+      "headers": [],
+      "auth": {
+        "type": "bearer",
+        "bearer": "{{token}}"
+      },
+      "tests": []
+    },
+    {
+      "_id": "3daaf53a-83ea-44f7-b5f1-cfaa6423c662",
+      "colId": "27ff83d6-f902-4ac3-9852-6342911e6e4c",
+      "containerId": "",
+      "name": "06 Update my profile",
+      "url": "{{base}}/users/{{userId}}",
+      "method": "PATCH",
+      "sortNum": 60000,
+      "created": "2026-10-26T12:19:25.976Z",
+      "modified": "2026-10-26T12:19:25.976Z",
+      "headers": [],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"bio\": \"Ready for my viva!\"\n}",
+        "form": []
+      },
+      "auth": {
+        "type": "bearer",
+        "bearer": "{{token}}"
+      },
+      "tests": []
+    },
+    {
+      "_id": "0f6aa89d-67af-445b-8df2-7fa714203a51",
+      "colId": "27ff83d6-f902-4ac3-9852-6342911e6e4c",
+      "containerId": "",
+      "name": "07 Create a trip",
+      "url": "{{base}}/trips",
+      "method": "POST",
+      "sortNum": 70000,
+      "created": "2026-10-26T12:19:25.976Z",
+      "modified": "2026-10-26T12:19:25.976Z",
+      "headers": [],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"title\": \"Goa Beach Trip\",\n  \"destination\": \"Goa\",\n  \"budget\": \"10000\",\n  \"startDate\": \"2026-12-20\",\n  \"endDate\": \"2026-12-23\"\n}",
+        "form": []
+      },
+      "auth": {
+        "type": "bearer",
+        "bearer": "{{token}}"
+      },
+      "tests": [
+        {
+          "type": "set-env-var",
+          "custom": "json.id",
+          "action": "setto",
+          "value": "{{tripId}}"
+        }
+      ]
+    },
+    {
+      "_id": "ebd8f97a-92c1-4da6-99ab-bb0410f1a025",
+      "colId": "27ff83d6-f902-4ac3-9852-6342911e6e4c",
+      "containerId": "",
+      "name": "08 Get all trips",
+      "url": "{{base}}/trips",
+      "method": "GET",
+      "sortNum": 80000,
+      "created": "2026-10-26T12:19:25.976Z",
+      "modified": "2026-10-26T12:19:25.976Z",
+      "headers": [],
+      "tests": []
+    },
+    {
+      "_id": "0bb67752-6148-4144-bb90-f54d0bd790a8",
+      "colId": "27ff83d6-f902-4ac3-9852-6342911e6e4c",
+      "containerId": "",
+      "name": "09 Get one trip by id",
+      "url": "{{base}}/trips/{{tripId}}",
+      "method": "GET",
+      "sortNum": 90000,
+      "created": "2026-10-26T12:19:25.976Z",
+      "modified": "2026-10-26T12:19:25.976Z",
+      "headers": [],
+      "tests": []
+    },
+    {
+      "_id": "2fa46d66-08ae-449b-a3d2-1453988c85b5",
+      "colId": "27ff83d6-f902-4ac3-9852-6342911e6e4c",
+      "containerId": "",
+      "name": "10 Get trips of a user",
+      "url": "{{base}}/users/{{userId}}/trips",
+      "method": "GET",
+      "sortNum": 100000,
+      "created": "2026-10-26T12:19:25.976Z",
+      "modified": "2026-10-26T12:19:25.976Z",
+      "headers": [],
+      "tests": []
+    },
+    {
+      "_id": "c463d277-d2b2-4b72-b9c5-8d702bfe540c",
+      "colId": "27ff83d6-f902-4ac3-9852-6342911e6e4c",
+      "containerId": "",
+      "name": "11 Update the trip",
+      "url": "{{base}}/trips/{{tripId}}",
+      "method": "PATCH",
+      "sortNum": 110000,
+      "created": "2026-10-26T12:19:25.976Z",
+      "modified": "2026-10-26T12:19:25.976Z",
+      "headers": [],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"budget\": \"15000\"\n}",
+        "form": []
+      },
+      "auth": {
+        "type": "bearer",
+        "bearer": "{{token}}"
+      },
+      "tests": []
+    },
+    {
+      "_id": "efea6028-52aa-4d9f-b59c-55ef02be2851",
+      "colId": "27ff83d6-f902-4ac3-9852-6342911e6e4c",
+      "containerId": "",
+      "name": "12 Delete the trip",
+      "url": "{{base}}/trips/{{tripId}}",
+      "method": "DELETE",
+      "sortNum": 120000,
+      "created": "2026-10-26T12:19:25.976Z",
+      "modified": "2026-10-26T12:19:25.976Z",
+      "headers": [],
+      "auth": {
+        "type": "bearer",
+        "bearer": "{{token}}"
+      },
+      "tests": []
+    },
+    {
+      "_id": "dcd679d0-0b73-4a45-b201-94b315a04fb4",
+      "colId": "27ff83d6-f902-4ac3-9852-6342911e6e4c",
+      "containerId": "",
+      "name": "13 Get deleted trip (should be 404)",
+      "url": "{{base}}/trips/{{tripId}}",
+      "method": "GET",
+      "sortNum": 130000,
+      "created": "2026-10-26T12:19:25.976Z",
+      "modified": "2026-10-26T12:19:25.976Z",
+      "headers": [],
+      "tests": []
+    },
+    {
+      "_id": "23373761-ca53-43f9-a362-e8f338572983",
+      "colId": "27ff83d6-f902-4ac3-9852-6342911e6e4c",
+      "containerId": "",
+      "name": "14 Create trip WITHOUT token (should be 401)",
+      "url": "{{base}}/trips",
+      "method": "POST",
+      "sortNum": 140000,
+      "created": "2026-10-26T12:19:25.976Z",
+      "modified": "2026-10-26T12:19:25.976Z",
+      "headers": [],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"title\": \"No token trip\"\n}",
+        "form": []
+      },
+      "tests": []
+    },
+    {
+      "_id": "7bed4e1b-b6c4-428e-aeba-d8d629ad6fd2",
+      "colId": "27ff83d6-f902-4ac3-9852-6342911e6e4c",
+      "containerId": "",
+      "name": "15 Ask Kibi AI",
+      "url": "{{base}}/chat",
+      "method": "POST",
+      "sortNum": 150000,
+      "created": "2026-10-26T12:19:25.976Z",
+      "modified": "2026-10-26T12:19:25.976Z",
+      "headers": [],
+      "body": {
+        "type": "json",
+        "raw": "{\n  \"message\": \"Suggest a 2 day trip from Delhi\"\n}",
+        "form": []
+      },
+      "auth": {
+        "type": "bearer",
+        "bearer": "{{token}}"
+      },
+      "tests": []
+    },
+    {
+      "_id": "89682c67-cdae-4939-898e-553a793fd10e",
+      "colId": "27ff83d6-f902-4ac3-9852-6342911e6e4c",
+      "containerId": "",
+      "name": "16 My Kibi AI chat history",
+      "url": "{{base}}/chat/history",
+      "method": "GET",
+      "sortNum": 160000,
+      "created": "2026-10-26T12:19:25.976Z",
+      "modified": "2026-10-26T12:19:25.976Z",
+      "headers": [],
+      "auth": {
+        "type": "bearer",
+        "bearer": "{{token}}"
+      },
+      "tests": []
+    },
+    {
+      "_id": "a84d692e-2fa0-4acb-a031-e838f562ba34",
+      "colId": "27ff83d6-f902-4ac3-9852-6342911e6e4c",
+      "containerId": "",
+      "name": "17 Health check",
+      "url": "{{base}}/health",
+      "method": "GET",
+      "sortNum": 170000,
+      "created": "2026-10-26T12:19:25.976Z",
+      "modified": "2026-10-26T12:19:25.976Z",
+      "headers": [],
+      "tests": []
+    }
+  ]
+}

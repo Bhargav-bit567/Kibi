@@ -1,0 +1,25 @@
+{
+  "clientName": "Thunder Client",
+  "envName": "kibi-live",
+  "envId": "b2400661-fbf2-45ff-8d6e-91b8f5fa09e2",
+  "dateExported": "2026-10-26T12:19:25.976Z",
+  "version": "1.1",
+  "data": [
+    {
+      "name": "base",
+      "value": "https://kibi-kyiq.onrender.com/api"
+    },
+    {
+      "name": "token",
+      "value": ""
+    },
+    {
+      "name": "userId",
+      "value": ""
+    },
+    {
+      "name": "tripId",
+      "value": ""
+    }
+  ]
+}

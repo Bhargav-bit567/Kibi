@@ -1,11 +1,12 @@
 /* ============================================
-   Kibi — User profile, role/status and preference routes
+   Kibi — User routes
+   Reading users is public (public profiles only); changing them needs a login.
    ============================================ */
 
 const express = require('express');
 const { User, Trip, SavedItinerary, JoinRequest, Notification, Preference, ChatMessage } = require('../models');
-const { isAdmin, requireAdmin } = require('../middleware/auth');
-const { asyncHandler, pickUpdates, isValidEmail, logActivity } = require('../utils');
+const { isAdmin, requireAuth, requireAdmin } = require('../middleware/auth');
+const { asyncHandler, pickUpdates, isValidEmail, logActivity, toClient, PRIVATE_USER_FIELDS } = require('../utils');
 
 const router = express.Router();
 
@@ -13,7 +14,33 @@ const ROLES = ['user', 'moderator', 'admin'];
 const STATUSES = ['active', 'suspended', 'banned'];
 const ADMIN_ONLY_FIELDS = ['role', 'status', 'statusReason'];
 
-router.patch('/:id', asyncHandler(async (req, res) => {
+// Full profile for yourself or an admin, public profile for everyone else.
+const fieldsFor = (viewer, id) => (viewer && (viewer._id === id || isAdmin(viewer)) ? '-passwordHash' : PRIVATE_USER_FIELDS);
+
+// GET /api/users — all users
+router.get('/', asyncHandler(async (req, res) => {
+  const users = await User.find().select(isAdmin(req.user) ? '-passwordHash' : PRIVATE_USER_FIELDS).sort({ createdAt: 1 }).lean();
+  res.json(users.map(toClient));
+}));
+
+// GET /api/users/me — the logged-in user
+router.get('/me', requireAuth, (req, res) => res.json(req.user.toJSON()));
+
+// GET /api/users/:id — one user
+router.get('/:id', asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id).select(fieldsFor(req.user, req.params.id)).lean();
+  if (!user) return res.status(404).json({ error: 'User not found' });
+  res.json(toClient(user));
+}));
+
+// GET /api/users/:id/trips — trips this user created
+router.get('/:id/trips', asyncHandler(async (req, res) => {
+  if (!(await User.exists({ _id: req.params.id }))) return res.status(404).json({ error: 'User not found' });
+  const trips = await Trip.find({ createdBy: req.params.id }).sort({ createdAt: 1 }).lean();
+  res.json(trips.map(toClient));
+}));
+
+router.patch('/:id', requireAuth, asyncHandler(async (req, res) => {
   const me = req.user;
   const admin = isAdmin(me);
   const isSelf = me._id === req.params.id;
@@ -62,7 +89,7 @@ router.patch('/:id', asyncHandler(async (req, res) => {
   res.json(target.toJSON());
 }));
 
-router.delete('/:id', requireAdmin, asyncHandler(async (req, res) => {
+router.delete('/:id', requireAuth, requireAdmin, asyncHandler(async (req, res) => {
   const userId = req.params.id;
   const tripIds = (await Trip.find({ createdBy: userId }).select('_id').lean()).map(t => t._id);
 
@@ -80,7 +107,7 @@ router.delete('/:id', requireAdmin, asyncHandler(async (req, res) => {
 }));
 
 /* --- Preferences: stored per user and mirrored onto the user profile --- */
-router.put('/:id/preferences', asyncHandler(async (req, res) => {
+router.put('/:id/preferences', requireAuth, asyncHandler(async (req, res) => {
   const userId = req.params.id;
   if (req.user._id !== userId && !isAdmin(req.user)) return res.status(403).json({ error: 'Not allowed' });
 

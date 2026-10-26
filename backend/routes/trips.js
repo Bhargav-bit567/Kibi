@@ -1,12 +1,13 @@
 /* ============================================
    Kibi — Trip and saved-itinerary routes
-   Creates use the client-generated id (PUT), so retried requests are safe.
+   Reading trips is public; creating, changing and deleting needs a login.
+   The website creates trips with its own id (PUT), so retried requests are safe.
    ============================================ */
 
 const express = require('express');
 const { Trip, SavedItinerary, JoinRequest } = require('../models');
-const { isAdmin } = require('../middleware/auth');
-const { asyncHandler, pickUpdates, logActivity } = require('../utils');
+const { isAdmin, requireAuth } = require('../middleware/auth');
+const { asyncHandler, pickUpdates, logActivity, generateId, toClient } = require('../utils');
 
 const trips = express.Router();
 const saved = express.Router();
@@ -37,10 +38,30 @@ async function writeTrip(req, res, { allowCreate }) {
   res.json(existing.toJSON());
 }
 
-trips.put('/:id', asyncHandler((req, res) => writeTrip(req, res, { allowCreate: true })));
-trips.patch('/:id', asyncHandler((req, res) => writeTrip(req, res, { allowCreate: false })));
+// GET /api/trips — all trips
+trips.get('/', asyncHandler(async (req, res) => {
+  const list = await Trip.find().sort({ createdAt: 1 }).lean();
+  res.json(list.map(toClient));
+}));
 
-trips.delete('/:id', asyncHandler(async (req, res) => {
+// GET /api/trips/:id — one trip
+trips.get('/:id', asyncHandler(async (req, res) => {
+  const trip = await Trip.findById(req.params.id).lean();
+  if (!trip) return res.status(404).json({ error: 'Trip not found' });
+  res.json(toClient(trip));
+}));
+
+// POST /api/trips — create a trip from the JSON body (the server picks the id)
+trips.post('/', requireAuth, asyncHandler(async (req, res) => {
+  const updates = pickUpdates(req.body, ['createdBy', ...(isAdmin(req.user) ? [] : ['featured'])]);
+  const trip = await Trip.create({ ...updates, _id: generateId(), createdBy: req.user._id });
+  res.status(201).json(trip.toJSON());
+}));
+
+trips.put('/:id', requireAuth, asyncHandler((req, res) => writeTrip(req, res, { allowCreate: true })));
+trips.patch('/:id', requireAuth, asyncHandler((req, res) => writeTrip(req, res, { allowCreate: false })));
+
+trips.delete('/:id', requireAuth, asyncHandler(async (req, res) => {
   const trip = await Trip.findById(req.params.id);
   if (!trip) return res.json({ ok: true }); // already gone
   if (!canManage(req.user, trip)) return res.status(403).json({ error: 'Only the trip creator can delete this trip.' });

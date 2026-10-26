@@ -10,12 +10,10 @@
 const express = require('express');
 const { User, Trip, SavedItinerary, JoinRequest, Notification, Preference, ActivityLog, Destination, SampleTraveler } = require('../models');
 const { isAdmin } = require('../middleware/auth');
-const { asyncHandler, toClient } = require('../utils');
+const { asyncHandler, toClient, PRIVATE_USER_FIELDS } = require('../utils');
 
 const router = express.Router();
 
-// Other viewers get public profiles only (no email; cover photos are only shown to their owner).
-const PRIVATE_USER_FIELDS = '-passwordHash -email -statusReason -providerId -savedTrips -coverImage';
 const lean = query => query.lean().then(docs => docs.map(toClient));
 
 router.get('/', asyncHandler(async (req, res) => {

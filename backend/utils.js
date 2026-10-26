@@ -66,4 +66,7 @@ function logActivity(action, details, actorId) {
     .catch(err => console.error('Activity log write failed:', err.message));
 }
 
-module.exports = { asyncHandler, generateId, validateIdParam, pickUpdates, toClient, newUserFields, isValidEmail, logActivity };
+// Other viewers get public profiles only (no email; cover photos are only shown to their owner).
+const PRIVATE_USER_FIELDS = '-passwordHash -email -statusReason -providerId -savedTrips -coverImage';
+
+module.exports = { PRIVATE_USER_FIELDS, asyncHandler, generateId, validateIdParam, pickUpdates, toClient, newUserFields, isValidEmail, logActivity };
